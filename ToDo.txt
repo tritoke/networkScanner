@@ -1,0 +1,3 @@
+1.	proof of concept for sending ICMP messages.
+2.	write a function which can turn an IP/mask into a list of IP addresses.
+3.	Implement a basic Ping scan to scan a subnet, pinging each host to see if it is alive.
