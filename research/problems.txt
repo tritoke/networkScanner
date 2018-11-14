@@ -1,0 +1,9 @@
+Problems encountered during development:
+
+1.	I found this line in an open source python ping ICMP packet implementation: 
+ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
+socket.SOL_IP are the settings for the underlying sockey, setsockopt sets the value of a configuration option in socket.SOL_IP.
+socket.IP_DRINCL allows manual IP header creation when set to 1. 
+according to http://www.cems.uwe.ac.uk/~irjohnso/linsock/Book%20Notes/Appendices/Data%20Tables/IP-Level%20Socket%20Options.html
+
+

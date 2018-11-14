@@ -1,0 +1,11 @@
+root@groot:~# ping -c 5 192.168.1.1
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=0.458 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=0.393 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=0.983 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=0.541 ms
+64 bytes from 192.168.1.1: icmp_seq=5 ttl=64 time=0.721 ms
+
+--- 192.168.1.1 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 61ms
+rtt min/avg/max/mdev = 0.393/0.619/0.983/0.213 ms
