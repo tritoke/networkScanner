@@ -1,6 +1,6 @@
 import socket
-
-# socket object         use IPV4 addr  allow raw socket access, set ICMP protocol        
+import struct
+# socket object using an IPV4 address, using only raw socket access, set ICMP protocol        
 ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 
 # this line sets the IP_HDRINCL attribute in SOL_IP to 1 allowing us to manually create IP headers.
