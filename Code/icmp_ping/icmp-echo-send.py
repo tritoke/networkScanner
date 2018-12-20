@@ -1,26 +1,44 @@
-#!/usr/bin/python
-
+#!/usr/bin/python3.7
 import socket
 import struct
+import os
+import time
+import array
 
-# socket object using an IPV4 address, using only raw socket access, set ICMP protocol        
+def calculateChecksum(pkt): # checksum function from scapy project
+    if len(pkt) % 2 == 1: # if packet had odd length pad with a null byte
+        pkt += b"\0"
+    s = sum(array.array("H", pkt))
+    s = (s >> 16) + (s & 0xffff)
+    s += s >> 16
+    s = ~s
+    # ^^ ones complement sum of the pairs of bytes
+    return (((s>>8)&0xff)|s<<8) & 0xffff
+    # s >> 8 move the leftmost eight bytes into the first byte
+    # and-ing that with 0xFF truncates any data that past the first 8 bytes
+    # i.e. 01101001,11110000 => 00000000,01101001
+    # or-ing that with s<<8 and then anding it places the second byte in the first places and truncates the remainder, leaving just the two bytes switched
+
+
+ICMP_ECHO_REQUEST = 8
+
+# opens a raw socket for the ICMP protocol
 ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+# allows manual IP header creation
+# ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
 
-# this line sets the IP_HDRINCL attribute in SOL_IP to 1 allowing us to manually create IP headers.
-ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
-packets = []
+ID = os.getpid() & 0xFFFF
 
-ip_header = recPacket[:20]
-icmp_header = recPacket[20:28]
-VER_IHL, DSCP_ECN, p_len, ID, F_FO, ttl, prot, csum, src_ip_long, dest_ip_long = struct.unpack('bbHHHBBHLL', ip_header)
-src_ip = socket.inet_ntoa(struct.pack('=i', src_ip_long))
-dest_ip = socket.inet_ntoa(struct.pack('=i', dest_ip_long))
-print("IP header:")
-print("version: [{}]\nheader length: [{}]\ndscp: [{}]\necn: [{}]\ntotal length: [{}]\nidentification: [{}]\nflags: [{}]\nfragment offset: [{}]\nttl: [{}]\nprot: [{}]\nchecksum: [{}]\nsource address: [{}]\ndestination address: [{}]".format(VER, IHL, DSCP, ECN, p_len, ID, FLAGS, FRAG_OFFSET, ttl, prot, csum, src_ip, dest_ip))
-print()
-msg_type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmp_header)
-print("ICMP header:")
-print("type: [{}]\ncode: [{}]\nchecksum: [{}]\np_id: [{}]\nsequence: [{}]".format(msg_type, code, checksum, p_id, sequence)) 
-packets.append(recPacket)
-print("\n")
+# the two zeros are the code and the dummy checksum, the one is the sequence number
+dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
+
+data = struct.pack("d", time.time()) + bytes((192 - struct.calcsize("d")) * "A", "ascii")
+
+checksum = socket.htons(calculateChecksum(dummy_header+data))
+
+header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
+
+packet = header + data
+
+ping_sock.sendto(packet, ("127.0.0.1", 1))
 

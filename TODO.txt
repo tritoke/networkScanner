@@ -1,3 +1,9 @@
-1.	proof of concept for sending ICMP messages.
-2.	write a function which can turn an IP/mask into a list of IP addresses.
-3.	Implement a basic Ping scan to scan a subnet, pinging each host to see if it is alive.
+1.	Proof of concept for sending ICMP messages. :: DONE
+2.	Write a function which can turn an IP/mask into a list of IP addresses. :: DONE
+3.  Make each of the previous scripts into one which can be imported and used. :: DONE
+4.	Implement a basic Ping scan to scan a subnet, pinging each host to see if it is alive. :: DONE
+5.  Proof of concept to detect whether SSH is running on port 22. :: DONE
+6.  Attempt a basic port scan of the 1000 most common TCP ports. :: DONE
+7.  Attempt a complete TCP port scan. :: DONE
+8.  Implement TCP SYN port scan.
+9.  Implement UDP port scan.

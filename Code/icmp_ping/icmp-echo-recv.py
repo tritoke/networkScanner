@@ -1,38 +1,39 @@
-#!/usr/bin/python
+#!/usr/bin/python3.7
 
 import socket
 import struct
+import time
+from typing import List
 
 # socket object using an IPV4 address, using only raw socket access, set ICMP protocol        
 ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 
-# this line sets the IP_HDRINCL attribute in SOL_IP to 1 allowing us to manually create IP headers.
-ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
-packets = []
+packets: List[bytes] = []
 
-# capture 6 packets
-while len(packets) < 4:
+while len(packets) < 1:
     recPacket, addr = ping_sock.recvfrom(1024)
     ip_header = recPacket[:20]
     icmp_header = recPacket[20:28]
-    VER_IHL, DSCP_ECN, p_len, ID, F_FO, ttl, prot, csum, src_ip_long, dest_ip_long = struct.unpack('bbHHHBBHLL', ip_header)
-    ver_ihl = "{:08b}".format(VER_IHL)
-    VER = int(ver_ihl[:4], 2)
-    IHL = int(ver_ihl[4:], 2)  
-    dscp_ecn = "{:08b}".format(DSCP_ECN)
-    DSCP = int(dscp_ecn[:6], 2)
-    ECN = int(dscp_ecn[6:], 2)
-    f_fo = "{:016b}".format(F_FO)
-    FLAGS = int(f_fo[:3], 2)
-    FRAG_OFFSET = int(f_fo[3:], 2)
-    src_ip = socket.inet_ntoa(struct.pack('=i', src_ip_long))
-    dest_ip = socket.inet_ntoa(struct.pack('=i', dest_ip_long))
-    print("IP header:")
-    print("version: [{}]\nheader length: [{}]\ndscp: [{}]\necn: [{}]\ntotal length: [{}]\nidentification: [{}]\nflags: [{}]\nfragment offset: [{}]\nttl: [{}]\nprot: [{}]\nchecksum: [{}]\nsource address: [{}]\ndestination address: [{}]".format(VER, IHL, DSCP, ECN, p_len, ID, FLAGS, FRAG_OFFSET, ttl, prot, csum, src_ip, dest_ip))
-    print()
-    msg_type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmp_header)
-    print("ICMP header:")
-    print("type: [{}]\ncode: [{}]\nchecksum: [{}]\np_id: [{}]\nsequence: [{}]".format(msg_type, code, checksum, p_id, sequence)) 
-    packets.append(recPacket)
-    print("\n")
 
+    ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl, ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII', ip_header)
+
+    hl_v = f"{ip_hp_ip_v:08b}"
+    ip_v = int(hl_v[:4], 2)
+    ip_hl = int(hl_v[4:], 2)
+    dscp_ecn = f"{ip_dscp_ip_ecn:08b}"
+    ip_dscp = int(dscp_ecn[:6], 2)
+    ip_ecn = int(dscp_ecn[6:], 2)
+    flgs_off = f"{ip_flgs_ip_off:016b}"
+    ip_flgs = int(flgs_off[:3],2)
+    ip_off = int(flgs_off[3:], 2)
+    src_addr = socket.inet_ntoa(struct.pack('!I', ip_src))
+    dst_addr = socket.inet_ntoa(struct.pack('!I', ip_dst))
+
+    print("IP header:")
+    print(f"Version: [{ip_v}]\nInternet Header Length: [{ip_hl}]\nDifferentiated Services Point Code: [{ip_dscp}]\nExplicit Congestion Notification: [{ip_ecn}]\nTotal Length: [{ip_len}]\nIdentification: [{ip_id:04x}]\nFlags: [{ip_flgs:03b}]\nFragment Offset: [{ip_off}]\nTime To Live: [{ip_ttl}]\nProtocol: [{ip_p}]\nHeader Checksum: [{ip_sum:04x}]\nSource Address: [{src_addr}]\nDestination Address: [{dst_addr}]\n")
+
+    msg_type, code, checksum, p_id, sequence = struct.unpack('!bbHHh', icmp_header)
+    print("ICMP header:")
+    print(f"Type: [{msg_type}]\nCode: [{code}]\nChecksum: [{checksum:04x}]\nProcess ID: [{p_id:04x}]\nSequence: [{sequence}]"
+    packets.append(recPacket)
+open("current_packet", "w").write("\n".join(" ".join(map(lambda x: "{x:02x}", map(int, i))) for i in packets))

@@ -5,7 +5,7 @@ Echo or Echo Reply Message
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |     Type      |     Code      |          Checksum             | 
+   |     Type      |     Code      |          Checksum             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |           Identifier          |        Sequence Number        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -16,7 +16,7 @@ Echo or Echo Reply Message
       The address of the source in an echo message will be the
       destination of the echo reply message.  To form an echo reply
       message, the source and destination addresses are simply reversed,
-      the type code changed to 0, and the checksum recomputed.         
+      the type code changed to 0, and the checksum recomputed.
    IP Fields:
    Type
       8 for echo message;
@@ -34,3 +34,16 @@ Echo or Echo Reply Message
       If code = 0, an identifier to aid in matching echos and replies,
       may be zero.
    Sequence Number
+      If code = 0, a sequence number to aid in matching echos and
+      replies, may be zero.
+   Description
+      The data received in the echo message must be returned in the echo
+      reply message.
+      The identifier and sequence number may be used by the echo sender
+      to aid in matching the replies with the echo requests.  For
+      example, the identifier might be used like a port in TCP or UDP to
+      identify a session, and the sequence number might be incremented
+      on each echo request sent.  The echoer returns these same values
+      in the echo reply.
+      Code 0 may be received from a gateway or a host.
+
