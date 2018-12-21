@@ -4,23 +4,29 @@ from contextlib import closing
 from typing import Optional, List, Tuple, Union
 
 
-def long_form_to_dot_form(long: int) -> str:
+def long_form_to_dot_form(long: int) -> Optional[str]:
     """
     Take in an IP address in packed 32 bit int form and return that address in dot notation.
     i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
     """
+    if not (0 <= long <= 0xFFFFFFFF):
+        print(f"invalid long form IP: [{long}]")
+        return None
+    else:
+        ip_str = f"{long:032b}"
+        return ".".join(str(int(ip_str[i:i+8], 2)) for i in range(0, 32, 8))
 
-    ip_str = f"{long:032b}"
-    return ".".join(str(int(ip_str[i:i+8], 2)) for i in range(0, 32, 8))
 
-
-def dot_form_to_long_form(ip: str) -> int:
+def dot_form_to_long_form(ip: str) -> Optional[int]:
     """
     Take an ip address in dot notation and return the packed 32 bit int version
     i.e. dot_form_to_long_form("127.0.0.1") = 0x7F000001
     """
-
-    return int("".join(map(lambda x: f"{int(x):08b}", ip.split("."))), 2)
+    if not is_valid_ip(ip):
+        print(f"Invalid dot form IP: [{ip}]")
+        return None
+    else:
+        return int("".join(map(lambda x: f"{int(x):08b}", ip.split("."))), 2)
 
 
 def is_valid_ip(ip: Union[int, str]) -> bool:
@@ -31,10 +37,16 @@ def is_valid_ip(ip: Union[int, str]) -> bool:
     import socket
 
     if type(ip) != str:
-        ip = long_form_to_dot_form(ip)
+        dot_form = long_form_to_dot_form(int(ip))
+    else:
+        dot_form = str(ip)
+    if dot_form is None:
+        return False
+    else:
+        ip_str = str(dot_form)
 
     try:
-        socket.inet_aton(ip)
+        socket.inet_aton(ip_str)
         return True
     except socket.error:
         return False
@@ -53,7 +65,12 @@ def ip_range(ip_subnet: str) -> Optional[List[str]]:
     cidr_form_regex = re.compile(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}")
 
     if cidr_form_regex.match(ip_subnet):
-        ip, n_bits = cidr_form_regex.search(ip_subnet).group().split("/")
+        cidr_search = cidr_form_regex.search(ip_subnet)
+        if cidr_search is not None:
+            ip, n_bits = cidr_search.group().split("/")
+        else:
+            print(f"Failed to group regex thing: {ip_subnet}")
+            return None
     else:
         print(f"Regex couldn't identify the ip address and subnet of {ip_subnet}, ensure that it is in CIDR form.")
         return None
@@ -68,11 +85,22 @@ def ip_range(ip_subnet: str) -> Optional[List[str]]:
         print(f"Invalid IP address: {ip}.")
         return None
 
-    ip_long_form = dot_form_to_long_form(ip)
+    ip_long = dot_form_to_long_form(ip)
+    if ip_long is None:
+        return None
+    else:
+        ip_long_form = int(ip_long)
+
     subnet_long_form = int(("1"*network_bits).zfill(32)[::-1], 2)
     lower_bound = ip_long_form & subnet_long_form
     upper_bound = ip_long_form | (subnet_long_form ^ 0xFFFFFFFF)
-    return list(map(long_form_to_dot_form, range(lower_bound, upper_bound+1)))
+    ips = map(long_form_to_dot_form, range(lower_bound, upper_bound+1))
+
+    if None in ips:
+        print("Failed to create ip range because one of the IP's specificed couldn't be turned from long form to dot form.")
+        return None
+    else:
+        return list(map(str, ips))
 
 
 def get_local_ip() -> str:
@@ -157,14 +185,14 @@ def make_tcp_packet(src_port: int, dst_port: int, from_address: Union[int, str],
             return None
 
         if type(from_address) == str:
-            src_addr = dot_form_to_long_form(from_address)
+            src_addr = dot_form_to_long_form(str(from_address))
         else:
-            src_addr = from_address
+            src_addr = int(from_address)
 
         if type(to_address) == str:
-            dst_addr = dot_form_to_long_form(to_address)
+            dst_addr = dot_form_to_long_form(str(to_address))
         else:
-            dst_addr = to_address
+            dst_addr = int(to_address)
         seq = ack = urg = 0
         data_offset = 6
         data_offset = int(f"{data_offset:04b}0000", 2)
@@ -177,7 +205,8 @@ def make_tcp_packet(src_port: int, dst_port: int, from_address: Union[int, str],
         checksum = ip_checksum(psuedo_header + dummy_header)
         actual_header_fields = (src_port, dst_port, seq, ack, data_offset, flags, window_size, checksum, urg, *max_segment_size)
         actual_tcp_header = struct.pack("!HHIIBBHHHBBH", *actual_header_fields)
-        print(ip_checksum(psuedo_header + actual_tcp_header))
+        # below line should be 0 use for checking checksum/network byte order.
+        # print(ip_checksum(psuedo_header + actual_tcp_header))
         return actual_tcp_header
 
 def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
