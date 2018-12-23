@@ -1,0 +1,11 @@
+Problems encountered during development:
+
+1.	I found this line in an open source python ping ICMP packet implementation: 
+ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
+socket.SOL_IP are the settings for the underlying socket, setsockopt sets the value of a configuration option in socket.SOL_IP.
+socket.IP_HDRINCL allows manual IP header creation when set to 1. (HeaDeR INCLude)
+according to http://www.cems.uwe.ac.uk/~irjohnso/linsock/Book%20Notes/Appendices/Data%20Tables/IP-Level%20Socket%20Options.html
+
+2.  I have had great difficulty with UDP scanning due to Linux machines being strict about only sending 1 ICMP Destination Unreachable message per second.
+This raises problems for UDP scanning because UDP ports are marked as open|filtered/closed by the ICMP message that is sent back when a connection is attempted.
+Thus if all the UDP ports were to be scanned at a second each it would take 65536 seconds which is 18.2 hour or almost exactly 3/4 of a day.

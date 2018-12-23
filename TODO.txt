@@ -5,5 +5,5 @@
 5.  Proof of concept to detect whether SSH is running on port 22. :: DONE
 6.  Attempt a basic port scan of the 1000 most common TCP ports. :: DONE
 7.  Attempt a complete TCP port scan. :: DONE
-8.  Implement TCP SYN port scan.
+8.  Implement TCP SYN port scan. :: DONE
 9.  Implement UDP port scan.

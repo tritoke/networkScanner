@@ -44,9 +44,10 @@ def recieved_ping_from_addresses(ID: int, timeout: float) -> List[Tuple[str, flo
         msg_type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmp_header)
         time_remaining -= time_waiting
         time_sent = struct.unpack("d", recPacket[28:28+struct.calcsize("d")])[0]
-        time_taken = time_recieved - time_sent
+        time_taken: float = time_recieved - time_sent
         if p_id == ID:
-            addresses.append((str(addr[0]), float(time_taken), int(ip_ttl)))
+            ip, port = addr
+            addresses.append((str(ip), float(time_taken), int(ip_ttl)))
         elif time_remaining <= 0:
             break
         else:
