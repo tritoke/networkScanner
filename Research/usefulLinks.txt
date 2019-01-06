@@ -1,2 +1,4 @@
 https://stackoverflow.com/questions/24575524/send-icmp-echo-request
 https://nmap.org/book/man-port-scanning-techniques.html
+https://nmap.org/book/vscan-technique.html
+https://nmap.org/book/vscan-fileformat.html
