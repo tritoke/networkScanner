@@ -4,13 +4,18 @@ from contextlib import closing
 from typing import Optional, List, Tuple, Union
 
 
+def eprint(*args, **kwargs):
+    from sys import stderr
+    print(*args, file=stderr, **kwargs)
+
+
 def long_form_to_dot_form(long: int) -> Optional[str]:
     """
     Take in an IP address in packed 32 bit int form and return that address in dot notation.
     i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
     """
     if not (0 <= long <= 0xFFFFFFFF):
-        print(f"invalid long form IP: [{long}]")
+        eprint(f"invalid long form IP: [{long}]")
         return None
     else:
         ip_str = f"{long:032b}"
@@ -23,7 +28,7 @@ def dot_form_to_long_form(ip: str) -> Optional[int]:
     i.e. dot_form_to_long_form("127.0.0.1") = 0x7F000001
     """
     if not is_valid_ip(ip):
-        print(f"Invalid dot form IP: [{ip}]")
+        eprint(f"Invalid dot form IP: [{ip}]")
         return None
     else:
         return int("".join(map(lambda x: f"{int(x):08b}", ip.split("."))), 2)
@@ -83,7 +88,7 @@ def ip_range(ip_subnet: str) -> Optional[List[str]]:
     """
 
     import re
-
+    print(ip_subnet)
     cidr_form_regex = re.compile(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}")
 
     if cidr_form_regex.match(ip_subnet):
@@ -91,20 +96,20 @@ def ip_range(ip_subnet: str) -> Optional[List[str]]:
         if cidr_search is not None:
             ip, n_bits = cidr_search.group().split("/")
         else:
-            print(f"Failed to group regex thing: {ip_subnet}")
+            eprint(f"Failed to group regex thing: {ip_subnet}")
             return None
     else:
-        print(f"Regex couldn't identify the ip address and subnet of {ip_subnet}, ensure that it is in CIDR form.")
+        eprint(f"Regex couldn't identify the ip address and subnet of {ip_subnet}, ensure that it is in CIDR form.")
         return None
 
     try:
         network_bits = int(n_bits)
     except ValueError:
-        print(f"Invalid address specification: {ip_subnet} subnet must be an integer between 0 and 32.")
+        eprint(f"Invalid address specification: {ip_subnet} subnet must be an integer between 0 and 32.")
         return None
 
     if not is_valid_ip(ip):
-        print(f"Invalid IP address: {ip}.")
+        eprint(f"Invalid IP address: {ip}.")
         return None
 
     ip_long = dot_form_to_long_form(ip)
@@ -116,10 +121,10 @@ def ip_range(ip_subnet: str) -> Optional[List[str]]:
     subnet_long_form = int(("1"*network_bits).zfill(32)[::-1], 2)
     lower_bound = ip_long_form & subnet_long_form
     upper_bound = ip_long_form | (subnet_long_form ^ 0xFFFFFFFF)
-    ips = map(long_form_to_dot_form, range(lower_bound, upper_bound+1))
+    ips = list(map(long_form_to_dot_form, range(lower_bound, upper_bound+1)))
 
     if None in ips:
-        print("Failed to create ip range because one of the IP's specificed couldn't be turned from long form to dot form.")
+        eprint("Failed to create ip range because one of the IP's specificed couldn't be turned from long form to dot form.")
         return None
     else:
         return list(map(str, ips))
@@ -202,15 +207,15 @@ def make_tcp_packet(src_port: int, dst_port: int, from_address: Union[int, str],
     import socket
 
     if flags not in [2, 18, 4]:
-        print("Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST.")
+        eprint("Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST.")
         return None
     else:
         if not all(map(is_valid_ip, (from_address, to_address))):
-            print(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
+            eprint(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
             return None
 
         if not all(map(is_valid_port_number, (src_port, dst_port))):
-            print(f"Ensure both ports are valid: {src_port},{dst_port}.")
+            eprint(f"Ensure both ports are valid: {src_port},{dst_port}.")
             return None
 
         x, y = union_to_int(from_address), union_to_int(to_address)
@@ -247,11 +252,11 @@ def make_udp_packet(src_port: int, dest_port: int, from_address: Union[str, int]
     import struct
 
     if not all(map(is_valid_ip, (from_address, to_address))):
-        print(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
+        eprint(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
         return None
 
     if not all(map(is_valid_port_number, (src_port, dest_port))):
-        print(f"Ensure both ports are valid: {src_port},{dest_port}.")
+        eprint(f"Ensure both ports are valid: {src_port},{dest_port}.")
         return None
 
     x, y = union_to_int(from_address), union_to_int(to_address)

@@ -4,7 +4,7 @@ import sys
 sys.path.append("../modules/")
 
 import ip_utils
-
+from ip_utils import eprint
 import socket
 from functools import partial
 from itertools import repeat
@@ -56,19 +56,27 @@ def recieved_ping_from_addresses(ID: int, timeout: float) -> List[Tuple[str, flo
 
 
 with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)) as ping_sock:
-    addresses = ip_utils.ip_range("192.168.1.0/24")
+    subnet_spec = "192.168.43.0/24"
+    ip_addresses = ip_utils.ip_range(subnet_spec)
+    if ip_addresses is not None:
+        addresses = list(ip_addresses)
+    else:
+        eprint(f"ip_range returned None, args: {subnet_spec}")
+        exit()
     local_ip = ip_utils.get_local_ip()
     if addresses is not None:
-        addresses_to_scan = filter(lambda x: x!=local_ip, addresses)
+        addresses_to_scan = list(filter(lambda x: x!=local_ip, addresses))
     else:
-        print("error with ip range specification")
+        eprint("error with ip range specification")
         exit()
     p = Pool(1)
     ID = getpid()&0xFFFF
     replied = p.apply_async(recieved_ping_from_addresses, (ID, 2))
+    print(addresses_to_scan)
     for address in zip(addresses_to_scan, repeat(1)):
         try:
             packet = ip_utils.make_icmp_packet(ID)
+            print(f"scanning {address}")
             ping_sock.sendto(packet, address)
         except PermissionError:
             pass

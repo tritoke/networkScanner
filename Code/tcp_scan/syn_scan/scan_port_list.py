@@ -4,16 +4,17 @@ import sys
 sys.path.append(getcwd()+"/../../modules/")
 
 import ip_utils
+from ip_utils import eprint
 
 import socket
 from contextlib import closing
 import struct
 import time
-from typing import List, Tuple, Union, Optional
+from typing import List, Tuple, Union, Optional, Iterable
 from multiprocessing import Pool
 
 
-def syn_listener(address: Tuple[str, int], timeout: int) -> List[int]:
+def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
     print(f"address: [{address}]\ntimeout: [{timeout}]")
     open_ports: List[int] = []
     with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)) as s:
@@ -36,19 +37,21 @@ def syn_listener(address: Tuple[str, int], timeout: int) -> List[int]:
     return open_ports
 
 
-
-def syn_scan(dest_ip: Union[str, int], portlist: int) -> Optional[List[int]]:
+def syn_scan(dest_ip: Union[str, int], portlist: Iterable[int]) -> Optional[List[int]]:
     src_port = ip_utils.get_free_port()
     local_ip = ip_utils.get_local_ip()
-
     loc_long = ip_utils.dot_form_to_long_form(local_ip)
     if loc_long is None:
         exit()
     else:
         local_long = int(loc_long)
 
-    dst_long = ip_utils.dot_form_to_long_form(dest_ip)
+    if isinstance(dest_ip, str):
+        dst_long = ip_utils.dot_form_to_long_form(dest_ip)
+    else:
+        dst_long = int(dest_ip)
     if dst_long is None:
+        eprint("Failed to convert destination ip to long form")
         exit()
     else:
         dest_long = int(dst_long)
@@ -59,14 +62,14 @@ def syn_scan(dest_ip: Union[str, int], portlist: int) -> Optional[List[int]]:
         print(f"Invalid IP address to scan: [{dest_ip}].")
         return None
     else:
-        if type(dest_ip) == str:
-            dst_long = ip_utils.dot_form_to_long_form(dest_ip)
-            if type(dst_long) == None:
-                print("Failed to convert destination ip to long form.")
-                return None
-            else:
-                dest_long = int(dst_long)
-        time.sleep(1)
+#          if isinstance(dest_ip, str):
+#              dst_long = ip_utils.dot_form_to_long_form(dest_ip)
+#              if type(dst_long) == None:
+#                  print("Failed to convert destination ip to long form.")
+#                  return None
+#          else:
+#              dst_long = int(dest_ip)
+#          dest_long = int(dst_long)
         print("starting scan")
         for port in portlist:
             pkt = ip_utils.make_tcp_packet(src_port, port, local_long, dest_long, 2) # 2 is TCP flag SYN
@@ -82,9 +85,10 @@ def syn_scan(dest_ip: Union[str, int], portlist: int) -> Optional[List[int]]:
         p.join()
         open_ports = listener.get()
         print(open_ports)
+        return open_ports
 
 
-dest_ip  = "192.168.1.159"
+dest_ip  = "127.0.0.1"
 
 syn_scan(dest_ip, range(2**16))
 
