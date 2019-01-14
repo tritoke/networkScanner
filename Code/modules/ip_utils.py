@@ -1,133 +1,95 @@
 #!/usr/bin/python3.7
-import socket
-from contextlib import closing
-from typing import Optional, List, Tuple, Union
 
+import array
+import re
+import socket
+import struct
+import select
+import time
+
+from contextlib import closing
+from itertools import islice, cycle
+from typing import List, Tuple, Union
 
 def eprint(*args, **kwargs):
     from sys import stderr
     print(*args, file=stderr, **kwargs)
 
 
-def long_form_to_dot_form(long: int) -> Optional[str]:
+def long_form_to_dot_form(long: int) -> str:
     """
     Take in an IP address in packed 32 bit int form and return that address in dot notation.
     i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
     """
-    if not (0 <= long <= 0xFFFFFFFF):
-        eprint(f"invalid long form IP: [{long}]")
-        return None
+    if not 0 <= long <= 0xFFFFFFFF:
+        raise ValueError(f"Invalid long form IP address: [{long:08x}]")
     else:
         ip_str = f"{long:032b}"
         return ".".join(str(int(ip_str[i:i+8], 2)) for i in range(0, 32, 8))
 
 
-def dot_form_to_long_form(ip: str) -> Optional[int]:
+def dot_form_to_long_form(ip: str) -> int:
     """
     Take an ip address in dot notation and return the packed 32 bit int version
     i.e. dot_form_to_long_form("127.0.0.1") = 0x7F000001
     """
-    if not is_valid_ip(ip):
-        eprint(f"Invalid dot form IP: [{ip}]")
-        return None
+    if not all(map(lambda x: 0 <= int(x) <= 255, ip.split("."))):
+        raise ValueError(f"Invalid dot form IP address: [{ip}]")
     else:
         return int("".join(map(lambda x: f"{int(x):08b}", ip.split("."))), 2)
 
 
-def union_to_int(ip: Union[str, int]) -> Optional[int]:
-    if type(ip) == str:
-        return dot_form_to_long_form(str(ip))
-    else:
-        return int(ip)
-
-
-def union_to_str(ip: Union[str, int]) -> Optional[str]:
-    if type(ip) == int:
-        return long_form_to_dot_form(int(ip))
-    else:
-        return str(ip)
-
-
 def is_valid_ip(ip: Union[int, str]) -> bool:
     """
-    does what it says on the tin, checks the validity of an IP address in either long or dot form.
+    checks whether a given IP address is valid.
     """
 
-    import socket
-
-    if type(ip) != str:
-        dot_form = long_form_to_dot_form(int(ip))
+    if isinstance(ip, int):
+        try:
+            dot_form = long_form_to_dot_form(ip)
+        except ValueError:
+            return False
     else:
         dot_form = str(ip)
-    if dot_form is None:
-        return False
-    else:
-        ip_str = str(dot_form)
 
     try:
-        socket.inet_aton(ip_str)
+        socket.inet_aton(dot_form)
         return True
     except socket.error:
         return False
 
 
 def is_valid_port_number(port_num: int) -> bool:
+    """
+    Checks whether the given port number is valid i.e. between 0 and 65536.
+    """
     if 0 <= port_num < 2**16:
         return True
     else:
         return False
 
 
-def ip_range(ip_subnet: str) -> Optional[List[str]]:
+def ip_range(ip: str, network_bits:int) -> List[str]:
     """
     Takes a Classless Inter Domain Routing(CIDR) address subnet specification and returns
-    the list of addresses specified by the IP/network bits.
-    If it cannot find a CIDR form IP in the ip_subnet variable it returns None.
-    If the number of network bits is not between 0 and 32 it returns None.
-    If the IP address is invalid according to is_valid_ip it returns None.
+    the list of addresses specified by the IP/network bits format.
+    If the number of network bits is not between 0 and 32 it raises a ValueError.
+    If the IP address is invalid according to is_valid_ip it raises a ValueError.
     """
 
-    import re
-    print(ip_subnet)
-    cidr_form_regex = re.compile(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}")
-
-    if cidr_form_regex.match(ip_subnet):
-        cidr_search = cidr_form_regex.search(ip_subnet)
-        if cidr_search is not None:
-            ip, n_bits = cidr_search.group().split("/")
-        else:
-            eprint(f"Failed to group regex thing: {ip_subnet}")
-            return None
-    else:
-        eprint(f"Regex couldn't identify the ip address and subnet of {ip_subnet}, ensure that it is in CIDR form.")
-        return None
-
-    try:
-        network_bits = int(n_bits)
-    except ValueError:
-        eprint(f"Invalid address specification: {ip_subnet} subnet must be an integer between 0 and 32.")
-        return None
+    if not 0 <= network_bits <= 32:
+        raise ValueError(f"Invalid number of network bits: [{network_bits}]")
 
     if not is_valid_ip(ip):
-        eprint(f"Invalid IP address: {ip}.")
-        return None
+        raise ValueError(f"Invalid IP address: [{ip}]")
 
     ip_long = dot_form_to_long_form(ip)
-    if ip_long is None:
-        return None
-    else:
-        ip_long_form = int(ip_long)
 
-    subnet_long_form = int(("1"*network_bits).zfill(32)[::-1], 2)
-    lower_bound = ip_long_form & subnet_long_form
-    upper_bound = ip_long_form | (subnet_long_form ^ 0xFFFFFFFF)
-    ips = list(map(long_form_to_dot_form, range(lower_bound, upper_bound+1)))
+    mask = int(f"{'1'*network_bits:0<32s}",2)
+    lower_bound = ip_long & mask
+    upper_bound = ip_long | (mask ^ 0xFFFFFFFF)
 
-    if None in ips:
-        eprint("Failed to create ip range because one of the IP's specificed couldn't be turned from long form to dot form.")
-        return None
-    else:
-        return list(map(str, ips))
+    return list(map(long_form_to_dot_form, range(lower_bound, upper_bound+1)))
 
 
 def get_local_ip() -> str:
@@ -160,8 +122,6 @@ def ip_checksum(pkt: bytes) -> int:
     This checksum is the returned.
     """
 
-    import array
-
     if len(pkt) % 2 == 1:
         pkt += b"\0"
     s = sum(array.array("H", pkt))
@@ -177,11 +137,6 @@ def make_icmp_packet(ID: int) -> bytes:
     Returns an ICMP ECHO REQUEST packet created with this ID
     """
 
-    import struct
-    import time
-    import socket
-    from itertools import islice, cycle
-
     ICMP_ECHO_REQUEST = 8
     dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
     time_bytes = struct.pack("d", time.time())
@@ -194,7 +149,7 @@ def make_icmp_packet(ID: int) -> bytes:
     return packet
 
 
-def make_tcp_packet(src_port: int, dst_port: int, from_address: Union[int, str], to_address: Union[int, str], flags: int) -> Optional[bytes]:
+def make_tcp_packet(src: int, dst: int, from_address: str, to_address: str, flags: int) -> bytes:
     """
     Takes in the source and destination port/ip address and returns a tcp packet.
     flags:
@@ -203,84 +158,61 @@ def make_tcp_packet(src_port: int, dst_port: int, from_address: Union[int, str],
     4 => RST
     """
 
-    import struct
-    import socket
-
     if flags not in [2, 18, 4]:
-        eprint("Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST.")
-        return None
-    else:
-        if not all(map(is_valid_ip, (from_address, to_address))):
-            eprint(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
-            return None
+        raise ValueError(f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]")
+    if not is_valid_ip(from_address):
+        raise ValueError(f"Invalid source IP address: [{from_address}]")
+    if not is_valid_ip(to_address):
+        raise ValueError(f"Invalid destination IP address: [{to_address}]")
+    if not is_valid_port_number(src):
+        raise ValueError(f"Invalid source port: [{src}]")
+    if not is_valid_port_number(dst):
+        raise ValueError(f"Invalid destination port: [{dst}]")
 
-        if not all(map(is_valid_port_number, (src_port, dst_port))):
-            eprint(f"Ensure both ports are valid: {src_port},{dst_port}.")
-            return None
+    src_addr = dot_form_to_long_form(from_address)
+    dst_addr = dot_form_to_long_form(to_address)
 
-        x, y = union_to_int(from_address), union_to_int(to_address)
-        if x is None or y is None:
-            return None
-        else:
-            src_addr = int(x)
-            dst_addr = int(y)
+    seq = ack = urg = 0
+    data_offset = 6<<4
+    window_size = 1024
+    max_segment_size = (2, 4, 1460)
 
-        seq = ack = urg = 0
-        data_offset = 6
-        data_offset = int(f"{data_offset:04b}0000", 2)
-        window_size = 1024
-        max_segment_size = (2, 4, 1460)
-        dummy_header_fields = (src_port, dst_port, seq, ack, data_offset, flags, window_size, 0, urg, *max_segment_size)
-        dummy_header = struct.pack("!HHIIBBHHHBBH", *dummy_header_fields)
-        psuedo_header_fields = (src_addr, dst_addr, 0, 6, len(dummy_header))
-        psuedo_header = struct.pack("!IIBBH", *psuedo_header_fields)
-        checksum = ip_checksum(psuedo_header + dummy_header)
-        actual_header_fields = (src_port, dst_port, seq, ack, data_offset, flags, window_size, checksum, urg, *max_segment_size)
-        actual_tcp_header = struct.pack("!HHIIBBHHHBBH", *actual_header_fields)
-        # below line should be 0 use for checking checksum/network byte order.
-        # print(ip_checksum(psuedo_header + actual_tcp_header))
-        return actual_tcp_header
+    dummy_header = struct.pack("!HHIIBBHHHBBH", src, dst, seq, ack, data_offset,
+                               flags, window_size, 0, urg, *max_segment_size)
+    psuedo_header = struct.pack("!IIBBH", src_addr, dst_addr, 0, 6, len(dummy_header))
+    checksum = ip_checksum(psuedo_header + dummy_header)
+
+    packet = struct.pack("!HHIIBBHHHBBH", src, dst, seq, ack, data_offset,
+                               flags, window_size, checksum, urg, *max_segment_size)
+
+    return packet
 
 
-def make_udp_packet(src_port: int, dest_port: int, from_address: Union[str, int], to_address: Union[str, int]) -> Optional[bytes]:
+def make_udp_packet(src: int, dst: int, from_address: str, to_address: str) -> bytes:
     """
     Takes in: source IP address and port, destination IP address and port.
     Returns: a UDP packet with those properties.
     the IP addresses are needed for calculating the checksum.
     """
 
-    import struct
-
-    if not all(map(is_valid_ip, (from_address, to_address))):
-        eprint(f"Ensure that both IP addresses are valid: {from_address}, {to_address}.")
-        return None
-
-    if not all(map(is_valid_port_number, (src_port, dest_port))):
-        eprint(f"Ensure both ports are valid: {src_port},{dest_port}.")
-        return None
-
-    x, y = union_to_int(from_address), union_to_int(to_address)
-    if x is None or y is None:
-        return None
-    else:
-        src_addr = int(x)
-        dest_addr = int(y)
+    if not is_valid_ip(from_address):
+        raise ValueError(f"Invalid source IP address: [{from_address}]")
+    if not is_valid_ip(to_address):
+        raise ValueError(f"Invalid destination IP address: [{to_address}]")
+    if not is_valid_port_number(src):
+        raise ValueError(f"Invalid source port: [{src}]")
+    if not is_valid_port_number(dst):
+        raise ValueError(f"Invalid destination port: [{dst}]")
 
     UDP_length = 8
-    dummy_header_fields = (src_port, dest_port, UDP_length, 0)
-    dummy_header = struct.pack("!HHHH", *dummy_header_fields)
+    dummy_header = struct.pack("!HHHH", src, dst, UDP_length, 0)
     # 17 is the UDP protocol number
-    psuedo_header_fields = (src_addr, dest_addr, 0, 17, len(dummy_header))
-    psuedo_header = struct.pack("!IIBBH", *psuedo_header_fields)
+    psuedo_header = struct.pack("!IIBBH", src, dst, 0, 17, len(dummy_header))
     checksum = ip_checksum(psuedo_header + dummy_header)
 
-    real_values = (src_port, dest_port, UDP_length, checksum)
-    udp_packet = struct.pack("!HHHH", *real_values)
-    # use for checking the information going into the packet it right
-    # print(f"source address: [{long_form_to_dot_form(src_addr)}]\ndestination address: [{long_form_to_dot_form(dest_addr)}]\nzeros: [0]\nprotocol numer: [17]\nheader length: [{len(dummy_header)}]\nsource port: [{src_port}]\ndestination port: [{dest_port}]\nUDP length: [8]\nchecksum: [{checksum:04x}]")
-    # use for checking the checksum is valid
-    # print(ip_checksum(psuedo_header + udp_packet))
-    return udp_packet
+    packet = struct.pack("!HHHH", src, dst, UDP_length, checksum)
+
+    return packet
 
 
 def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
@@ -289,9 +221,6 @@ def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
     If the socket is readable return a tuple of the socket and the time taken
     otherwise return None.
     """
-
-    import time
-    import select
 
     start = time.time()
     is_socket_readable = select.select([sock], [], [], wait_time)
