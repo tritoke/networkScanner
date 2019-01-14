@@ -30,11 +30,14 @@ def recieved_ping_from_addresses(ID: int, timeout: float) -> List[Tuple[str, flo
     ICMP ECHO REPLY packets with the packed id matching ID in the time given by timeout.
     """
     ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
-    time_remaining = timeout
+    # opens a raw socket for sending ICMP protocol packets
+	time_remaining = timeout
     addresses = []
     while True:
         time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
-        if time_waiting == -1:
+        # time_waiting stores the time the socket took to become readable 
+		# or returns minus one if it ran out of time
+		if time_waiting == -1:
             break
         time_recieved = time.time()
         recPacket, addr = ping_sock.recvfrom(1024)

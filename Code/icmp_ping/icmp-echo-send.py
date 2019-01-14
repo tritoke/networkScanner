@@ -6,6 +6,9 @@ import time
 import array
 
 def calculateChecksum(pkt): # checksum function from scapy project
+    """
+    This is the checksum function from the scapy module.
+    """
     if len(pkt) % 2 == 1: # if packet had odd length pad with a null byte
         pkt += b"\0"
     s = sum(array.array("H", pkt))
@@ -33,12 +36,12 @@ ID = os.getpid() & 0xFFFF
 dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
 
 data = struct.pack("d", time.time()) + bytes((192 - struct.calcsize("d")) * "A", "ascii")
-
+# the data to send in the packet
 checksum = socket.htons(calculateChecksum(dummy_header+data))
-
+# calculates the checksum for the packet and psuedo header
 header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
-
+# packs the packet header
 packet = header + data
-
+# concatonates the header and the data to form the final packet.
 ping_sock.sendto(packet, ("127.0.0.1", 1))
-
+# sends the packet to localhost

@@ -1,1 +1,2 @@
 finish refactor of ip_utils by sorting through all the code where optionals were used and replace it with exception handling.
+add comments to all code.
