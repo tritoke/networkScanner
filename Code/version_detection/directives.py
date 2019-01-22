@@ -18,4 +18,3 @@ class Probe:
         self.rarity = -1
         self.fallback = []
 
-
