@@ -11,6 +11,7 @@ from contextlib import closing
 from itertools import islice, cycle
 from typing import List, Tuple, Union
 
+
 def eprint(*args, **kwargs):
     from sys import stderr
     print(*args, file=stderr, **kwargs)
@@ -25,7 +26,7 @@ def long_form_to_dot_form(long: int) -> str:
         raise ValueError(f"Invalid long form IP address: [{long:08x}]")
     else:
         ip_str = f"{long:032b}"
-        return ".".join(str(int(ip_str[i:i+8], 2)) for i in range(0, 32, 8))
+        return ".".join(str(int(ip_str[i:i + 8], 2)) for i in range(0, 32, 8))
 
 
 def dot_form_to_long_form(ip: str) -> int:
@@ -69,7 +70,7 @@ def is_valid_port_number(port_num: int) -> bool:
         return False
 
 
-def ip_range(ip: str, network_bits:int) -> List[str]:
+def ip_range(ip: str, network_bits: int) -> List[str]:
     """
     Takes a Classless Inter Domain Routing(CIDR) address subnet specification and returns
     the list of addresses specified by the IP/network bits format.
@@ -85,11 +86,12 @@ def ip_range(ip: str, network_bits:int) -> List[str]:
 
     ip_long = dot_form_to_long_form(ip)
 
-    mask = int(f"{'1'*network_bits:0<32s}",2)
+    mask = int(f"{'1'*network_bits:0<32s}", 2)
     lower_bound = ip_long & mask
     upper_bound = ip_long | (mask ^ 0xFFFFFFFF)
 
-    return list(map(long_form_to_dot_form, range(lower_bound, upper_bound+1)))
+    return list(map(long_form_to_dot_form, range(
+        lower_bound, upper_bound + 1)))
 
 
 def get_local_ip() -> str:
@@ -128,7 +130,7 @@ def ip_checksum(pkt: bytes) -> int:
     s = (s >> 16) + (s & 0xffff)
     s += s >> 16
     s = ~s
-    return (((s>>8)&0xff)|s<<8) & 0xffff
+    return (((s >> 8) & 0xff) | s << 8) & 0xffff
 
 
 def make_icmp_packet(ID: int) -> bytes:
@@ -142,14 +144,20 @@ def make_icmp_packet(ID: int) -> bytes:
     time_bytes = struct.pack("d", time.time())
     bytes_to_repeat_in_data = map(ord, " y33t ")
     data_bytes = (192 - struct.calcsize("d"))
-    data = time_bytes + bytes(islice(cycle(bytes_to_repeat_in_data), data_bytes))
-    checksum = socket.htons(ip_checksum(dummy_header+data))
+    data = time_bytes + \
+        bytes(islice(cycle(bytes_to_repeat_in_data), data_bytes))
+    checksum = socket.htons(ip_checksum(dummy_header + data))
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
     packet = header + data
     return packet
 
 
-def make_tcp_packet(src: int, dst: int, from_address: str, to_address: str, flags: int) -> bytes:
+def make_tcp_packet(
+        src: int,
+        dst: int,
+        from_address: str,
+        to_address: str,
+        flags: int) -> bytes:
     """
     Takes in the source and destination port/ip address and returns a tcp packet.
     flags:
@@ -159,7 +167,8 @@ def make_tcp_packet(src: int, dst: int, from_address: str, to_address: str, flag
     """
 
     if flags not in [2, 18, 4]:
-        raise ValueError(f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]")
+        raise ValueError(
+            f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]")
     if not is_valid_ip(from_address):
         raise ValueError(f"Invalid source IP address: [{from_address}]")
     if not is_valid_ip(to_address):
@@ -173,22 +182,42 @@ def make_tcp_packet(src: int, dst: int, from_address: str, to_address: str, flag
     dst_addr = dot_form_to_long_form(to_address)
 
     seq = ack = urg = 0
-    data_offset = 6<<4
+    data_offset = 6 << 4
     window_size = 1024
     max_segment_size = (2, 4, 1460)
 
-    dummy_header = struct.pack("!HHIIBBHHHBBH", src, dst, seq, ack, data_offset,
-                               flags, window_size, 0, urg, *max_segment_size)
-    psuedo_header = struct.pack("!IIBBH", src_addr, dst_addr, 0, 6, len(dummy_header))
+    dummy_header = struct.pack(
+        "!HHIIBBHHHBBH",
+        src,
+        dst,
+        seq,
+        ack,
+        data_offset,
+        flags,
+        window_size,
+        0,
+        urg,
+        *max_segment_size)
+    psuedo_header = struct.pack(
+        "!IIBBH",
+        src_addr,
+        dst_addr,
+        0,
+        6,
+        len(dummy_header))
     checksum = ip_checksum(psuedo_header + dummy_header)
 
     packet = struct.pack("!HHIIBBHHHBBH", src, dst, seq, ack, data_offset,
-                               flags, window_size, checksum, urg, *max_segment_size)
+                         flags, window_size, checksum, urg, *max_segment_size)
 
     return packet
 
 
-def make_udp_packet(src: int, dst: int, from_address: str, to_address: str) -> bytes:
+def make_udp_packet(
+        src: int,
+        dst: int,
+        from_address: str,
+        to_address: str) -> bytes:
     """
     Takes in: source IP address and port, destination IP address and port.
     Returns: a UDP packet with those properties.
@@ -229,4 +258,3 @@ def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
         return float(-1)
     else:
         return taken
-

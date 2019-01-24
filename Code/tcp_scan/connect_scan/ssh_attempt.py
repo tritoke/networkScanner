@@ -12,4 +12,3 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
         print(f"connection on port {PORT} succedded")
     except ConnectionRefusedError:
         print(f"print port {PORT} is closed")
-

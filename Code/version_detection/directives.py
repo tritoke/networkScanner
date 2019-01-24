@@ -1,13 +1,13 @@
 import re
 from collections import defaultdict
-
+from typing import Iterable, List
 
 class Probe:
     """
     This class represents the Probe directive of the nmap-service-probes file.
     """
 
-    exclude = None
+    exclude: Iterable[int] = []
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         if protocol in {"TCP", "UDP"}:
@@ -18,7 +18,7 @@ class Probe:
         self.name = probename
         self.string = probestring.split("|")[1]
 
-        self.matches = []
+        self.matches: List[Match] = []
         self.softmatches = []
         self.ports = []
         self.totalwaitms = 6000

@@ -40,49 +40,53 @@ import select
 #
 
 # From /usr/include/linux/icmp.h; your milage may vary.
-ICMP_ECHO_REQUEST = 8 # Seems to be the same on Solaris.
+ICMP_ECHO_REQUEST = 8  # Seems to be the same on Solaris.
 
 # I'm not too confident that this is right but testing seems
 # to suggest that it gives the same answers as in_cksum in ping.c
+
+
 def checksum(str):
     csum = 0
     countTo = (len(str) / 2) * 2
     count = 0
     while count < countTo:
-        thisVal = ord(str[count+1]) * 256 + ord(str[count])
+        thisVal = ord(str[count + 1]) * 256 + ord(str[count])
         csum = csum + thisVal
-        csum = csum & 0xffffffff # Necessary?
+        csum = csum & 0xffffffff  # Necessary?
         count = count + 2
 
     if countTo < len(str):
         csum = csum + ord(str[len(str) - 1])
-        csum = csum & 0xffffffff # Necessary?
+        csum = csum & 0xffffffff  # Necessary?
 
-    csum = (csum >16) + (csum & 0xffff)
-    csum = csum + (csum >16)
+    csum = (csum > 16) + (csum & 0xffff)
+    csum = csum + (csum > 16)
     answer = ~csum
     answer = answer & 0xffff
 
     # Swap bytes. Bugger me if I know why.
-    answer = answer >8 | (answer << 8 & 0xff00)
+    answer = answer > 8 | (answer << 8 & 0xff00)
 
     return answer
+
 
 def receiveOnePing(mySocket, ID, timeout):
     timeLeft = timeout
 
-    while 1:
+    while True:
         startedSelect = time.time()
         whatReady = select.select([mySocket], [], [], timeLeft)
         howLongInSelect = (time.time() - startedSelect)
 
-        if whatReady[0] == []: # Timeout
+        if whatReady[0] == []:  # Timeout
             return -1
 
         timeReceived = time.time()
         recPacket, addr = mySocket.recvfrom(1024)
         icmpHeader = recPacket[20:28]
-        typ, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+        typ, code, checksum, packetID, sequence = struct.unpack(
+            "bbHHh", icmpHeader)
 
         if packetID == ID:
             bytesInDouble = struct.calcsize("d")
@@ -94,13 +98,14 @@ def receiveOnePing(mySocket, ID, timeout):
         if timeLeft <= 0:
             return -1
 
+
 def sendOnePing(mySocket, destAddr, ID):
     # Header is type (8), code (8), checksum (16), id (16), sequence (16)
     myChecksum = 0
 
     # Make a dummy heder with a 0 checksum.
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum,
-    ID, 1)
+                         ID, 1)
     bytesInDouble = struct.calcsize("d")
     data = (192 - bytesInDouble) * "Q"
     data = struct.pack("d", time.time()) + data
@@ -118,13 +123,14 @@ def sendOnePing(mySocket, destAddr, ID):
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
 
     packet = header + data
-    mySocket.sendto(packet, (destAddr, 1)) # Don't know about the 1
+    mySocket.sendto(packet, (destAddr, 1))  # Don't know about the 1
+
 
 def doOne(destAddr, timeout=10):
     # Returns either the delay (in seconds) or none on timeout.
     icmp = socket.getprotobyname("icmp")
     print(socket.IPPROTO_ICMP == icmp)
-    mySocket = socket.socket(socket.AF_INET,socket.SOCK_RAW,icmp)
+    mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
     myID = os.getpid() & 0xFFFF
     sendOnePing(mySocket, destAddr, myID)
     delay = receiveOnePing(mySocket, myID, timeout)
@@ -132,11 +138,13 @@ def doOne(destAddr, timeout=10):
 
     return delay
 
+
 def ping(host, timeout=1):
     dest = socket.gethostbyname(host)
     print(dest)
     delay = doOne(dest, timeout)
     return delay
+
 
 if __name__ == '__main__':
     print(ping("127.0.0.1", 3))

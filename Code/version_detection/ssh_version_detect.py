@@ -1,8 +1,8 @@
 #!/usr/bin/python3.7
-import directives
 from os import getcwd
 from sys import path
 path.append(getcwd())
+import directives
 
 # filter out any unicode characters
 data = filter(lambda x: x < 128, open("nmap-service-probes", "rb").read())
@@ -11,7 +11,7 @@ lines = list(filter(lambda x: not x.startswith("#") and x !=
                     "", "".join(map(chr, data)).split("\n")))
 
 # parse the exclude directive
-directives.Probe.Exclude = range(int(lines[0][10:14]), int(lines[0][15:]) + 1)
+directives.Probe.exclude = range(int(lines[0][10:14]), int(lines[0][15:]) + 1)
 
 probes = []
 
@@ -28,7 +28,7 @@ for line in lines:
     # new match directive
     elif line.startswith("match"):
         # split the line into words
-        service = line.split(" ")
+        words = line.split(" ")
         # the protocol will always be the first word
         protocol = words[1]
         # make the rest of the line
@@ -39,7 +39,7 @@ for line in lines:
         # the delimiter for the match is the next charcter after the m
         delimiter = remainder[match_start + 1]
         # finds the start and end of the match
-        match_start, match_end = [i for i, j in i, j in enumerate(remainder) if j == delimiter][:2]
+        match_start, match_end = [i for i, j in enumerate(remainder) if j == delimiter][:2]
         # splits to the string to match on out of the remainder
         match_string = remainder[match_start:match_end + 1]
         next_space = remainder[match_end + 2:].find(" ")
@@ -51,5 +51,4 @@ for line in lines:
         current_probe.matches.append(match)
 
 
-
-# TODO: more directives 
+# TODO: more directives

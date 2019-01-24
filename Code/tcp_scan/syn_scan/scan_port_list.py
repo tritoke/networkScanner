@@ -1,18 +1,15 @@
 #!/usr/bin/python3.7
+from multiprocessing import Pool
+from typing import List, Tuple, Union, Optional, Iterable
+import time
+import struct
+from contextlib import closing
+import socket
 from os import getcwd
 import sys
-sys.path.append(getcwd()+"/../../modules/")
-
-import ip_utils
+sys.path.append(getcwd() + "/../../modules/")
 from ip_utils import eprint
-
-import socket
-from contextlib import closing
-import struct
-import time
-from typing import List, Tuple, Union, Optional, Iterable
-from multiprocessing import Pool
-
+import ip_utils
 
 def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
     """
@@ -35,11 +32,12 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
             packet = s.recv(1024)
             # recieve the packet data
             src_prt, dst_prt, seq, ack, data_offset, flags, window_size,\
-            checksum, urg =struct.unpack("!HHIIBBHHH", packet[20:40])
-            # unpack the data from the TCP header section 
-            if flags == int("00010010", 2): # syn ack
+                checksum, urg = struct.unpack("!HHIIBBHHH", packet[20:40])
+            # unpack the data from the TCP header section
+            if flags == int("00010010", 2):  # syn ack
                 open_ports.append(src_prt)
-                # check that the header contained the TCP ACK flag and if it did append it
+                # check that the header contained the TCP ACK flag and if it
+                # did append it
             else:
                 continue
         print("finished listening")
@@ -70,7 +68,6 @@ def syn_scan(dest_ip: str, portlist: Iterable[int]) -> List[int]:
     return open_ports
 
 
-dest_ip  = "127.0.0.1"
+dest_ip = "127.0.0.1"
 
 syn_scan(dest_ip, range(2**16))
-
