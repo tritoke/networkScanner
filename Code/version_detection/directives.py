@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import Iterable, List
+from typing import Iterable, List, DefaultDict
 
 class Probe:
     """
@@ -19,17 +19,17 @@ class Probe:
         self.string = probestring.split("|")[1]
 
         self.matches: List[Match] = []
-        self.softmatches = []
-        self.ports = []
+        self.softmatches: List[Softmatch] = []
+        self.ports: List[int] = []
         self.totalwaitms = 6000
         self.tcpwrappems = 3000
         self.rarity = -1
-        self.fallback = []
+        self.fallback: List[Fallback] = []
 
 
 class Match:
 
-    version_info = defaultdict(str)
+    version_info: DefaultDict[str,str] = defaultdict(str)
     letter_to_name = {"p": "vendorproductname",
                       "v": "version",
                       "i": "info",
@@ -42,11 +42,24 @@ class Match:
         self.pattern = pattern
         self.pattern_options = pattern_options
 
-    def add_version_info(version_string):
+    def add_version_info(self, version_string: str):
         # this regular expression matches one character from pvihod
         # followed by a / then it non-greedily matches at least one of
         # any character followed by another slash
         regex = re.compile(r"[pvihod]/.+?/")
+        # find all the additional fields and iterate over them
         fields = regex.findall(version_string)
         for field in fields:
-            version_info[letter_to_name[field[0]]] = field[2:-1]
+            # add the field information to the match object
+            self.version_info[Match.letter_to_name[field[0]]] = field[2:-1]
+
+class Softmatch:
+    def __init__(self, service, pattern, pattern_options):
+        self.service = service
+        self.pattern = pattern
+        self.pattern_options = pattern_options
+        
+
+class Fallback:
+    def __init__(self):
+        pass
