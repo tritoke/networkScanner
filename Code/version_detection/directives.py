@@ -58,7 +58,7 @@ class Softmatch:
         self.service = service
         self.pattern = pattern
         self.pattern_options = pattern_options
-        
+
 
 class Fallback:
     def __init__(self):

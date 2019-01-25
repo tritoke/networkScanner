@@ -3,7 +3,7 @@ from os import getcwd
 from sys import path
 path.append(getcwd())
 import directives
-
+from typing import List
 
 # split match and softmatch information out of a line.
 def split_match(line: str) -> List[str]:
@@ -24,8 +24,12 @@ def split_match(line: str) -> List[str]:
     match_string = remainder[match_start:match_end + 1]
     next_space = remainder[match_end + 2:].find(" ")
     pattern_options = remainder[match_end + 2:match_end + 2 + next_space]
-    version_info = remainder[match_end + 2 + next_space:]
-    return [service, match_string, pattern_options, version_info]
+    if next_space != -1:
+        return [service, match_string, pattern_options]
+    else:
+        version_info = remainder[match_end + 2 + next_space:]
+        return [service, match_string, pattern_options, version_info]
+
 
 # filter out any unicode characters
 data = filter(lambda x: x < 128, open("./small-example-probes", "rb").read())
@@ -33,12 +37,24 @@ data = filter(lambda x: x < 128, open("./small-example-probes", "rb").read())
 lines = list(filter(lambda x: not x.startswith("#") and x !=
                     "", "".join(map(chr, data)).split("\n")))
 
+
+def parse_ports(portstring: str) -> List[int]:
+    ports: List[int] = []
+    for i in portstring.split(","):
+        if "-" in i:
+            start, finish = map(int, i.split("-"))
+            ports += list(range(start, finish+1))
+        else:
+            ports.append(int(i))
+    return ports
+
+
 # TODO parse_ports function which returns a list of all the ports specified by a direcive.
 
 # parse the exclude directive
-directives.Probe.exclude = range(int(lines[0][10:14]), int(lines[0][15:]) + 1)
+directives.Probe.exclude = parse_ports(lines[0].split(" ")[1])
 
-probes: List[directive.Probe] = []
+probes: List[directives.Probe] = []
 
 for line in lines:
     # new probe directive
@@ -61,12 +77,14 @@ for line in lines:
         # add the match directive to the current probe
         current_probe.matches.append(match)
 
+
+    # new softmatch directive
     elif line.startswith("softmatch"):
         # this function returns a list of all the options for the match directive
         args = split_match(line)
         # creates new match object
         softmatch = directives.Softmatch(*args[:-1])
-        probes.softmatches.append(softmatch)
+        current_probe.softmatches.append(softmatch)
 
 
 # TODO: more directives
