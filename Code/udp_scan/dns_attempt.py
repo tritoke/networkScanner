@@ -2,9 +2,6 @@
 from contextlib import closing
 import socket
 import ip_utils
-from os import getcwd
-import sys
-sys.path.append(getcwd() + "/../modules/")
 
 
 dest_ip = "192.168.1.1"
@@ -14,7 +11,12 @@ local_port = ip_utils.get_free_port()
 
 local_ip = dest_ip = "127.0.0.1"
 
-with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)) as s:
+with closing(
+        socket.socket(
+            socket.AF_INET,
+            socket.SOCK_RAW,
+            socket.IPPROTO_UDP
+        )) as s:
     try:
         pkt = ip_utils.make_udp_packet(
             local_port, dest_port, local_ip, dest_ip)
@@ -23,6 +25,12 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP))
             s.sendto(packet, (dest_ip, dest_port))
         else:
             print(
-                f"Error making packet.\nlocal port: [{local_port}]\ndestination port: [{dest_port}]\nlocal ip: [{local_ip}]\ndestination ip: [{dest_ip}]")
+                "Error making packet.",
+                f"local port: [{local_port}]",
+                f"destination port: [{dest_port}]",
+                f"local ip: [{local_ip}]",
+                f"destination ip: [{dest_ip}]",
+                sep="\n"
+            )
     except socket.error:
-        print("")
+        raise

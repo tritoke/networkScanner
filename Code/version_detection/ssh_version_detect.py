@@ -1,9 +1,6 @@
-#!/usr/bin/python3.7
-from os import getcwd
-from sys import path
-path.append(getcwd())
-import directives
+from .version_detection import directives
 from typing import List
+
 
 # split match and softmatch information out of a line.
 def split_match(line: str) -> List[str]:
@@ -19,7 +16,9 @@ def split_match(line: str) -> List[str]:
     # the delimiter for the match is the next charcter after the m
     delimiter = remainder[m_pos + 1]
     # finds the start and end of the match
-    match_start, match_end = [i for i, j in enumerate(remainder) if j == delimiter][:2]
+    match_start, match_end = [i for i, j in
+                              enumerate(remainder)
+                              if j == delimiter][:2]
     # splits to the string to match on out of the remainder
     match_string = remainder[match_start:match_end + 1]
     next_space = remainder[match_end + 2:].find(" ")
@@ -48,8 +47,6 @@ def parse_ports(portstring: str) -> List[int]:
             ports.append(int(i))
     return ports
 
-
-# TODO parse_ports function which returns a list of all the ports specified by a direcive.
 
 # parse the exclude directive
 directives.Probe.exclude = parse_ports(lines[0].split(" ")[1])

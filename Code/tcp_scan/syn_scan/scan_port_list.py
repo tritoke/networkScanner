@@ -1,23 +1,25 @@
 #!/usr/bin/python3.7
 from multiprocessing import Pool
-from typing import List, Tuple, Union, Optional, Iterable
-import time
+from typing import List, Tuple, Iterable
 import struct
 from contextlib import closing
 import socket
-from os import getcwd
-import sys
-sys.path.append(getcwd() + "/../../modules/")
-from ip_utils import eprint
 import ip_utils
+
 
 def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
     """
-    This function is run asynchronously and listens for TCP ACK responses to the sent TCP SYN msg.
+    This function is run asynchronously and listens for
+    TCP ACK responses to the sent TCP SYN msg.
     """
     print(f"address: [{address}]\ntimeout: [{timeout}]")
     open_ports: List[int] = []
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)) as s:
+    with closing(
+            socket.socket(
+                socket.AF_INET,
+                socket.SOCK_RAW,
+                socket.IPPROTO_TCP
+            )) as s:
         s.bind(address)
         # bind the raw socket to the listening address
         time_remaining = timeout
@@ -55,7 +57,13 @@ def syn_scan(dest_ip: str, portlist: Iterable[int]) -> List[int]:
     for port in portlist:
         packet = ip_utils.make_tcp_packet(src_port, port, local_ip, dest_ip, 2)
         # create a TCP packet with the syn flag
-        with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)) as s:
+        with closing(
+                socket.socket(
+                    socket.AF_INET,
+                    socket.SOCK_RAW,
+                    socket.IPPROTO_TCP
+                )
+        ) as s:
             s.sendto(packet, (dest_ip, port))
             # send the packet to its destination
 

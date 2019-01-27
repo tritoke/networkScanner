@@ -2,7 +2,6 @@
 
 import socket
 import struct
-import time
 from typing import List
 
 # socket object using an IPV4 address, using only raw socket access, set
@@ -16,8 +15,9 @@ while len(packets) < 1:
     ip_header = recPacket[:20]
     icmp_header = recPacket[20:28]
 
-    ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl, ip_p, ip_sum, ip_src, ip_dst = struct.unpack(
-        '!BBHHHBBHII', ip_header)
+    ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl,\
+        ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII',
+                                                     ip_header)
     # the above line deconstructs the ip_header variable into its component
     # parts
     hl_v = f"{ip_hp_ip_v:08b}"
@@ -38,13 +38,33 @@ while len(packets) < 1:
     src_addr = socket.inet_ntoa(struct.pack('!I', ip_src))
     dst_addr = socket.inet_ntoa(struct.pack('!I', ip_dst))
     # parses the source and destination of each IP address
-    print("IP header:")
-    print(f"Version: [{ip_v}]\nInternet Header Length: [{ip_hl}]\nDifferentiated Services Point Code: [{ip_dscp}]\nExplicit Congestion Notification: [{ip_ecn}]\nTotal Length: [{ip_len}]\nIdentification: [{ip_id:04x}]\nFlags: [{ip_flgs:03b}]\nFragment Offset: [{ip_off}]\nTime To Live: [{ip_ttl}]\nProtocol: [{ip_p}]\nHeader Checksum: [{ip_sum:04x}]\nSource Address: [{src_addr}]\nDestination Address: [{dst_addr}]\n")
 
-    msg_type, code, checksum, p_id, sequence = struct.unpack(
-        '!bbHHh', icmp_header)
-    print("ICMP header:")
-    print(f"Type: [{msg_type}]\nCode: [{code}]\nChecksum: [{checksum:04x}]\nProcess ID: [{p_id:04x}]\nSequence: [{sequence}]")
+    print("IP header:",
+          f"Version: [{ip_v}]",
+          f"Internet Header Length: [{ip_hl}]",
+          f"Differentiated Services Point Code: [{ip_dscp}]",
+          f"Explicit Congestion Notification: [{ip_ecn}]",
+          f"Total Length: [{ip_len}]",
+          f"Identification: [{ip_id:04x}]",
+          f"Flags: [{ip_flgs:03b}]",
+          f"Fragment Offset: [{ip_off}]",
+          f"Time To Live: [{ip_ttl}]",
+          f"Protocol: [{ip_p}]",
+          f"Header Checksum: [{ip_sum:04x}]",
+          f"Source Address: [{src_addr}]",
+          f"Destination Address: [{dst_addr}]",
+          sep="\n")
+
+    msg_type, code, checksum, p_id, sequence = struct.unpack('!bbHHh',
+                                                             icmp_header)
+    print("ICMP header:", f"Type: [{msg_type}]",
+          f"Code: [{code}]",
+          f"Checksum: [{checksum:04x}]",
+          f"Process ID: [{p_id:04x}]",
+          f"Sequence: [{sequence}]",
+          sep="\n")
+
     packets.append(recPacket)
+
 open("current_packet", "w").write("\n".join(
     " ".join(map(lambda x: "{x:02x}", map(int, i))) for i in packets))

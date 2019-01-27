@@ -1,7 +1,6 @@
 #!/usr/bin/python3.7
 
 import array
-import re
 import socket
 import struct
 import select
@@ -9,7 +8,7 @@ import time
 
 from contextlib import closing
 from itertools import islice, cycle
-from typing import List, Tuple, Union
+from typing import List, Union
 
 
 def eprint(*args, **kwargs):
@@ -19,7 +18,8 @@ def eprint(*args, **kwargs):
 
 def long_form_to_dot_form(long: int) -> str:
     """
-    Take in an IP address in packed 32 bit int form and return that address in dot notation.
+    Take in an IP address in packed 32 bit int form
+    and return that address in dot notation.
     i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
     """
     if not 0 <= long <= 0xFFFFFFFF:
@@ -72,10 +72,11 @@ def is_valid_port_number(port_num: int) -> bool:
 
 def ip_range(ip: str, network_bits: int) -> List[str]:
     """
-    Takes a Classless Inter Domain Routing(CIDR) address subnet specification and returns
-    the list of addresses specified by the IP/network bits format.
-    If the number of network bits is not between 0 and 32 it raises a ValueError.
-    If the IP address is invalid according to is_valid_ip it raises a ValueError.
+    Takes a Classless Inter Domain Routing(CIDR) address subnet
+    specification and returns the list of addresses specified
+    by the IP/network bits format.
+    If the number of network bits is not between 0 and 32 it raises an error.
+    If the IP address is invalid according to is_valid_ip it raises an error.
     """
 
     if not 0 <= network_bits <= 32:
@@ -96,12 +97,17 @@ def ip_range(ip: str, network_bits: int) -> List[str]:
 
 def get_local_ip() -> str:
     """
-    Connects to the router with UDP and gets the local IP specified by the router.
-    takes no argument
+    Connects to the router with UDP and gets the local IP specified by
+    the router or google. takes no argument
     """
 
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s:
-        s.connect(("192.168.1.1", 0))
+    with closing(
+            socket.socket(
+                socket.AF_INET,
+                socket.SOCK_DGRAM
+            )
+    ) as s:
+        s.connect(("google.com", 80))
         ip = s.getsockname()[0]
     return ip
 
@@ -112,7 +118,12 @@ def get_free_port() -> int:
     the socket is then closed and the port number assigned is returned.
     """
 
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+    with closing(
+            socket.socket(
+                socket.AF_INET,
+                socket.SOCK_STREAM
+            )
+    ) as s:
         s.bind(('', 0))
         port_num = s.getsockname()[1]
     return port_num
@@ -120,8 +131,10 @@ def get_free_port() -> int:
 
 def ip_checksum(pkt: bytes) -> int:
     """
-    ip_checksum takes a packet and calculates the IP checksum for the given packet.
-    This checksum is the returned.
+    ip_checksum takes a packet and calculates the IP checksum
+    for the given packet.
+    This checksum function is taken from the scapy python library
+    which is released under the open source GPLV2
     """
 
     if len(pkt) % 2 == 1:
@@ -159,14 +172,15 @@ def make_tcp_packet(
         to_address: str,
         flags: int) -> bytes:
     """
-    Takes in the source and destination port/ip address and returns a tcp packet.
+    Takes in the source and destination port/ip address
+    returns a tcp packet.
     flags:
     2 => SYN
     18 => SYN:ACK
     4 => RST
     """
 
-    if flags not in [2, 18, 4]:
+    if flags not in {2, 18, 4}:
         raise ValueError(
             f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]")
     if not is_valid_ip(from_address):
@@ -258,3 +272,7 @@ def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
         return float(-1)
     else:
         return taken
+
+
+if __name__ == "__main__":
+    print(get_local_ip())

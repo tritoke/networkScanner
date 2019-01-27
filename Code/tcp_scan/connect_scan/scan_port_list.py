@@ -10,7 +10,12 @@ def connect_scan(address: str, ports: Iterable[int]) -> List[int]:
     for port in ports:
         # loop through each port in the list of ports to scan
         try:
-            with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+            with closing(
+                    socket.socket(
+                        socket.AF_INET,
+                        socket.SOCK_STREAM
+                    )
+            ) as s:
                 # open an IPV4 TCP socket
                 s.connect((address, port))
                 # attempt to connect the newly created socket to the target
