@@ -1,5 +1,6 @@
-from .version_detection import directives
+import directives
 from typing import List
+import re
 
 
 # split match and softmatch information out of a line.
@@ -39,12 +40,26 @@ lines = list(filter(lambda x: not x.startswith("#") and x !=
 
 def parse_ports(portstring: str) -> List[int]:
     ports: List[int] = []
-    for i in portstring.split(","):
-        if "-" in i:
-            start, finish = map(int, i.split("-"))
-            ports += list(range(start, finish+1))
-        else:
-            ports.append(int(i))
+    # matches both the num-num port range format
+    # and the plain num port specification
+    pair_regex = re.compile(r"(\d+):(\d+)|(\d+)")
+    pairs = portstring.split(",")
+    # searches contains the result of trying the pair_regex
+    # search against all of the command seperated
+    # port strings
+    searches = map(pair_regex.search, pairs)
+    for i in searches:
+        if i:
+            if len(i.groups()) > 1:
+                # if the regex finds number-number
+                # then split the numbers into groups
+                # and map them to ints
+                start, finish = map(int, i.groups())
+                ports += list(range(start, finish+1))
+            else:
+                # if the regex only finds one number
+                # treat that number as a port
+                ports.append(int(i.groups()[0]))
     return ports
 
 
@@ -65,7 +80,8 @@ for line in lines:
 
     # new match directive
     elif line.startswith("match"):
-        # this function returns a list of all the options for the match directive
+        # this function returns a list of
+        # all the options for the match directive
         args = split_match(line)
         # creates new match object
         match = directives.Match(*args[:-1])
@@ -74,10 +90,10 @@ for line in lines:
         # add the match directive to the current probe
         current_probe.matches.append(match)
 
-
     # new softmatch directive
     elif line.startswith("softmatch"):
-        # this function returns a list of all the options for the match directive
+        # this function returns a list of
+        # all the options for the match directive
         args = split_match(line)
         # creates new match object
         softmatch = directives.Softmatch(*args[:-1])
@@ -85,3 +101,5 @@ for line in lines:
 
 
 # TODO: more directives
+if __name__ == "__main__":
+    print(parse_ports("1,23-25,79,66-73"))
