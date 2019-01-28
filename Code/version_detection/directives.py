@@ -1,13 +1,18 @@
 import re
 from collections import defaultdict
-from typing import Iterable, List, DefaultDict
+from typing import List, DefaultDict
+
 
 class Probe:
     """
     This class represents the Probe directive of the nmap-service-probes file.
+    It holds information such as the protocol to use, the string to send,
+    the ports to scan, the time to wait for a null TCP to return a banner,
+    the rarity of the probe (how often it will return a response) and the
+    probes to try if this one fails.
     """
 
-    exclude: Iterable[int] = []
+    exclude: List[int] = []
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         if protocol in {"TCP", "UDP"}:
@@ -22,14 +27,18 @@ class Probe:
         self.softmatches: List[Softmatch] = []
         self.ports: List[int] = []
         self.totalwaitms = 6000
-        self.tcpwrappems = 3000
+        self.tcpwrappedms = 3000
         self.rarity = -1
-        self.fallback: List[Fallback] = []
+        self.fallback: List[str] = []
 
 
 class Match:
-
-    version_info: DefaultDict[str,str] = defaultdict(str)
+    """
+    This class holds information for the match directive.
+    This includes optional version info as well as a service,
+    a pattern to match the response against and some pattern options.
+    """
+    version_info: DefaultDict[str, str] = defaultdict(str)
     letter_to_name = {"p": "vendorproductname",
                       "v": "version",
                       "i": "info",
@@ -53,13 +62,14 @@ class Match:
             # add the field information to the match object
             self.version_info[Match.letter_to_name[field[0]]] = field[2:-1]
 
+
 class Softmatch:
+    """
+    This class holds infomation for the sortmatch directive.
+    Such as the service, the regex pattern and the pattern options.
+    """
     def __init__(self, service, pattern, pattern_options):
         self.service = service
         self.pattern = pattern
         self.pattern_options = pattern_options
 
-
-class Fallback:
-    def __init__(self):
-        pass
