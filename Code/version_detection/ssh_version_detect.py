@@ -1,38 +1,17 @@
 import directives
-from typing import List, Dict
+from typing import Dict, Set
 import re
+delims: Set[str] = set()
 
 
-# split match and softmatch information out of a line.
-def split_match(line: str) -> List[str]:
-    # split the line into words
-    words = line.split(" ")
-    # the protocol will always be the first word
-    service = words[1]
-    # make the rest of the line
-    remainder = " ".join(words)
-    # this will find the index of the first "m" character
-    # in the remainder of the string
-    m_pos = remainder.find("m")
-    # the delimiter for the match is the next charcter after the m
-    delimiter = remainder[m_pos + 1]
-    # finds the start and end of the match
-    match_start, match_end = [i for i, j in
-                              enumerate(remainder)
-                              if j == delimiter][:2]
-    # splits to the string to match on out of the remainder
-    match_string = remainder[match_start:match_end + 1]
-    next_space = remainder[match_end + 2:].find(" ")
-    pattern_options = remainder[match_end + 2:match_end + 2 + next_space]
-    if next_space != -1:
-        return [service, match_string, pattern_options]
-    else:
-        version_info = remainder[match_end + 2 + next_space:]
-        return [service, match_string, pattern_options, version_info]
-
-
-def parse_ports(portstring: str) -> List[int]:
-    ports: List[int] = []
+def parse_ports(portstring: str) -> Set[int]:
+    """
+    This function takes in a port directive
+    and returns a set of the ports specified.
+    A set is used because it is O(1) for contains
+    operations as opposed for O(N) for lists.
+    """
+    ports: Set[int] = set()
     # matches both the num-num port range format
     # and the plain num port specification
     # num-num form must come first otherwise it breaks.
@@ -41,24 +20,19 @@ def parse_ports(portstring: str) -> List[int]:
     # searches contains the result of trying the pair_regex
     # search against all of the command seperated
     # port strings
-    searches = list(map(pair_regex.search, pairs))
-    print(list(searches))
+    searches = map(pair_regex.search, pairs)
     for i in searches:
         if i:
             if i.groups().count(None) < 2:
                 # if the regex finds number-number
                 # then split the numbers into groups
                 # and map them to ints
-                print(i)
-                print(i.groups())
                 start, finish = map(int, i.groups()[:2])
-                ports += list(range(start, finish+1))
+                ports.update(range(start, finish+1))
             else:
                 # if the regex only finds one number
                 # treat that number as a port
-                print(i)
-                print(i.groups())
-                ports.append(int(i.groups()[-1]))
+                ports.add(int(i.groups()[-1]))
     return ports
 
 
@@ -87,15 +61,19 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
         # new match directive
         elif line.startswith("match"):
-            # this function returns a list of
-            # all the options for the match directive
-            args = split_match(line)
-            # creates new match object
-            match = directives.Match(*args[:-1])
-            # add the version info to the match object
-            match.add_version_info(args[-1])
-            # add the match directive to the current probe
-            current_probe.matches.append(match)
+            match_regex = re.compile(" ".join(["match",
+                                               "(\S+)",
+                                               "(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
+                                               "([pvihod]/.+/)"]))
+            search = match_regex.search(line)
+            if search:
+                args = search.groups()
+                # creates new match object
+                match = directives.Match(*args[:-1])
+                # add the version info to the match object
+                match.add_version_info(args[-1])
+                # add the match directive to the current probe
+                current_probe.matches.add(match)
 
         # new softmatch directive
         elif line.startswith("softmatch"):
@@ -104,7 +82,7 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
             args = split_match(line)
             # creates new match object
             softmatch = directives.Softmatch(*args[:-1])
-            current_probe.softmatches.append(softmatch)
+            current_probe.softmatches.add(softmatch)
 
         # new ports directive
         elif line.startswith("ports"):
@@ -120,12 +98,11 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
         # new fallback directive
         elif line.startswith("fallback"):
-            current_probe.fallback = line[10:].split(",")
+            current_probe.fallback = set(line[10:].split(","))
     return probes
 
 
 if __name__ == "__main__":
-    print(parse_ports("1,2,3,4,5-10,6-89"))
+    probes = parse_probes("./small-example-probes")
+    print(probes)
     exit()
-
-

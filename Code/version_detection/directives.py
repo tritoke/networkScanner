@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import List, DefaultDict
+from typing import DefaultDict, Set, Optional
 
 
 class Probe:
@@ -12,7 +12,7 @@ class Probe:
     probes to try if this one fails.
     """
 
-    exclude: List[int] = []
+    exclude: Set[int] = set()
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         if protocol in {"TCP", "UDP"}:
@@ -23,13 +23,13 @@ class Probe:
         self.name = probename
         self.string = probestring.split("|")[1]
 
-        self.matches: List[Match] = []
-        self.softmatches: List[Softmatch] = []
-        self.ports: List[int] = []
+        self.matches: Set[Match] = set()
+        self.softmatches: Set[Softmatch] = set()
+        self.ports: Set[int] = set()
         self.totalwaitms = 6000
         self.tcpwrappedms = 3000
         self.rarity = -1
-        self.fallback: List[str] = []
+        self.fallback: Set[str] = set()
 
 
 class Match:
@@ -46,10 +46,13 @@ class Match:
                       "o": "operatingsystem",
                       "d": "devicetype"}
 
-    def __init__(self, service, pattern, pattern_options):
-        self.service = service
-        self.pattern = pattern
-        self.pattern_options = pattern_options
+    def __init__(self,
+                 service: str,
+                 pattern: str,
+                 pattern_options: str):
+        self.service: str = service
+        self.pattern: str = pattern
+        self.pattern_options: str = pattern_options
 
     def add_version_info(self, version_string: str):
         # this regular expression matches one character from pvihod
@@ -68,8 +71,10 @@ class Softmatch:
     This class holds infomation for the sortmatch directive.
     Such as the service, the regex pattern and the pattern options.
     """
-    def __init__(self, service, pattern, pattern_options):
-        self.service = service
-        self.pattern = pattern
-        self.pattern_options = pattern_options
-
+    def __init__(self,
+                 service: str,
+                 pattern: str,
+                 pattern_options: str):
+        self.service: str = service
+        self.pattern: str = pattern
+        self.pattern_options: str = pattern_options
