@@ -1,6 +1,8 @@
 import directives
-from typing import Dict, Set
+from typing import Dict, Set, Pattern
+from functools import reduce
 import re
+import operator
 delims: Set[str] = set()
 
 
@@ -11,28 +13,31 @@ def parse_ports(portstring: str) -> Set[int]:
     A set is used because it is O(1) for contains
     operations as opposed for O(N) for lists.
     """
-    ports: Set[int] = set()
     # matches both the num-num port range format
     # and the plain num port specification
     # num-num form must come first otherwise it breaks.
-    pair_regex = re.compile(r"(\d+)-(\d+)|(\d+)")
-    pairs = portstring.split(",")
+    pair_regex = re.compile(r"(\d+)-(\d+)")
+    single_regex = re.compile(r"(\d+)")
     # searches contains the result of trying the pair_regex
     # search against all of the command seperated
     # port strings
-    searches = map(pair_regex.search, pairs)
-    for i in searches:
-        if i:
-            if i.groups().count(None) < 2:
-                # if the regex finds number-number
-                # then split the numbers into groups
-                # and map them to ints
-                start, finish = map(int, i.groups()[:2])
-                ports.update(range(start, finish+1))
-            else:
-                # if the regex only finds one number
-                # treat that number as a port
-                ports.add(int(i.groups()[-1]))
+    pairs = pair_regex.findall(portstring)
+    # for each pair of numbers in the pairs list
+    # seperate each number and cast them to int
+    # then generate the range of numbers from x[0]
+    # to x[1]+1 then cast this range to a list
+    # and "reduce" the list of lists by joining them
+    # with operator.add and then let ports be the set
+    # of all the ports defined by the ranges.
+    ports: Set[int] = set(reduce(operator.add,
+                                 map(lambda x: list(range(int(x[0]),
+                                                          int(x[1])+1)),
+                                     pairs)))
+    singles = single_regex.findall(portstring)
+    # for each of the ports that are specified on their own
+    # cast them to int and update the set of all ports with
+    # that list.
+    ports.update(map(int, singles))
     return ports
 
 
@@ -42,14 +47,35 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     # filter out all lines that start with hashtags
     lines = list(filter(lambda x: not x.startswith("#") and x != "",
                         "".join(map(chr, data)).split("\n")))
-    # parse the exclude directive
-    directives.Probe.exclude = parse_ports(lines[0].split(" ")[1])
 
     # list holding each of the probe directives.
     probes: Dict[str, directives.Probe] = {}
 
+    # this defines the string on which to form
+    # the regex which I use to match the match directives.
+    match_string = " ".join(["match",
+                             r"(\S+)",
+                             r"(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
+                             r"([pvihod]/.+/)"])
+    match_regex = re.compile(match_string)
+    regexes: Dict[str, Pattern]
+    regexes = {"rarity":       re.compile(r"rarity (\d+)"),
+               "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
+               "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
+               "fallback":     re.compile(r"fallback (\S+)"),
+               "ports":        re.compile(r"ports (\S+)"),
+               "exclude":      re.compile(r"Exclude T:(\S+)")}
+
     # parse the probes out from the file
     for line in lines:
+        # add any ports to be excluded to the base probe class
+        if line.startswith("Exclude"):
+            search = regexes["exclude"].search(line)
+            if search:
+                # parse the ports from the grouped output of
+                # a search with the regex defined above.
+                directives.Probe.exclude.update(parse_ports(search.group()))
+
         # new probe directive
         if line.startswith("Probe"):
             # parse line into probe protocol, name and probestring
@@ -60,45 +86,51 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
             current_probe = probes[name]
 
         # new match directive
-        elif line.startswith("match"):
-            match_regex = re.compile(" ".join(["match",
-                                               "(\S+)",
-                                               "(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
-                                               "([pvihod]/.+/)"]))
+        elif line.startswith("match") or line.startswith("softmatch"):
+            # service name, match string, version strings
             search = match_regex.search(line)
             if search:
-                args = search.groups()
-                # creates new match object
-                match = directives.Match(*args[:-1])
-                # add the version info to the match object
-                match.add_version_info(args[-1])
-                # add the match directive to the current probe
-                current_probe.matches.add(match)
+                # return any information matched by the regex
+                service, regex, regex_options, version_info = search.groups()
+                if line[0] == "m":  # new match object
+                    match = directives.Match(service,
+                                             regex[2:-1],
+                                             regex_options)
+                    # add the version info to the match object
+                    match.add_version_info(version_info)
+                    # add the match directive to the current probe
+                    current_probe.matches.add(match)
 
-        # new softmatch directive
-        elif line.startswith("softmatch"):
-            # this function returns a list of
-            # all the options for the match directive
-            args = split_match(line)
-            # creates new match object
-            softmatch = directives.Softmatch(*args[:-1])
-            current_probe.softmatches.add(softmatch)
+                else:
+                    softmatch = directives.Softmatch(service,
+                                                     regex[2:-1],
+                                                     regex_options)
+                    current_probe.softmatches.add(softmatch)
 
         # new ports directive
         elif line.startswith("ports"):
-            current_probe.ports = parse_ports(line[6:])
+            search = regexes["ports"].search(line)
+            if search:
+                current_probe.ports = parse_ports(search.group(1))
 
         # new totalwaitms directive
         elif line.startswith("totalwaitms"):
-            current_probe.totalwaitms = int(line[12:])
+            search = regexes["totalwaitms"].search(line)
+            if search:
+                current_probe.totalwaitms = int(search.group(1))
 
         # new rarity directive
         elif line.startswith("rarity"):
-            current_probe.rarity = int(line[8:])
+            search = regexes["rarity"].search(line)
+            if search:
+                current_probe.rarity = int(search.group(1))
 
         # new fallback directive
         elif line.startswith("fallback"):
-            current_probe.fallback = set(line[10:].split(","))
+            search = regexes["fallback"].search(line)
+            if search:
+                current_probe.fallback = set(search.group(1).split(","))
+
     return probes
 
 

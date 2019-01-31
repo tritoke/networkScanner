@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import DefaultDict, Set, Optional
+from typing import DefaultDict, Set
 
 
 class Probe:
@@ -21,7 +21,7 @@ class Probe:
             raise ValueError(
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
         self.name = probename
-        self.string = probestring.split("|")[1]
+        self.string = probestring[2:-1]
 
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
