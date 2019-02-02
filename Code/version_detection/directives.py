@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import re
 from collections import defaultdict
 from typing import DefaultDict, Set
@@ -15,13 +16,19 @@ class Probe:
     exclude: Set[int] = set()
 
     def __init__(self, protocol: str, probename: str, probestring: str):
+        """
+        This is the initial function that is called by the
+        constructor of the Probe class, it is used to define
+        the variables that are specific to each instance of
+        the class.
+        """
         if protocol in {"TCP", "UDP"}:
             self.proto = protocol
         else:
             raise ValueError(
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
         self.name = probename
-        self.string = probestring[2:-1]
+        self.string = probestring
 
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
@@ -30,6 +37,21 @@ class Probe:
         self.tcpwrappedms = 3000
         self.rarity = -1
         self.fallback: Set[str] = set()
+
+    def __repr__(self):
+        """
+        This is the function that is called when something
+        tries to print an instance of this class.
+        It is used to reveal information internal
+        to the class.
+        """
+        return ", ".join([f"Probe({self.name}",
+                          f"\"{self.string}\"",
+                          f"{len(self.matches)} matches",
+                          f"{len(self.softmatches)} softmatches",
+                          f"ports: {self.ports}",
+                          f"rarity: {self.rarity}",
+                          f"fallbacks: {self.fallback})"])
 
 
 class Match:
@@ -52,6 +74,7 @@ class Match:
                  pattern_options: str):
         self.service: str = service
         self.pattern: str = pattern
+        # inline regex options are the cool
         self.pattern_options: str = pattern_options
 
     def add_version_info(self, version_string: str):

@@ -1,9 +1,9 @@
+#!/usr/bin/env python
 import directives
 from typing import Dict, Set, Pattern
 from functools import reduce
 import re
 import operator
-delims: Set[str] = set()
 
 
 def parse_ports(portstring: str) -> Set[int]:
@@ -18,6 +18,7 @@ def parse_ports(portstring: str) -> Set[int]:
     # num-num form must come first otherwise it breaks.
     pair_regex = re.compile(r"(\d+)-(\d+)")
     single_regex = re.compile(r"(\d+)")
+    ports: Set[int] = set()
     # searches contains the result of trying the pair_regex
     # search against all of the command seperated
     # port strings
@@ -28,11 +29,12 @@ def parse_ports(portstring: str) -> Set[int]:
     # to x[1]+1 then cast this range to a list
     # and "reduce" the list of lists by joining them
     # with operator.add and then let ports be the set
-    # of all the ports defined by the ranges.
-    ports: Set[int] = set(reduce(operator.add,
-                                 map(lambda x: list(range(int(x[0]),
-                                                          int(x[1])+1)),
-                                     pairs)))
+    # of all the ports in that list.
+    if pairs:
+        ports = set(reduce(operator.add,
+                           map(lambda x: list(range(int(x[0]),
+                                                    int(x[1])+1)),
+                               pairs)))
     singles = single_regex.findall(portstring)
     # for each of the ports that are specified on their own
     # cast them to int and update the set of all ports with
@@ -42,6 +44,10 @@ def parse_ports(portstring: str) -> Set[int]:
 
 
 def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
+    """
+    Extracts all of the probe directives from the
+    file pointed to by probe_file.
+    """
     # filter out any unicode characters
     data = filter(lambda x: x < 128, open(probe_file, "rb").read())
     # filter out all lines that start with hashtags
@@ -59,7 +65,8 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                              r"([pvihod]/.+/)"])
     match_regex = re.compile(match_string)
     regexes: Dict[str, Pattern]
-    regexes = {"rarity":       re.compile(r"rarity (\d+)"),
+    regexes = {"probe":      re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
+               "rarity":       re.compile(r"rarity (\d+)"),
                "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
                "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
                "fallback":     re.compile(r"fallback (\S+)"),
@@ -79,11 +86,17 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
         # new probe directive
         if line.startswith("Probe"):
             # parse line into probe protocol, name and probestring
-            proto, name, string = line.split()[1:]
-            # add the new probe to the end of the list of probes
-            probes[name] = directives.Probe(proto, name, string)
-            # assign current_probe to the most recently added probe
-            current_probe = probes[name]
+            search = regexes["probe"].search(line)
+            if search:
+                try:
+                    proto, name, string = search.groups()
+                except ValueError:
+                    print(line)
+                    raise
+                # add the new probe to the end of the list of probes
+                probes[name] = directives.Probe(proto, name, string)
+                # assign current_probe to the most recently added probe
+                current_probe = probes[name]
 
         # new match directive
         elif line.startswith("match") or line.startswith("softmatch"):
@@ -135,6 +148,6 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
 
 if __name__ == "__main__":
-    probes = parse_probes("./small-example-probes")
-    print(probes)
-    exit()
+    probes = parse_probes("./nmap-service-probes")
+    for probe in probes.values():
+        print(f"{probe.name}: {probe.string}")
