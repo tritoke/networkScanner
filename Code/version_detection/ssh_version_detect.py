@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import directives
-from typing import Dict, Set, Pattern
+from typing import Dict, Set, Pattern, Tuple, DefaultDict
 from functools import reduce
+from itertools import repeat
+from collections import defaultdict
 import re
 import operator
 
 
-def parse_ports(portstring: str) -> Set[int]:
+def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     """
     This function takes in a port directive
     and returns a set of the ports specified.
@@ -16,30 +18,45 @@ def parse_ports(portstring: str) -> Set[int]:
     # matches both the num-num port range format
     # and the plain num port specification
     # num-num form must come first otherwise it breaks.
+    proto_regex = re.compile(r"([ TU]):?([0-9,-]+)")
+    # THE SPACE IS IMPORTANT!!!
+    # it allows ports specified before TCP/UDP ports
+    # to be specified globally
+
     pair_regex = re.compile(r"(\d+)-(\d+)")
     single_regex = re.compile(r"(\d+)")
-    ports: Set[int] = set()
+    ports: DefaultDict[str, Set[int]] = defaultdict(set)
     # searches contains the result of trying the pair_regex
     # search against all of the command seperated
     # port strings
-    pairs = pair_regex.findall(portstring)
-    # for each pair of numbers in the pairs list
-    # seperate each number and cast them to int
-    # then generate the range of numbers from x[0]
-    # to x[1]+1 then cast this range to a list
-    # and "reduce" the list of lists by joining them
-    # with operator.add and then let ports be the set
-    # of all the ports in that list.
-    if pairs:
-        ports = set(reduce(operator.add,
-                           map(lambda x: list(range(int(x[0]),
-                                                    int(x[1])+1)),
-                               pairs)))
-    singles = single_regex.findall(portstring)
-    # for each of the ports that are specified on their own
-    # cast them to int and update the set of all ports with
-    # that list.
-    ports.update(map(int, singles))
+
+    for protocol, portstring in proto_regex.findall(portstring):
+        pairs = pair_regex.findall(portstring)
+        # for each pair of numbers in the pairs list
+        # seperate each number and cast them to int
+        # then generate the range of numbers from x[0]
+        # to x[1]+1 then cast this range to a list
+        # and "reduce" the list of lists by joining them
+        # with operator.add and then let ports be the set
+        # of all the ports in that list.
+        proto_map = {" ": "ANY",
+                     "U": "UDP",
+                     "T": "TCP"}
+        if pairs: #TODO FIX THIS SHIT
+            ports[proto_map[protocol]] = set(zip(reduce(operator.add,
+                                   map  (lambda x: list(range(int(x[0]),
+                                                            int(x[1])+1)),
+                                       pairs)),
+                            proto_map[protocol]))
+            print(ports)
+
+        singles = single_regex.findall(portstring)
+        # for each of the ports that are specified on their own
+        # cast them to int and update the set of all ports with
+        # that list.
+        ports.update(zip(map(int, singles),
+                         proto_map[protocol]))
+
     return ports
 
 
@@ -64,6 +81,7 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                              r"(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
                              r"([pvihod]/.+/)"])
     match_regex = re.compile(match_string)
+
     regexes: Dict[str, Pattern]
     regexes = {"probe":      re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
                "rarity":       re.compile(r"rarity (\d+)"),
@@ -147,7 +165,15 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     return probes
 
 
+def version_detect_scan(target: directives.Target,
+                        probes: Dict[str, directives.Probe]):
+    pass
+
+
 if __name__ == "__main__":
-    probes = parse_probes("./nmap-service-probes")
-    for probe in probes.values():
-        print(f"{probe.name}: {probe.string}")
+    probes = parse_probes("./small-example-probes")
+    target = directives.Target("127.0.0.1",
+                               {(22, "TCP"), (0, "ANY")},
+                               {(53, "UDP")})
+
+    version_detect_scan(target, probes)

@@ -1,7 +1,23 @@
 #!/usr/bin/env python
 import re
 from collections import defaultdict
-from typing import DefaultDict, Set
+from typing import DefaultDict, Set, Tuple
+from dataclasses import dataclass
+
+
+@dataclass
+class Target:
+    """
+    This class holds data about targets to
+    scan. the dataclass decorator is simply
+    a way of python automatically writing some
+    of the basic methods a class for storing data
+    has, such as __repr__ for printing information
+    in the object etc.
+    """
+    address: str
+    open_ports: Set[Tuple[int, str]]
+    open_filtered_ports: Set[Tuple[int, str]]
 
 
 class Probe:
@@ -23,7 +39,7 @@ class Probe:
         the class.
         """
         if protocol in {"TCP", "UDP"}:
-            self.proto = protocol
+            self.protocol = protocol
         else:
             raise ValueError(
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
@@ -32,7 +48,7 @@ class Probe:
 
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
-        self.ports: Set[int] = set()
+        self.ports: Set[Tuple[int, str]] = set()
         self.totalwaitms = 6000
         self.tcpwrappedms = 3000
         self.rarity = -1
@@ -45,13 +61,22 @@ class Probe:
         It is used to reveal information internal
         to the class.
         """
-        return ", ".join([f"Probe({self.name}",
+        return ", ".join([f"Probe({self.protocol}",
+                          f"{self.name}",
                           f"\"{self.string}\"",
                           f"{len(self.matches)} matches",
                           f"{len(self.softmatches)} softmatches",
                           f"ports: {self.ports}",
                           f"rarity: {self.rarity}",
                           f"fallbacks: {self.fallback})"])
+
+    def scan(self, target: Target):
+        """
+        scan takes in an object of class Targer to
+        probe and attempts to detect the version of
+        any services running on the machine.
+        """
+        pass
 
 
 class Match:
