@@ -16,8 +16,8 @@ class Target:
     in the object etc.
     """
     address: str
-    open_ports: Set[Tuple[int, str]]
-    open_filtered_ports: Set[Tuple[int, str]]
+    open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
+    open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
 
 
 class Probe:
@@ -29,7 +29,16 @@ class Probe:
     probes to try if this one fails.
     """
 
-    exclude: Set[int] = set()
+    # a default dict is one which takes in a
+    # "default factory" which is called when
+    # a new key is introduced to the dict
+    # in this case the default factory is
+    # the set function meaning that when I
+    # do exclude[protocol].update(ports)
+    # but exclude[protocol] has not yet been defined
+    # it will be defined as an empty set
+    # allowing me to update it with ports.
+    exclude: DefaultDict[str, Set[int]] = defaultdict(set)
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         """
@@ -48,7 +57,7 @@ class Probe:
 
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
-        self.ports: Set[Tuple[int, str]] = set()
+        self.ports: DefaultDict[str, Set[int]] = defaultdict(set)
         self.totalwaitms = 6000
         self.tcpwrappedms = 3000
         self.rarity = -1

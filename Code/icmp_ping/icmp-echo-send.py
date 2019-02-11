@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/env python
 import socket
 import struct
 import os

@@ -2,7 +2,6 @@
 import directives
 from typing import Dict, Set, Pattern, Tuple, DefaultDict
 from functools import reduce
-from itertools import repeat
 from collections import defaultdict
 import re
 import operator
@@ -37,25 +36,28 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
         # then generate the range of numbers from x[0]
         # to x[1]+1 then cast this range to a list
         # and "reduce" the list of lists by joining them
-        # with operator.add and then let ports be the set
-        # of all the ports in that list.
+        # with operator.ior (inclusive or) and then let
+        # ports be the set of all the ports in that list.
         proto_map = {" ": "ANY",
                      "U": "UDP",
                      "T": "TCP"}
-        if pairs: #TODO FIX THIS SHIT
-            ports[proto_map[protocol]] = set(zip(reduce(operator.add,
-                                   map  (lambda x: list(range(int(x[0]),
-                                                            int(x[1])+1)),
-                                       pairs)),
-                            proto_map[protocol]))
+        if pairs:
+            # a function to go from a port pair to
+            # the set of specified ports
+            def pair_to_ports(pair: Tuple[int, int]) -> Set[int]:
+                start, end = pair
+                return set(range(start, end+1))
+            # ports contains the set of all ANY/TCP/UDP specified ports
+            ports[proto_map[protocol]] = set(reduce(operator.ior,
+                                                    map(pair_to_ports,
+                                                        pairs)))
             print(ports)
 
         singles = single_regex.findall(portstring)
         # for each of the ports that are specified on their own
         # cast them to int and update the set of all ports with
         # that list.
-        ports.update(zip(map(int, singles),
-                         proto_map[protocol]))
+        ports[proto_map[protocol]].update(map(int, singles))
 
     return ports
 
@@ -99,7 +101,8 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
             if search:
                 # parse the ports from the grouped output of
                 # a search with the regex defined above.
-                directives.Probe.exclude.update(parse_ports(search.group()))
+                for protocol, ports in parse_ports(search.group(1)).items():
+                    directives.Probe.exclude[protocol].update(ports)
 
         # new probe directive
         if line.startswith("Probe"):
@@ -142,7 +145,8 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
         elif line.startswith("ports"):
             search = regexes["ports"].search(line)
             if search:
-                current_probe.ports = parse_ports(search.group(1))
+                for protocol, ports in parse_ports(search.group(1)).items():
+                    current_probe.ports[protocol].update(ports)
 
         # new totalwaitms directive
         elif line.startswith("totalwaitms"):
@@ -172,8 +176,7 @@ def version_detect_scan(target: directives.Target,
 
 if __name__ == "__main__":
     probes = parse_probes("./small-example-probes")
-    target = directives.Target("127.0.0.1",
-                               {(22, "TCP"), (0, "ANY")},
-                               {(53, "UDP")})
-
+    target = directives.Target("127.0.0.1")
+    target.open_ports["TCP"].update([1,2,3])
+    print(target)
     version_detect_scan(target, probes)

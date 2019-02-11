@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/env python
 import struct
 import socket
 import time
@@ -37,6 +37,7 @@ def recieved_ping_from_addresses(
         time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
         # time_waiting stores the time the socket took to become readable
     # or returns minus one if it ran out of time
+
         if time_waiting == -1:
             break
         time_recieved = time.time()

@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/ python
 from contextlib import closing
 import socket
 import ip_utils
