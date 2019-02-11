@@ -171,12 +171,21 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
 def version_detect_scan(target: directives.Target,
                         probes: Dict[str, directives.Probe]):
-    pass
+    for probe in probes.values():
+        probe.scan(target)
 
 
 if __name__ == "__main__":
     probes = parse_probes("./small-example-probes")
-    target = directives.Target("127.0.0.1")
-    target.open_ports["TCP"].update([1,2,3])
+    open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
+    open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
+    open_ports["TCP"].update([1, 2, 3, 4])
+    open_filtered_ports["UDP"].update([6, 7, 8])
+
+    target = directives.Target("127.0.0.1",
+                               open_ports,
+                               open_filtered_ports)
+
+    target.open_ports["TCP"].update([1, 2, 3])
     print(target)
     version_detect_scan(target, probes)

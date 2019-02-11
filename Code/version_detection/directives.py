@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re
 from collections import defaultdict
-from typing import DefaultDict, Set, Tuple
+from typing import DefaultDict, Set
 from dataclasses import dataclass
 
 
@@ -16,8 +16,8 @@ class Target:
     in the object etc.
     """
     address: str
-    open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
-    open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
+    open_ports: DefaultDict[str, Set[int]]
+    open_filtered_ports: DefaultDict[str, Set[int]]
 
 
 class Probe:
@@ -81,11 +81,25 @@ class Probe:
 
     def scan(self, target: Target):
         """
-        scan takes in an object of class Targer to
+        scan takes in an object of class Target to
         probe and attempts to detect the version of
         any services running on the machine.
         """
-        pass
+        # this constructs the set of all ports,
+        # that are either open or open_filtered,
+        # and are in the set of ports to scan for
+        # this particular probe, this means that,
+        # we are only connecting to ports that we
+        # know are not closed.
+        ports_to_scan: Set[int] = (
+            (Target.open_filtered_ports[self.protocol]
+             | Target.open_ports[self.protocol])
+            & self.ports[self.protocol]
+        )
+
+        for port in ports_to_scan:
+            # TODO main scanning logic
+            pass
 
 
 class Match:
