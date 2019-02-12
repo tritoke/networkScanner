@@ -2,7 +2,7 @@
 from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass
-from typing import DefaultDict, Set
+from typing import DefaultDict, Set, Dict
 import ip_utils
 import re
 import socket
@@ -42,8 +42,10 @@ class Probe:
     # it will be defined as an empty set
     # allowing me to update it with ports.
     exclude: DefaultDict[str, Set[int]] = defaultdict(set)
-    proto_to_socket_type: Dict[str, int] = {"TCP": socket.SOCK_STREAM,
-                                            "UDP": socket.SOCK_DGRAM}
+    proto_to_socket_type: Dict[str, int] = {
+        "TCP": socket.SOCK_STREAM,
+        "UDP": socket.SOCK_DGRAM
+    }
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         """
@@ -59,7 +61,6 @@ class Probe:
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
         self.name = probename
         self.string = probestring
-
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
         self.ports: DefaultDict[str, Set[int]] = defaultdict(set)
@@ -75,14 +76,16 @@ class Probe:
         It is used to reveal information internal
         to the class.
         """
-        return ", ".join([f"Probe({self.protocol}",
-                          f"{self.name}",
-                          f"\"{self.string}\"",
-                          f"{len(self.matches)} matches",
-                          f"{len(self.softmatches)} softmatches",
-                          f"ports: {self.ports}",
-                          f"rarity: {self.rarity}",
-                          f"fallbacks: {self.fallback})"])
+        return ", ".join([
+            f"Probe({self.protocol}",
+            f"{self.name}",
+            f"\"{self.string}\"",
+            f"{len(self.matches)} matches",
+            f"{len(self.softmatches)} softmatches",
+            f"ports: {self.ports}",
+            f"rarity: {self.rarity}",
+            f"fallbacks: {self.fallback})"
+        ])
 
     def scan(self, target: Target):
         """
@@ -95,20 +98,22 @@ class Probe:
         # and are in the set of ports to scan for
         # this particular probe, this means that,
         # we are only connecting to ports that we
-        # know are not closed.
+        # know are not closed and are not to be excluded.
         ports_to_scan: Set[int] = (
-            (target.open_filtered_ports[self.protocol]
-             | target.open_ports[self.protocol]
-             | self.ports["ANY"])
+            (
+                target.open_filtered_ports[self.protocol]
+                | target.open_ports[self.protocol]
+                | self.ports["ANY"]
+            )
             & self.ports[self.protocol]
-        )
+        ) - Probe.exclude[self.protocol] - Probe.exclude["ANY"]
 
         for port in ports_to_scan:
             with closing(
                     socket.socket(socket.AF_INET,
                                   self.proto_to_socket_type[self.protocol]
                                   )
-                        ):
+            ):
                 pass
                 # TODO main scanning logic
 
@@ -120,17 +125,21 @@ class Match:
     a pattern to match the response against and some pattern options.
     """
     version_info: DefaultDict[str, str] = defaultdict(str)
-    letter_to_name = {"p": "vendorproductname",
-                      "v": "version",
-                      "i": "info",
-                      "h": "hostname",
-                      "o": "operatingsystem",
-                      "d": "devicetype"}
+    letter_to_name = {
+        "p": "vendorproductname",
+        "v": "version",
+        "i": "info",
+        "h": "hostname",
+        "o": "operatingsystem",
+        "d": "devicetype"
+    }
 
-    def __init__(self,
-                 service: str,
-                 pattern: str,
-                 pattern_options: str):
+    def __init__(
+            self,
+            service: str,
+            pattern: str,
+            pattern_options: str
+    ):
         self.service: str = service
         self.pattern: str = pattern
         # inline regex options are the cool
@@ -153,10 +162,12 @@ class Softmatch:
     This class holds infomation for the sortmatch directive.
     Such as the service, the regex pattern and the pattern options.
     """
-    def __init__(self,
-                 service: str,
-                 pattern: str,
-                 pattern_options: str):
+    def __init__(
+            self,
+            service: str,
+            pattern: str,
+            pattern_options: str
+    ):
         self.service: str = service
         self.pattern: str = pattern
         self.pattern_options: str = pattern_options

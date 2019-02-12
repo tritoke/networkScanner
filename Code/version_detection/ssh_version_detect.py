@@ -48,9 +48,10 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
                 start, end = pair
                 return set(range(start, end+1))
             # ports contains the set of all ANY/TCP/UDP specified ports
-            ports[proto_map[protocol]] = set(reduce(operator.ior,
-                                                    map(pair_to_ports,
-                                                        pairs)))
+            ports[proto_map[protocol]] = set(reduce(
+                operator.ior,
+                map(pair_to_ports, pairs)
+            ))
             print(ports)
 
         singles = single_regex.findall(portstring)
@@ -62,36 +63,43 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     return ports
 
 
+# TODO Continue readability refactor above and in all other files.
 def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     """
     Extracts all of the probe directives from the
     file pointed to by probe_file.
     """
-    # filter out any unicode characters
-    data = filter(lambda x: x < 128, open(probe_file, "rb").read())
-    # filter out all lines that start with hashtags
-    lines = list(filter(lambda x: not x.startswith("#") and x != "",
-                        "".join(map(chr, data)).split("\n")))
+    # lines contains each line of the file which doesn't
+    # start with a # and is not empty.
+    lines = [
+        line
+        for line in open(probe_file).read().splitlines()
+        if line and not line.startswith("#")
+    ]
 
     # list holding each of the probe directives.
     probes: Dict[str, directives.Probe] = {}
 
     # this defines the string on which to form
     # the regex which I use to match the match directives.
-    match_string = " ".join(["match",
-                             r"(\S+)",
-                             r"(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
-                             r"([pvihod]/.+/)"])
+    match_string = " ".join([
+        "match",
+        r"(\S+)",
+        r"(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
+        r"([pvihod]/.+/)"
+    ])
     match_regex = re.compile(match_string)
 
     regexes: Dict[str, Pattern]
-    regexes = {"probe":      re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
-               "rarity":       re.compile(r"rarity (\d+)"),
-               "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
-               "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
-               "fallback":     re.compile(r"fallback (\S+)"),
-               "ports":        re.compile(r"ports (\S+)"),
-               "exclude":      re.compile(r"Exclude T:(\S+)")}
+    regexes = {
+        "probe":      re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
+        "rarity":       re.compile(r"rarity (\d+)"),
+        "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
+        "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
+        "fallback":     re.compile(r"fallback (\S+)"),
+        "ports":        re.compile(r"ports (\S+)"),
+        "exclude":      re.compile(r"Exclude T:(\S+)")
+    }
 
     # parse the probes out from the file
     for line in lines:
@@ -127,18 +135,21 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                 # return any information matched by the regex
                 service, regex, regex_options, version_info = search.groups()
                 if line[0] == "m":  # new match object
-                    match = directives.Match(service,
-                                             regex[2:-1],
-                                             regex_options)
+                    match = directives.Match(
+                        service,
+                        regex[2:-1],
+                        regex_options)
                     # add the version info to the match object
                     match.add_version_info(version_info)
                     # add the match directive to the current probe
                     current_probe.matches.add(match)
 
                 else:
-                    softmatch = directives.Softmatch(service,
-                                                     regex[2:-1],
-                                                     regex_options)
+                    softmatch = directives.Softmatch(
+                        service,
+                        regex[2:-1],
+                        regex_options
+                    )
                     current_probe.softmatches.add(softmatch)
 
         # new ports directive
@@ -169,8 +180,10 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     return probes
 
 
-def version_detect_scan(target: directives.Target,
-                        probes: Dict[str, directives.Probe]):
+def version_detect_scan(
+        target: directives.Target,
+        probes: Dict[str, directives.Probe]
+):
     for probe in probes.values():
         probe.scan(target)
 
@@ -182,9 +195,11 @@ if __name__ == "__main__":
     open_ports["TCP"].update([1, 2, 3, 4])
     open_filtered_ports["UDP"].update([6, 7, 8])
 
-    target = directives.Target("127.0.0.1",
-                               open_ports,
-                               open_filtered_ports)
+    target = directives.Target(
+        "127.0.0.1",
+        open_ports,
+        open_filtered_ports
+    )
 
     target.open_ports["TCP"].update([1, 2, 3])
     print(target)
