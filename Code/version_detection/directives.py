@@ -1,8 +1,11 @@
 #!/usr/bin/env python
-import re
 from collections import defaultdict
-from typing import DefaultDict, Set
+from contextlib import closing
 from dataclasses import dataclass
+from typing import DefaultDict, Set
+import ip_utils
+import re
+import socket
 
 
 @dataclass
@@ -39,6 +42,8 @@ class Probe:
     # it will be defined as an empty set
     # allowing me to update it with ports.
     exclude: DefaultDict[str, Set[int]] = defaultdict(set)
+    proto_to_socket_type: Dict[str, int] = {"TCP": socket.SOCK_STREAM,
+                                            "UDP": socket.SOCK_DGRAM}
 
     def __init__(self, protocol: str, probename: str, probestring: str):
         """
@@ -92,14 +97,20 @@ class Probe:
         # we are only connecting to ports that we
         # know are not closed.
         ports_to_scan: Set[int] = (
-            (Target.open_filtered_ports[self.protocol]
-             | Target.open_ports[self.protocol])
+            (target.open_filtered_ports[self.protocol]
+             | target.open_ports[self.protocol]
+             | self.ports["ANY"])
             & self.ports[self.protocol]
         )
 
         for port in ports_to_scan:
-            # TODO main scanning logic
-            pass
+            with closing(
+                    socket.socket(socket.AF_INET,
+                                  self.proto_to_socket_type[self.protocol]
+                                  )
+                        ):
+                pass
+                # TODO main scanning logic
 
 
 class Match:
