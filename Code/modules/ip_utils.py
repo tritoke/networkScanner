@@ -7,9 +7,10 @@ import select
 import time
 
 from contextlib import closing
+from functools import singledispatch
 from itertools import islice, cycle
 from sys import stderr
-from typing import List, Union
+from typing import List
 
 
 def eprint(*args, **kwargs):
@@ -45,8 +46,9 @@ def long_to_dot(long: int) -> str:
 def dot_to_long(ip: str) -> int:
     """
     Take an ip address in dot notation and return the packed 32 bit int version
-    i.e. dot_form_to_long_form("127.0.0.1") = 0x7F000001
+    i.e. dot_to_long("127.0.0.1") = 0x7F000001
     """
+
     # dot form ips: a.b.c.d must have each
     # part (a,b,c,d) between 0 and 255,
     # otherwise they are invalid
@@ -71,26 +73,44 @@ def dot_to_long(ip: str) -> int:
         )
 
 
-def is_valid_ip(ip: Union[int, str]) -> bool:
+@singledispatch
+def is_valid_ip(ip) -> bool:
     """
     checks whether a given IP address is valid.
     """
 
-    if isinstance(ip, int):
-        try:
-            dot_form = long_to_dot(ip)
-        except ValueError:
-            return False
-    else:
-        dot_form = str(ip)
 
+@is_valid_ip.register
+def _(ip: int):
+    # this is the int overload variant of
+    # the is_valid_ip function.
     try:
-        socket.inet_aton(dot_form)
+        # try to turn the long form ip address
+        # to a dot form one, if it fails,
+        # then return False, else return True
+        long_to_dot(ip)
         return True
-    except socket.error:
+    except ValueError:
         return False
 
 
+# the type ignore comment is required to stop
+# mypy exploding over the fact I have defined `_` twice.
+@is_valid_ip.register  # type: ignore
+def _(ip: str):
+    # this is the string overload variant
+    # of the is_valid_ip function.
+    try:
+        # try to turn the dot form ip address
+        # to a long form one, if it fails,
+        # then return False, else return True
+        dot_to_long(ip)
+        return True
+    except ValueError:
+        return False
+
+
+# TODO add comments below
 def is_valid_port_number(port_num: int) -> bool:
     """
     Checks whether the given port number is valid i.e. between 0 and 65536.
