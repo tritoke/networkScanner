@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-import ip_utils
-import time
-from multiprocessing import Pool
-from functools import reduce
-from typing import List, Tuple, Set
+from collections import defaultdict
 from contextlib import closing
-import struct
+from multiprocessing import Pool
+from typing import List, Set, DefaultDict
+import ip_utils
 import socket
+import struct
+import time
 
 
 def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
@@ -32,12 +32,24 @@ def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
             packet = s.recv(1024)
             ip_header, udp_header = packet[:20], packet[20:28]
             # strip out the IP and UDP header from the packet
-            ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl,\
-                ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII',
-                                                             ip_header)
+            (
+                ip_hp_ip_v,
+                ip_dscp_ip_ecn,
+                ip_len, ip_id,
+                ip_flgs_ip_off,
+                ip_ttl,
+                ip_p,
+                ip_sum,
+                ip_src,
+                ip_dst
+             ) = struct.unpack('!BBHHHBBHII', ip_header)
             # unpack the IP header
-            src_port, dest_port, length, checksum = struct.unpack(
-                "!HHHH", udp_header)
+            (
+                src_port,
+                dest_port,
+                length,
+                checksum
+            ) = struct.unpack("!HHHH", udp_header)
             # unpack the UDP header
             if dest_ip == ip_src and ip_p == 17:
                 ports |= set([src_port])
@@ -60,7 +72,8 @@ def icmp_listener(src_ip: str, timeout=2) -> int:
     ping_sock = socket.socket(
         socket.AF_INET,
         socket.SOCK_RAW,
-        socket.IPPROTO_ICMP)
+        socket.IPPROTO_ICMP
+    )
     # open raw socket to listen for ICMP destination unrechable packets
     time_remaining = timeout
     code = -1
@@ -74,15 +87,33 @@ def icmp_listener(src_ip: str, timeout=2) -> int:
         recPacket, addr = ping_sock.recvfrom(1024)
         # recieve the packet
         ip_header = recPacket[:20]
-        ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl,\
-            ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII',
-                                                         ip_header)
+        (
+            ip_hp_ip_v,
+            ip_dscp_ip_ecn,
+            ip_len,
+            ip_id,
+            ip_flgs_ip_off,
+            ip_ttl,
+            ip_p,
+            ip_sum,
+            ip_src,
+            ip_dst
+        ) = struct.unpack('!BBHHHBBHII', ip_header)
         icmp_header = recPacket[20:28]
-        msg_type, icmp_code, checksum, p_id, sequence = struct.unpack(
-            'bbHHh', icmp_header)
+        (
+            msg_type,
+            icmp_code,
+            checksum,
+            p_id,
+            sequence
+        ) = struct.unpack('bbHHh', icmp_header)
         # unpack the UDP and IP headers
-        if ip_src == src_ip and msg_type == 3 and icmp_code in [
-                0, 1, 2, 3, 9, 10, 13]:
+        valid_codes = [0, 1, 2, 3, 9, 10, 13]
+        if (
+                ip_src == src_ip
+                and msg_type == 3
+                and icmp_code in valid_codes
+        ):
             code = icmp_code
             break
         elif time_remaining <= 0:
@@ -93,11 +124,10 @@ def icmp_listener(src_ip: str, timeout=2) -> int:
     return code
 
 
-def udp_scan(dest_ip: str,
-             portlist: List[int]) -> Tuple[Set[int],
-                                           Set[int],
-                                           Set[int],
-                                           Set[int]]:
+def udp_scan(
+        dest_ip: str,
+        portlist: List[int]
+) -> DefaultDict[str, Set[int]]:
     """
     Takes in a destination IP address in either dot or long form and
     a list of ports to scan. Sends UDP packets to each port specified
@@ -109,8 +139,7 @@ def udp_scan(dest_ip: str,
     local_ip = ip_utils.get_local_ip()
     local_port = ip_utils.get_free_port()
     # get local ip address and port number
-    filtered_ports: Set[int] = set()
-    closed_ports: Set[int] = set()
+    ports: DefaultDict[str, Set[int]] = defaultdict(set)
 
     p = Pool(1)
     udp_listen = p.apply_async(udp_listener, (dest_ip, 4))
@@ -144,9 +173,9 @@ def udp_scan(dest_ip: str,
     p.close()
     p.join()
 
-    open_ports: Set[int] = set(udp_listen.get())
+    ports["OPEN"].update(udp_listen.get())
 
-    portlist = list(filter(lambda x: x not in open_ports, portlist))
+    portlist = list(filter(lambda x: x not in ports["OPEN"], portlist))
     # only scan the ports which we know are not open
     with closing(
             socket.socket(
@@ -171,9 +200,9 @@ def udp_scan(dest_ip: str,
                 icmp_code = icmp_listen.get()
                 # recieve ICMP code from the ICMP listener
                 if icmp_code in [0, 1, 2, 9, 10, 13]:
-                    filtered_ports |= set([dest_port])
+                    ports["FILTERED"].add(dest_port)
                 elif icmp_code == 3:
-                    closed_ports |= set([dest_port])
+                    ports["CLOSED"].add(dest_port)
             except socket.error:
                 packet_bytes = " ".join(map("{:02x}".format, packet))
                 ip_utils.eprint(
@@ -185,15 +214,14 @@ def udp_scan(dest_ip: str,
     # this creates a new set which contains all the elements that
     # are in the list of ports to be scanned but have not yet
     # been classified
-    open_filtered_ports = set(portlist) - reduce(lambda a, b: a | b,
-                                                 [
-                                                     open_ports,
-                                                     filtered_ports,
-                                                     closed_ports
-                                                 ]
-                                                 )
+    ports["OPEN|FILTERED"] = (
+        set(portlist)
+        - ports["OPEN"]
+        - ports["FILTERED"]
+        - ports["CLOSED"]
+    )
     # set comprehension to update the list of open filtered ports
-    return (open_ports, open_filtered_ports, filtered_ports, closed_ports)
+    return ports
 
 
 maybe_ports = udp_scan("127.0.0.1", [22, 68, 53, 6969])

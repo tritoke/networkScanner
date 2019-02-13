@@ -38,12 +38,14 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
         # and "reduce" the list of lists by joining them
         # with operator.ior (inclusive or) and then let
         # ports be the set of all the ports in that list.
-        proto_map = {" ": "ANY",
-                     "U": "UDP",
-                     "T": "TCP"}
+        proto_map = {
+            " ": "ANY",
+            "U": "UDP",
+            "T": "TCP"
+        }
         if pairs:
-            # a function to go from a port pair to
-            # the set of specified ports
+            # a function to go from a port pair i.e. (80-85)
+            # to the set of specified ports: {80,81,82,83,84,85}
             def pair_to_ports(pair: Tuple[int, int]) -> Set[int]:
                 start, end = pair
                 return set(range(start, end+1))

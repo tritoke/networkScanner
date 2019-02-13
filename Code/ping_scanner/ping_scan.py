@@ -1,14 +1,14 @@
 #!/usr/bin/env python
+import ip_utils
 import struct
 import socket
 import time
+from contextlib import closing
+from itertools import repeat
+from math import log10, floor
+from multiprocessing import Pool
 from os import getpid
 from typing import List, Tuple
-from math import log10, floor
-from contextlib import closing
-from multiprocessing import Pool
-from itertools import repeat
-import ip_utils
 
 
 def round_significant_figures(x: float, n: int) -> float:

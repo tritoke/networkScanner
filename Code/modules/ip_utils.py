@@ -8,36 +8,67 @@ import time
 
 from contextlib import closing
 from itertools import islice, cycle
+from sys import stderr
 from typing import List, Union
 
 
 def eprint(*args, **kwargs):
-    from sys import stderr
+    """
+    Mirrors print exactly but prints to stderr
+    instead of stdout.
+    """
     print(*args, file=stderr, **kwargs)
 
 
-def long_form_to_dot_form(long: int) -> str:
+def long_to_dot(long: int) -> str:
     """
     Take in an IP address in packed 32 bit int form
     and return that address in dot notation.
     i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
     """
+    # these are long form values for 0.0.0.0
+    # and 255.255.255.255
     if not 0 <= long <= 0xFFFFFFFF:
         raise ValueError(f"Invalid long form IP address: [{long:08x}]")
     else:
-        ip_str = f"{long:032b}"
-        return ".".join(str(int(ip_str[i:i + 8], 2)) for i in range(0, 32, 8))
+        # shift the long form IP along 0, 8, 16, 24 bits
+        # take only the first 8 bits of the newly shifted number
+        # cast them to a string and join them with '.'s
+        return ".".join(
+            str(
+                (long >> (8*(3-i))) & 0xFF
+            )
+            for i in range(4)
+        )
 
 
-def dot_form_to_long_form(ip: str) -> int:
+def dot_to_long(ip: str) -> int:
     """
     Take an ip address in dot notation and return the packed 32 bit int version
     i.e. dot_form_to_long_form("127.0.0.1") = 0x7F000001
     """
-    if not all(map(lambda x: 0 <= int(x) <= 255, ip.split("."))):
+    # dot form ips: a.b.c.d must have each
+    # part (a,b,c,d) between 0 and 255,
+    # otherwise they are invalid
+
+    parts = [int(i) for i in ip.split(".")]
+
+    if not all(
+            0 <= int(i) <= 255
+            for i in parts
+    ):
         raise ValueError(f"Invalid dot form IP address: [{ip}]")
+
     else:
-        return int("".join(map(lambda x: f"{int(x):08b}", ip.split("."))), 2)
+        # for each part of the dotted IP address
+        # bit shift left each part by eight times
+        # three minus it's position. This puts the bits
+        # from each part in the right place in the final sum
+        # a.b.c.d -> a<<3*8 + b<<2*8 + c<<1*8 + d<<0*8
+        return sum(
+            part << ((3-i)*8)
+            for i, part in enumerate(parts)
+        )
 
 
 def is_valid_ip(ip: Union[int, str]) -> bool:
@@ -47,7 +78,7 @@ def is_valid_ip(ip: Union[int, str]) -> bool:
 
     if isinstance(ip, int):
         try:
-            dot_form = long_form_to_dot_form(ip)
+            dot_form = long_to_dot(ip)
         except ValueError:
             return False
     else:
@@ -85,14 +116,16 @@ def ip_range(ip: str, network_bits: int) -> List[str]:
     if not is_valid_ip(ip):
         raise ValueError(f"Invalid IP address: [{ip}]")
 
-    ip_long = dot_form_to_long_form(ip)
+    ip_long = dot_to_long(ip)
 
     mask = int(f"{'1'*network_bits:0<32s}", 2)
     lower_bound = ip_long & mask
     upper_bound = ip_long | (mask ^ 0xFFFFFFFF)
 
-    return list(map(long_form_to_dot_form, range(
-        lower_bound, upper_bound + 1)))
+    return list(map(
+        long_to_dot,
+        range(lower_bound, upper_bound + 1)
+    ))
 
 
 def get_local_ip() -> str:
@@ -108,7 +141,7 @@ def get_local_ip() -> str:
             )
     ) as s:
         s.connect(("google.com", 80))
-        ip = s.getsockname()[0]
+        ip, _ = s.getsockname()
     return ip
 
 
@@ -125,8 +158,8 @@ def get_free_port() -> int:
             )
     ) as s:
         s.bind(('', 0))
-        port_num = s.getsockname()[1]
-    return port_num
+        _, port = s.getsockname()
+    return port
 
 
 def ip_checksum(pkt: bytes) -> int:
@@ -134,7 +167,7 @@ def ip_checksum(pkt: bytes) -> int:
     ip_checksum takes a packet and calculates the IP checksum
     for the given packet.
     This checksum function is taken from the scapy python library
-    which is released under the open source GPLV2
+    which is released under the open source GPLV2.
     """
 
     if len(pkt) % 2 == 1:
@@ -182,18 +215,27 @@ def make_tcp_packet(
 
     if flags not in {2, 18, 4}:
         raise ValueError(
-            f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]")
+            f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]"
+        )
     if not is_valid_ip(from_address):
-        raise ValueError(f"Invalid source IP address: [{from_address}]")
+        raise ValueError(
+            f"Invalid source IP address: [{from_address}]"
+        )
     if not is_valid_ip(to_address):
-        raise ValueError(f"Invalid destination IP address: [{to_address}]")
+        raise ValueError(
+            f"Invalid destination IP address: [{to_address}]"
+        )
     if not is_valid_port_number(src):
-        raise ValueError(f"Invalid source port: [{src}]")
+        raise ValueError(
+            f"Invalid source port: [{src}]"
+        )
     if not is_valid_port_number(dst):
-        raise ValueError(f"Invalid destination port: [{dst}]")
+        raise ValueError(
+            f"Invalid destination port: [{dst}]"
+        )
 
-    src_addr = dot_form_to_long_form(from_address)
-    dst_addr = dot_form_to_long_form(to_address)
+    src_addr = dot_to_long(from_address)
+    dst_addr = dot_to_long(to_address)
 
     seq = ack = urg = 0
     data_offset = 6 << 4
@@ -211,18 +253,31 @@ def make_tcp_packet(
         window_size,
         0,
         urg,
-        *max_segment_size)
+        *max_segment_size
+    )
     psuedo_header = struct.pack(
         "!IIBBH",
         src_addr,
         dst_addr,
         0,
         6,
-        len(dummy_header))
+        len(dummy_header)
+    )
     checksum = ip_checksum(psuedo_header + dummy_header)
 
-    packet = struct.pack("!HHIIBBHHHBBH", src, dst, seq, ack, data_offset,
-                         flags, window_size, checksum, urg, *max_segment_size)
+    packet = struct.pack(
+        "!HHIIBBHHHBBH",
+        src,
+        dst,
+        seq,
+        ack,
+        data_offset,
+        flags,
+        window_size,
+        checksum,
+        urg,
+        *max_segment_size
+    )
 
     return packet
 
@@ -231,7 +286,8 @@ def make_udp_packet(
         src: int,
         dst: int,
         from_address: str,
-        to_address: str) -> bytes:
+        to_address: str
+) -> bytes:
     """
     Takes in: source IP address and port, destination IP address and port.
     Returns: a UDP packet with those properties.
@@ -239,23 +295,49 @@ def make_udp_packet(
     """
 
     if not is_valid_ip(from_address):
-        raise ValueError(f"Invalid source IP address: [{from_address}]")
+        raise ValueError(
+            f"Invalid source IP address: [{from_address}]"
+        )
     if not is_valid_ip(to_address):
-        raise ValueError(f"Invalid destination IP address: [{to_address}]")
+        raise ValueError(
+            f"Invalid destination IP address: [{to_address}]"
+        )
     if not is_valid_port_number(src):
-        raise ValueError(f"Invalid source port: [{src}]")
+        raise ValueError(
+            f"Invalid source port: [{src}]"
+        )
     if not is_valid_port_number(dst):
-        raise ValueError(f"Invalid destination port: [{dst}]")
+        raise ValueError(
+            f"Invalid destination port: [{dst}]"
+        )
 
     UDP_length = 8
-    dummy_header = struct.pack("!HHHH", src, dst, UDP_length, 0)
+    dummy_header = struct.pack(
+        "!HHHH",
+        src,
+        dst,
+        UDP_length,
+        0
+    )
     # 17 is the UDP protocol number
-    psuedo_header = struct.pack("!IIBBH", src, dst, 0, 17, len(dummy_header))
+    psuedo_header = struct.pack(
+        "!IIBBH",
+        src,
+        dst,
+        0,
+        17,
+        len(dummy_header)
+    )
+
     checksum = ip_checksum(psuedo_header + dummy_header)
 
-    packet = struct.pack("!HHHH", src, dst, UDP_length, checksum)
-
-    return packet
+    return struct.pack(
+        "!HHHH",
+        src,
+        dst,
+        UDP_length,
+        checksum
+    )
 
 
 def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
@@ -275,4 +357,6 @@ def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
 
 
 if __name__ == "__main__":
-    print(get_local_ip())
+    print(dot_to_long("127.0.0.1"))
+    print(long_to_dot(dot_to_long("127.0.0.1")))
+    print(long_to_dot(0x7F000001))

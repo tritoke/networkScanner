@@ -1,8 +1,7 @@
 #!/usr/bin/ python
 from contextlib import closing
-import socket
 import ip_utils
-
+import socket
 
 dest_ip = "192.168.1.1"
 dest_port = 68
@@ -10,6 +9,8 @@ local_ip = ip_utils.get_local_ip()
 local_port = ip_utils.get_free_port()
 
 local_ip = dest_ip = "127.0.0.1"
+
+address = (dest_ip, dest_port)
 
 with closing(
         socket.socket(
@@ -19,10 +20,14 @@ with closing(
         )) as s:
     try:
         pkt = ip_utils.make_udp_packet(
-            local_port, dest_port, local_ip, dest_ip)
+            local_port,
+            dest_port,
+            local_ip,
+            dest_ip
+        )
         if pkt is not None:
             packet = bytes(pkt)
-            s.sendto(packet, (dest_ip, dest_port))
+            s.sendto(packet, address)
         else:
             print(
                 "Error making packet.",
