@@ -3,7 +3,6 @@ from contextlib import closing
 import socket
 import ip_utils
 
-
 dest_port = 22
 src_port = ip_utils.get_free_port()
 local_ip = ip_utils.get_local_ip()
@@ -21,7 +20,12 @@ with closing(
         )
 ) as s:
     tcp_packet = ip_utils.make_tcp_packet(
-        src_port, dest_port, local_ip, dest_ip, SYN)
+        src_port,
+        dest_port,
+        local_ip,
+        dest_ip,
+        SYN
+    )
     if tcp_packet is not None:
         s.sendto(tcp_packet, (dest_ip, dest_port))
     else:

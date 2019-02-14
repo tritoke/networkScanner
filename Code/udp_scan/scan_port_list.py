@@ -1,12 +1,16 @@
 #!/usr/bin/env python
-from collections import defaultdict
-from contextlib import closing
-from multiprocessing import Pool
-from typing import List, Set, DefaultDict
 import ip_utils
 import socket
-import struct
 import time
+from collections import defaultdict
+from contextlib import closing
+from headers import (
+    icmp_header,
+    ip_header,
+    udp_header
+)
+from multiprocessing import Pool
+from typing import Set, DefaultDict
 
 
 def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
@@ -30,29 +34,11 @@ def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
             else:
                 time_remaining -= time_taken
             packet = s.recv(1024)
-            ip_header, udp_header = packet[:20], packet[20:28]
-            # strip out the IP and UDP header from the packet
-            (
-                ip_hp_ip_v,
-                ip_dscp_ip_ecn,
-                ip_len, ip_id,
-                ip_flgs_ip_off,
-                ip_ttl,
-                ip_p,
-                ip_sum,
-                ip_src,
-                ip_dst
-             ) = struct.unpack('!BBHHHBBHII', ip_header)
-            # unpack the IP header
-            (
-                src_port,
-                dest_port,
-                length,
-                checksum
-            ) = struct.unpack("!HHHH", udp_header)
+            ip = ip_header(packet[:20])
+            udp = udp_header(packet[20:28])
             # unpack the UDP header
-            if dest_ip == ip_src and ip_p == 17:
-                ports |= set([src_port])
+            if dest_ip == ip.source and ip.protocol == 17:
+                ports.add(udp.src)
 
     return ports
 
@@ -86,35 +72,15 @@ def icmp_listener(src_ip: str, timeout=2) -> int:
             time_remaining -= time_waiting
         recPacket, addr = ping_sock.recvfrom(1024)
         # recieve the packet
-        ip_header = recPacket[:20]
-        (
-            ip_hp_ip_v,
-            ip_dscp_ip_ecn,
-            ip_len,
-            ip_id,
-            ip_flgs_ip_off,
-            ip_ttl,
-            ip_p,
-            ip_sum,
-            ip_src,
-            ip_dst
-        ) = struct.unpack('!BBHHHBBHII', ip_header)
-        icmp_header = recPacket[20:28]
-        (
-            msg_type,
-            icmp_code,
-            checksum,
-            p_id,
-            sequence
-        ) = struct.unpack('bbHHh', icmp_header)
-        # unpack the UDP and IP headers
+        ip = ip_header(recPacket[:20])
+        icmp = icmp_header(recPacket[20:28])
         valid_codes = [0, 1, 2, 3, 9, 10, 13]
         if (
-                ip_src == src_ip
-                and msg_type == 3
-                and icmp_code in valid_codes
+                ip.source == src_ip
+                and icmp.type == 3
+                and icmp.code in valid_codes
         ):
-            code = icmp_code
+            code = icmp.code
             break
         elif time_remaining <= 0:
             break
@@ -126,7 +92,7 @@ def icmp_listener(src_ip: str, timeout=2) -> int:
 
 def udp_scan(
         dest_ip: str,
-        portlist: List[int]
+        ports_to_scan: Set[int]
 ) -> DefaultDict[str, Set[int]]:
     """
     Takes in a destination IP address in either dot or long form and
@@ -140,7 +106,7 @@ def udp_scan(
     local_port = ip_utils.get_free_port()
     # get local ip address and port number
     ports: DefaultDict[str, Set[int]] = defaultdict(set)
-
+    ports["REMAINING"] = ports_to_scan
     p = Pool(1)
     udp_listen = p.apply_async(udp_listener, (dest_ip, 4))
     # start the UDP listener
@@ -154,15 +120,22 @@ def udp_scan(
         for _ in range(2):
             # repeat 3 times because UDP scanning comes
             # with a high chance of packet loss
-            for dest_port in portlist:
+            for dest_port in ports["REMAINING"]:
                 try:
                     packet = ip_utils.make_udp_packet(
-                        local_port, dest_port, local_ip, dest_ip)
+                        local_port,
+                        dest_port,
+                        local_ip,
+                        dest_ip
+                    )
                     # create the UDP packet to send
                     s.sendto(packet, (dest_ip, dest_port))
                     # send the packet to the currently scanning address
                 except socket.error:
-                    packet_bytes = " ".join(map("{:02x}".format, packet))
+                    packet_bytes = " ".join(
+                        f"{byte:02x}"
+                        for byte in packet
+                    )
                     print(
                         "The socket modules sendto method with the following",
                         "argument resulting in a socket error.",
@@ -175,7 +148,7 @@ def udp_scan(
 
     ports["OPEN"].update(udp_listen.get())
 
-    portlist = list(filter(lambda x: x not in ports["OPEN"], portlist))
+    ports["REMAINING"] -= ports["OPEN"]
     # only scan the ports which we know are not open
     with closing(
             socket.socket(
@@ -184,10 +157,14 @@ def udp_scan(
                 socket.IPPROTO_UDP
             )
     ) as s:
-        for dest_port in portlist:
+        for dest_port in ports["REMAINING"]:
             try:
                 packet = ip_utils.make_udp_packet(
-                    local_port, dest_port, local_ip, dest_ip)
+                    local_port,
+                    dest_port,
+                    local_ip,
+                    dest_ip
+                )
                 # make a new UDP packet
                 p = Pool(1)
                 icmp_listen = p.apply_async(icmp_listener, (dest_ip,))
@@ -199,7 +176,7 @@ def udp_scan(
                 p.join()
                 icmp_code = icmp_listen.get()
                 # recieve ICMP code from the ICMP listener
-                if icmp_code in [0, 1, 2, 9, 10, 13]:
+                if icmp_code in {0, 1, 2, 9, 10, 13}:
                     ports["FILTERED"].add(dest_port)
                 elif icmp_code == 3:
                     ports["CLOSED"].add(dest_port)
@@ -215,7 +192,7 @@ def udp_scan(
     # are in the list of ports to be scanned but have not yet
     # been classified
     ports["OPEN|FILTERED"] = (
-        set(portlist)
+        ports["REMAINING"]
         - ports["OPEN"]
         - ports["FILTERED"]
         - ports["CLOSED"]
@@ -224,12 +201,8 @@ def udp_scan(
     return ports
 
 
-maybe_ports = udp_scan("127.0.0.1", [22, 68, 53, 6969])
-if maybe_ports is not None:
-    open_ports, open_filtered_ports, filtered_ports, closed_ports = maybe_ports
-    print(f"Open ports: {open_ports}")
-    print(f"Open or filtered ports: {open_filtered_ports}")
-    print(f"Filtered ports: {filtered_ports}")
-    print(f"Closed ports: {closed_ports}")
-else:
-    print("Something went wrong, check error messages.")
+ports = udp_scan("127.0.0.1", {22, 68, 53, 6969})
+print(f"Open ports: {ports['OPEN']}")
+print(f"Open or filtered ports: {ports['OPEN|FILTERED']}")
+print(f"Filtered ports: {ports['FILTERED']}")
+print(f"Closed ports: {ports['CLOSED']}")

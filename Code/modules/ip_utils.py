@@ -188,6 +188,7 @@ def get_free_port() -> int:
     return port
 
 
+#TODO rewrite this yourself...
 def ip_checksum(pkt: bytes) -> int:
     """
     ip_checksum takes a packet and calculates the IP checksum

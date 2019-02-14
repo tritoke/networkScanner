@@ -4,6 +4,7 @@ import struct
 import socket
 import time
 from contextlib import closing
+from headers import icmp_header, ip_header
 from itertools import repeat
 from math import log10, floor
 from multiprocessing import Pool
@@ -11,16 +12,18 @@ from os import getpid
 from typing import List, Tuple
 
 
-def round_significant_figures(x: float, n: int) -> float:
+def sig_figs(x: float, n: int) -> float:
     """
     rounds x to n significant figures.
-    round_significant_figures(1234, 2) = 1200.0
+    sig_figs(1234, 2) = 1200.0
     """
     return round(x, n - (1 + int(floor(log10(abs(x))))))
 
 
 def recieved_ping_from_addresses(
-        ID: int, timeout: float) -> List[Tuple[str, float, int]]:
+        ID: int,
+        timeout: float
+) -> List[Tuple[str, float, ip_header]]:
     """
     Takes in a process id and a timeout and returns
     a list of addresses which sent ICMP ECHO REPLY
@@ -44,30 +47,22 @@ def recieved_ping_from_addresses(
         # store the time the packet was recieved
         recPacket, addr = ping_sock.recvfrom(1024)
         # recieve the packet
-        ip_header = recPacket[:20]
-        # split the IP header from the packet
-        ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl,\
-            ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII',
-                                                         ip_header)
+        ip = ip_header(recPacket[:20])
         # unpack the IP header into its respective components
-        icmp_header = recPacket[20:28]
-        # split the ICMP header from the packet
-        msg_type, code, checksum, p_id, sequence = struct.unpack(
-            'bbHHh', icmp_header)
-        # unpack the ICMP header
-        time_remaining -= time_waiting
-        # decrease the amount of time remaining to wait for by the amount of
-        # time spent waiting
+        icmp = icmp_header(recPacket[20:28])
+        # unpack the time from the packet.
         time_sent = struct.unpack(
-            "d", recPacket[28:28 + struct.calcsize("d")])[0]
+            "d",
+            recPacket[28:28 + struct.calcsize("d")]
+        )[0]
         # unpack the value for when the packet was sent
         time_taken: float = time_recieved - time_sent
         # calculate the round trip time taken for the packet
-        if p_id == ID:
+        if icmp.id == ID:
             # if the ping was sent from this machine then add it to the list of
             # responses
-            ip, port = addr
-            addresses.append((str(ip), float(time_taken), int(ip_ttl)))
+            ip_address, port = addr
+            addresses.append((ip_address, time_taken, ip))
         elif time_remaining <= 0:
             break
         else:
@@ -83,16 +78,20 @@ with closing(
             socket.IPPROTO_ICMP
         )
 ) as ping_sock:
-    subnet_spec = ("192.168.1.0", 24)
-    # subnet mask to scan
-    ip_addresses = ip_utils.ip_range(*subnet_spec)
+    ip_addresses = ip_utils.ip_range("192.168.1.0", 24)
     # generate the range of IP addresses to scan.
     local_ip = ip_utils.get_local_ip()
+
     # get the local ip address
-    addresses = list(filter(lambda x: not x.endswith(".0")
-                            and not x.endswith(".255")
-                            and x != local_ip,
-                            ip_addresses))
+    addresses = [
+        ip
+        for ip in ip_addresses
+        if (
+            not ip.endswith(".0")
+            and not ip.endswith(".255")
+            and ip != local_ip
+        )
+    ]
 
     # initialise a process pool
     p = Pool(1)
@@ -116,10 +115,9 @@ with closing(
     # get the list of addresses that replied to the echo request from the
     # listener function
     print("\n".join(
-        map(lambda x: f"host: [{x[0]}]\t" +
-            "responded to an ICMP ECHO REQUEST in " +
-            f"{str(round_significant_figures(x[1], 2))+ 's':<10s} " +
-            f"ttl: [{x[2]}]",
-            hosts_up
-            )))
-    # print the results nice, though with
+        f"host: [{host}]\t" +
+        "responded to an ICMP ECHO REQUEST in " +
+        f"{str(sig_figs(taken, 2))+ 's':<10s} " +
+        f"ttl: [{ip_head.time_to_live}]"
+        for host, taken, ip_head in hosts_up
+    ))
