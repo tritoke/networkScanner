@@ -9,7 +9,7 @@ src_port = ip_utils.get_free_port()
 local_ip = ip_utils.get_local_ip()
 dest_ip = "192.168.1.159"
 local_ip = dest_ip = "127.0.0.1"
-loc_long = ip_utils.dot_form_to_long_form(local_ip)
+loc_long = ip_utils.dot_to_long(local_ip)
 
 SYN = 2
 RST = 4

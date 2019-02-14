@@ -20,13 +20,16 @@ def ip_range(ip_subnet):
         ip, n_bits = ip_subnet.split("/")
     else:
         print(
-            f"regex couldn't identify the ip address and subnet of {ip_subnet}")
+            f"regex couldn't identify the ip address and subnet of {ip_subnet}"
+        )
 
     try:
         network_bits = int(n_bits)
     except ValueError:
         print(
-            f"invalid address specification: {ip_subnet} subnet must be an integer between 0 and 32")
+            f"invalid address specification: {ip_subnet}",
+            "subnet must be an integer between 0 and 32"
+        )
         return None
 
     try:
@@ -35,7 +38,8 @@ def ip_range(ip_subnet):
         print(f"Invalid IP address: {ip}")
         if cidr_form_regex.match(ip):
             print(
-                "Either use CIDR form or specify the number of network bits, you cannot do both.")
+                "Either use CIDR form or specify the number of network",
+                "bits, you cannot do both.")
         return None
 
     ip_long_form = dot_form_to_long_form(ip)
@@ -52,6 +56,8 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument(
         "ip_subnet",
-        help="The ip/subnet that you wish to print the IP addresses specified by.")
+        help="The ip/subnet that you wish to print" +
+             "the IP addresses specified by."
+    )
     args = parser.parse_args()
     print("\n".join(ip_range(args.ip_subnet)))

@@ -25,7 +25,7 @@ def long_to_dot(long: int) -> str:
     """
     Take in an IP address in packed 32 bit int form
     and return that address in dot notation.
-    i.e. long_form_to_dot_form(0x7F000001) = 127.0.0.1
+    i.e. long_to_dot(0x7F000001) = 127.0.0.1
     """
     # these are long form values for 0.0.0.0
     # and 255.255.255.255
@@ -110,11 +110,11 @@ def _(ip: str):
         return False
 
 
-# TODO add comments below
 def is_valid_port_number(port_num: int) -> bool:
     """
     Checks whether the given port number is valid i.e. between 0 and 65536.
     """
+    # port numbers must be between 0 and 65535(2^16 - 1)
     if 0 <= port_num < 2**16:
         return True
     else:
@@ -135,25 +135,31 @@ def ip_range(ip: str, network_bits: int) -> List[str]:
 
     if not is_valid_ip(ip):
         raise ValueError(f"Invalid IP address: [{ip}]")
-
+    # get the ip as long form which is useful
+    # later on for using bitwise operators
+    # to isolate only the constant(network) bits
     ip_long = dot_to_long(ip)
 
+    # generate the bit mask which specifies
+    # which bits to keep and which to discard
     mask = int(f"{'1'*network_bits:0<32s}", 2)
     lower_bound = ip_long & mask
     upper_bound = ip_long | (mask ^ 0xFFFFFFFF)
 
-    return list(map(
-        long_to_dot,
+    # turn all the long form IP addresses between
+    # the lower and upper bound into dot form
+    return [
+        long_to_dot(long_ip)
+        for long_ip in
         range(lower_bound, upper_bound + 1)
-    ))
+    ]
 
 
 def get_local_ip() -> str:
     """
-    Connects to the router with UDP and gets the local IP specified by
-    the router or google. takes no argument
+    Connects to the google.com with UDP and gets
+    the IP address used to connect(the local address).
     """
-
     with closing(
             socket.socket(
                 socket.AF_INET,
@@ -188,14 +194,24 @@ def ip_checksum(pkt: bytes) -> int:
     for the given packet.
     This checksum function is taken from the scapy python library
     which is released under the open source GPLV2.
+    comments are mine.
     """
-
+    # if the length of the packet is not
+    # divisible by 2 then append a null byte
     if len(pkt) % 2 == 1:
         pkt += b"\0"
+    # find the sum of the byte of the packet
+    # treating them as unsigned shorts - 2 bytes long
     s = sum(array.array("H", pkt))
+    # this line takes the bits after the 16th
+    # bit from the right and adds it to the first 16 bits.
+    # [<-16][16-8][8-0] -> [16-0] + [<-16]
     s = (s >> 16) + (s & 0xffff)
+    # add on all the bits past 16 again
     s += s >> 16
+    # bitwise negate each bit
     s = ~s
+    # ([<-8] OR [<-0][0*8]) AND [1*16]
     return (((s >> 8) & 0xff) | s << 8) & 0xffff
 
 
@@ -206,16 +222,43 @@ def make_icmp_packet(ID: int) -> bytes:
     """
 
     ICMP_ECHO_REQUEST = 8
-    dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
+    # pack the information for the dummy header needed
+    # for the IP checksum
+    dummy_header = struct.pack(
+        "bbHHh",
+        ICMP_ECHO_REQUEST,
+        0,
+        0,
+        ID,
+        1
+    )
+    # pack the current time into a double
     time_bytes = struct.pack("d", time.time())
+    # define the bytes to repeat in the data section of the packet
+    # this makes the packets easily identifiable in packet captures.
     bytes_to_repeat_in_data = map(ord, " y33t ")
+    # calculate the number of bytes left for data
     data_bytes = (192 - struct.calcsize("d"))
-    data = time_bytes + \
+    # first pack the current time into the start of the data section
+    # the pack the identifiable data into the rest
+    data = (
+        time_bytes +
         bytes(islice(cycle(bytes_to_repeat_in_data), data_bytes))
+    )
+    # get the IP checksum for the dummy header and data
+    # and switch the bytes into the order expected by the network
     checksum = socket.htons(ip_checksum(dummy_header + data))
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
-    packet = header + data
-    return packet
+    # pack the header with the correct checksum and information
+    header = struct.pack(
+        "bbHHh",
+        ICMP_ECHO_REQUEST,
+        0,
+        checksum,
+        ID,
+        1
+    )
+    # concatonate the header bytes and the data bytes
+    return header + data
 
 
 def make_tcp_packet(
@@ -232,7 +275,7 @@ def make_tcp_packet(
     18 => SYN:ACK
     4 => RST
     """
-
+    # validate that the information passed in is valid
     if flags not in {2, 18, 4}:
         raise ValueError(
             f"Flags must be one of 2:SYN, 18:SYN,ACK, 4:RST. not: [{flags}]"
@@ -253,7 +296,7 @@ def make_tcp_packet(
         raise ValueError(
             f"Invalid destination port: [{dst}]"
         )
-
+    # turn the ip addresses into long form
     src_addr = dot_to_long(from_address)
     dst_addr = dot_to_long(to_address)
 
@@ -261,7 +304,7 @@ def make_tcp_packet(
     data_offset = 6 << 4
     window_size = 1024
     max_segment_size = (2, 4, 1460)
-
+    # pack the dummy header needed for the checksum calculation
     dummy_header = struct.pack(
         "!HHIIBBHHHBBH",
         src,
@@ -275,6 +318,8 @@ def make_tcp_packet(
         urg,
         *max_segment_size
     )
+    # pack the psuedo header that is also needed for the checksum
+    # just because TCP and why not
     psuedo_header = struct.pack(
         "!IIBBH",
         src_addr,
@@ -283,9 +328,10 @@ def make_tcp_packet(
         6,
         len(dummy_header)
     )
-    checksum = ip_checksum(psuedo_header + dummy_header)
 
-    packet = struct.pack(
+    checksum = ip_checksum(psuedo_header + dummy_header)
+    # pack the final TCP packet with the relevant data and checksum
+    return struct.pack(
         "!HHIIBBHHHBBH",
         src,
         dst,
@@ -299,8 +345,6 @@ def make_tcp_packet(
         *max_segment_size
     )
 
-    return packet
-
 
 def make_udp_packet(
         src: int,
@@ -313,7 +357,7 @@ def make_udp_packet(
     Returns: a UDP packet with those properties.
     the IP addresses are needed for calculating the checksum.
     """
-
+    # validate data passed in
     if not is_valid_ip(from_address):
         raise ValueError(
             f"Invalid source IP address: [{from_address}]"
@@ -332,6 +376,7 @@ def make_udp_packet(
         )
 
     UDP_length = 8
+    # pack the dummy and psuedo headers needed for the checksum
     dummy_header = struct.pack(
         "!HHHH",
         src,
@@ -350,7 +395,8 @@ def make_udp_packet(
     )
 
     checksum = ip_checksum(psuedo_header + dummy_header)
-
+    # pack the data and checksum into the right format
+    # and return the packed bytes
     return struct.pack(
         "!HHHH",
         src,
