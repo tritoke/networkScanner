@@ -190,6 +190,42 @@ class icmp_header:
         ))
 
 
+class tcp_header:
+    def __init__(self, header: bytes):
+        (
+            src_prt,
+            dst_prt,
+            seq,
+            ack,
+            data_offset,
+            flags,
+            window_size,
+            checksum,
+            urg
+        ) = struct.unpack("!HHIIBBHHH", header)
+
+        self.source: int = src_prt
+        self.destination: int = dst_prt
+        self.seq: int = seq
+        self.ack: int = ack
+        self.data_offset: int = data_offset >> 4
+        self.flags: int = flags + ((data_offset & 0x01) << 8)
+        self.window_size: int = window_size
+        self.checksum: int = checksum
+        self.urg: int = urg
+
+    # TODO finish repr
+    def __repr__(self):
+        return "\n\t".join(
+            "TCP header:",
+            "Source port: [{self.source}]",
+            "Destination port: [{self.destination}]",
+            "Sequence number: [{self.seq}]",
+            "Acknowledgement number: [{self.ack}]",
+            "Data "
+        )
+
+
 class udp_header:
     def __init__(self, header: bytes):
         # parse udp header

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import array
 import socket
 import struct
@@ -142,7 +140,10 @@ def ip_range(ip: str, network_bits: int) -> List[str]:
 
     # generate the bit mask which specifies
     # which bits to keep and which to discard
-    mask = int(f"{'1'*network_bits:0<32s}", 2)
+    mask = int(
+        f"{'1'*network_bits:0<32s}",
+        base=2
+    )
     lower_bound = ip_long & mask
     upper_bound = ip_long | (mask ^ 0xFFFFFFFF)
 
@@ -188,7 +189,7 @@ def get_free_port() -> int:
     return port
 
 
-#TODO rewrite this yourself...
+# TODO rewrite this yourself...
 def ip_checksum(pkt: bytes) -> int:
     """
     ip_checksum takes a packet and calculates the IP checksum
@@ -421,9 +422,3 @@ def wait_for_socket(sock: socket.socket, wait_time: float) -> float:
         return float(-1)
     else:
         return taken
-
-
-if __name__ == "__main__":
-    print(dot_to_long("127.0.0.1"))
-    print(long_to_dot(dot_to_long("127.0.0.1")))
-    print(long_to_dot(0x7F000001))

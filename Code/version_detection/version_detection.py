@@ -192,6 +192,8 @@ def version_detect_scan(
 
 if __name__ == "__main__":
     probes = parse_probes("./small-example-probes")
+    print(probes)
+    exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_ports["TCP"].update([1, 2, 3, 4])
@@ -204,5 +206,5 @@ if __name__ == "__main__":
     )
 
     target.open_ports["TCP"].update([1, 2, 3])
-    print(target)
+    # print(target)
     version_detect_scan(target, probes)

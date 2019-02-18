@@ -1,8 +1,9 @@
 #!/usr/bin/python3.7
+from contextlib import closing
+from headers import tcp_header
 from multiprocessing import Pool
 from typing import List, Tuple, Iterable
 import struct
-from contextlib import closing
 import socket
 import ip_utils
 
@@ -33,11 +34,9 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
                 time_remaining -= time_taken
             packet = s.recv(1024)
             # recieve the packet data
-            src_prt, dst_prt, seq, ack, data_offset, flags, window_size,\
-                checksum, urg = struct.unpack("!HHIIBBHHH", packet[20:40])
-            # unpack the data from the TCP header section
-            if flags == int("00010010", 2):  # syn ack
-                open_ports.append(src_prt)
+            tcp = tcp_header(packet[20:40])
+            if tcp.flags == int("00010010", 2):  # syn ack
+                   open_ports.append(tcp.source)
                 # check that the header contained the TCP ACK flag and if it
                 # did append it
             else:

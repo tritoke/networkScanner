@@ -113,8 +113,8 @@ class Probe:
                     socket.socket(socket.AF_INET,
                                   self.proto_to_socket_type[self.protocol]
                                   )
-            ):
-                pass
+            ) as sock:
+                sock.send(bytes(self.string, "utf-8"))
                 # TODO main scanning logic
 
 
