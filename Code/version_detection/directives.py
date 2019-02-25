@@ -87,8 +87,23 @@ class Target:
     # TODO complete the repr method so that strings
     # of ports: [1,2,3,4,5] are shown as 1..5
     def __repr__(self):
+        def reduce_sequence(seq: Set[int]) -> str:
+            result = ""
+            list_seq = list(seq)
+            enum = enumerate(list_seq)
+            for index, item in enum:
+                if index == 0:
+                    result += f"{item}.."
+                elif index == len(list_seq)-1:
+                    result += f"{item}"
+                elif item+1 != list_seq[index+1]:
+                    result += f"{item},{list_seq[index+1]}.."
+                    # jump over the next element
+                    next(enum)
+            return result
         return "Target(" + ", ".join((
             f"{self.address})",
+            f"({reduce_sequence()})"
         ))
 
 
