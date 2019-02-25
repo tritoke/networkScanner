@@ -84,6 +84,13 @@ class Target:
     open_filtered_ports: DefaultDict[str, Set[int]]
     services: Dict[int, Union[Match, Softmatch]] = field(default_factory=dict)
 
+    # TODO complete the repr method so that strings
+    # of ports: [1,2,3,4,5] are shown as 1..5
+    def __repr__(self):
+        return "Target(" + ", ".join((
+            f"{self.address})",
+        ))
+
 
 class Probe:
     """
@@ -156,6 +163,7 @@ class Probe:
         probe and attempts to detect the version of
         any services running on the machine.
         """
+        print(f"Scanning {target}")
         # this constructs the set of all ports,
         # that are either open or open_filtered,
         # and are in the set of ports to scan for
@@ -170,7 +178,7 @@ class Probe:
             )
             & self.ports[self.protocol]
         ) - Probe.exclude[self.protocol] - Probe.exclude["ANY"]
-
+        print(f"Scanning ports: {ports_to_scan}")
         for port in ports_to_scan:
             with closing(
                     socket.socket(
@@ -178,15 +186,18 @@ class Probe:
                         self.proto_to_socket_type[self.protocol]
                     )
             ) as sock:
-                # send the payload to the target
+                # setup the connection to the target
                 sock.connect((target.address, port))
+                # send the payload to the target
                 sock.send(self.payload)
                 time_taken = ip_utils.wait_for_socket(
                     sock,
                     self.totalwaitms/1000
                 )
+
                 if time_taken != -1:
                     data_recieved = sock.recv(4096).decode("utf-8")
+                    print(data_recieved)
                     service_name = ""
                     for softmatch in self.softmatches:
                         search = softmatch.search(data_recieved)
@@ -196,6 +207,10 @@ class Probe:
                             break
 
                     for match in self.matches:
+                        # If the softmatch fails then
+                        # service_name defaults to ""
+                        # this makes the below statement true
+                        # for all match.service names.
                         if service_name in match.service:
                             search = match.search(data_recieved)
                             if search:

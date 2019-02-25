@@ -7,6 +7,5 @@
 7.  Attempt a complete TCP port scan. :: DONE
 8.  Implement TCP SYN port scan. :: DONE
 9.  Implement UDP port scan. :: DONE
-10. Attempt to detect the version of an ssh client.
-11. Implement service/version scanning.
+10. Implement service/version scanning.
 12. Create flowcharts for each section.

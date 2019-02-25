@@ -132,10 +132,7 @@ def udp_scan(
                     s.sendto(packet, (dest_ip, dest_port))
                     # send the packet to the currently scanning address
                 except socket.error:
-                    packet_bytes = " ".join(
-                        f"{byte:02x}"
-                        for byte in packet
-                    )
+                    packet_bytes = " ".join(map(hex, packet))
                     print(
                         "The socket modules sendto method with the following",
                         "argument resulting in a socket error.",

@@ -4,7 +4,6 @@ from functools import reduce
 from collections import defaultdict
 import directives
 import re
-import socket
 import operator
 
 
@@ -191,15 +190,15 @@ def version_detect_scan(
 
 
 if __name__ == "__main__":
-    probes = parse_probes("./small_")
+    probes = parse_probes("./small-example-probes")
 
-    for probe in probes.values():
-        print(bytes(probe.string, "utf-8"))
-    exit()
+    #  for probe in probes.values():
+    #      print(bytes(probe.string, "utf-8"))
+    #  exit()
+
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
-    open_ports["TCP"].update([1, 2, 3, 4])
-    open_filtered_ports["UDP"].update([6, 7, 8])
+    open_ports["TCP"].update(range(2**16))
 
     target = directives.Target(
         "127.0.0.1",
