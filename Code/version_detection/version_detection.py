@@ -198,7 +198,8 @@ if __name__ == "__main__":
 
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
-    open_ports["TCP"].update(range(2**16))
+    open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,
+                              20, 21, 22, 23, 24, 25])
 
     target = directives.Target(
         "127.0.0.1",

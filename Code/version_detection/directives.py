@@ -2,8 +2,10 @@
 from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
-from typing import DefaultDict, Dict, Set, Union
+from functools import reduce
+from typing import DefaultDict, Dict, Set, Union, List
 import ip_utils
+import operator
 import re
 import socket
 
@@ -84,27 +86,53 @@ class Target:
     open_filtered_ports: DefaultDict[str, Set[int]]
     services: Dict[int, Union[Match, Softmatch]] = field(default_factory=dict)
 
-    # TODO complete the repr method so that strings
-    # of ports: [1,2,3,4,5] are shown as 1..5
     def __repr__(self):
-        def reduce_sequence(seq: Set[int]) -> str:
+        # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1..5,7,9..13,15
+        def collapse(values: dict.values) -> str:
             result = ""
-            list_seq = list(seq)
-            enum = enumerate(list_seq)
-            for index, item in enum:
-                if index == 0:
-                    result += f"{item}.."
-                elif index == len(list_seq)-1:
-                    result += f"{item}"
-                elif item+1 != list_seq[index+1]:
-                    result += f"{item},{list_seq[index+1]}.."
-                    # jump over the next element
-                    next(enum)
-            return result
+            # becauss the objects in values are of
+            # type set we need to use operator.ior
+            # to reduce them to a combined set
+            # i.e. values = [a,b,c], items => a or b or c
+            items: List[int] = sorted(reduce(
+                operator.ior,
+                values,
+                set()
+            ))
+            # if its an empty list return now to avoid errors
+            if len(items) == 0:
+                return ""
+            else:
+                new_sequence = False
+                # enumerate up until the one before
+                # the last to prevent index errors.
+                for index, item in enumerate(items[:-1]):
+                    # if its the first one add it on
+                    if index == 0:
+                        result += f"{item}"
+                        # if its a sequence start one else put a comma
+                        if items[index+1] == item+1:
+                            result += ".."
+                        else:
+                            result += ","
+                    # if the sequence breaks then put a comma
+                    elif item+1 != items[index+1]:
+                        result += f"{item},"
+                        new_sequence = True
+                    # if its a new sequence the put the ..'s in
+                    elif item+1 == items[index+1] and new_sequence:
+                        result += f"{item}.."
+                        new_sequence = False
+                result += f"{items[-1]}"
+                return result
+
+        open_ports = collapse(self.open_ports.values())
+        open_filtered_ports = collapse(self.open_filtered_ports.values())
         return "Target(" + ", ".join((
-            f"{self.address})",
-            f"({reduce_sequence()})"
-        ))
+            f"address=[{self.address}]",
+            f"open_ports=[{open_ports}]",
+            f"open_filtered_ports=[{open_filtered_ports}]"
+        )) + ")"
 
 
 class Probe:
@@ -189,11 +217,15 @@ class Probe:
             (
                 target.open_filtered_ports[self.protocol]
                 | target.open_ports[self.protocol]
-                | self.ports["ANY"]
             )
             & self.ports[self.protocol]
         ) - Probe.exclude[self.protocol] - Probe.exclude["ANY"]
-        print(f"Scanning ports: {ports_to_scan}")
+        #  print(target.open_filtered_ports[self.protocol])
+        #  print(target.open_ports[self.protocol])
+        #  print(self.ports[self.protocol])
+        #  print(Probe.exclude[self.protocol])
+        #  print(Probe.exclude["ANY"])
+        #  print(f"Scanning ports: {ports_to_scan}")
         for port in ports_to_scan:
             with closing(
                     socket.socket(
