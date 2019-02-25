@@ -16,4 +16,4 @@ with closing(
         s.connect(address)
         print(f"connection on port {PORT} succedded")
     except ConnectionRefusedError:
-        print(f"print port {PORT} is closed")
+        print(f"port {PORT} is closed")

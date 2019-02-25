@@ -2,7 +2,7 @@
 from contextlib import closing
 from headers import tcp_header
 from multiprocessing import Pool
-from typing import List, Tuple, Iterable
+from typing import List, Tuple, Set
 import struct
 import socket
 import ip_utils
@@ -36,7 +36,8 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
             # recieve the packet data
             tcp = tcp_header(packet[20:40])
             if tcp.flags == int("00010010", 2):  # syn ack
-                   open_ports.append(tcp.source)
+                print(tcp)
+                open_ports.append(tcp.source)
                 # check that the header contained the TCP ACK flag and if it
                 # did append it
             else:
@@ -45,10 +46,11 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
     return open_ports
 
 
-def syn_scan(dest_ip: str, portlist: Iterable[int]) -> List[int]:
+def syn_scan(dest_ip: str, portlist: Set[int]) -> List[int]:
     src_port = ip_utils.get_free_port()
     # request a local port to connect from
     local_ip = ip_utils.get_local_ip()
+    local_ip="127.0.0.1"
     p = Pool(1)
     listener = p.apply_async(syn_listener, ((local_ip, src_port), 5))
     # start the TCP ACK listener in the background
@@ -77,4 +79,4 @@ def syn_scan(dest_ip: str, portlist: Iterable[int]) -> List[int]:
 
 dest_ip = "127.0.0.1"
 
-syn_scan(dest_ip, range(2**16))
+syn_scan(dest_ip, set(range(2**16)))

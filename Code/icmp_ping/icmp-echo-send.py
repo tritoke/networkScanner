@@ -3,27 +3,7 @@ import socket
 import struct
 import os
 import time
-import array
-
-
-def calculateChecksum(pkt):  # checksum function from scapy project
-    """
-    This is the checksum function from the scapy module.
-    """
-    if len(pkt) % 2 == 1:  # if packet had odd length pad with a null byte
-        pkt += b"\0"
-    s = sum(array.array("H", pkt))
-    s = (s >> 16) + (s & 0xffff)
-    s += s >> 16
-    s = ~s
-    # ^^ ones complement sum of the pairs of bytes
-    return (((s >> 8) & 0xff) | s << 8) & 0xffff
-    # s >> 8 move the leftmost eight bytes into the first byte
-    # and-ing that with 0xFF truncates any data that past the first 8 bytes
-    # i.e. 01101001,11110000 => 00000000,01101001
-    # or-ing that with s<<8 and then anding it places the second byte in the
-    # first places and truncates the remainder, leaving just the two bytes
-    # switched
+from ip_utils import ip_checksum
 
 
 ICMP_ECHO_REQUEST = 8
@@ -42,7 +22,7 @@ dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
 data = struct.pack("d", time.time()) + \
     bytes((192 - struct.calcsize("d")) * "A", "ascii")
 # the data to send in the packet
-checksum = socket.htons(calculateChecksum(dummy_header + data))
+checksum = socket.htons(ip_checksum(dummy_header + data))
 # calculates the checksum for the packet and psuedo header
 header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
 # packs the packet header

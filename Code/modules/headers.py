@@ -172,8 +172,8 @@ class icmp_header:
         self.id: int
         self.sequence: int
         if self.type in {0, 8}:
-            self.id = remainder >> 16
-            self.sequence = remainder & 0xFFFF
+            self.id = socket.htons(remainder >> 16)
+            self.sequence = socket.htons(remainder & 0xFFFF)
         else:
             self.id = -1
             self.sequence = -1
@@ -214,16 +214,19 @@ class tcp_header:
         self.checksum: int = checksum
         self.urg: int = urg
 
-    # TODO finish repr
     def __repr__(self):
-        return "\n\t".join(
+        return "\n\t".join((
             "TCP header:",
-            "Source port: [{self.source}]",
-            "Destination port: [{self.destination}]",
-            "Sequence number: [{self.seq}]",
-            "Acknowledgement number: [{self.ack}]",
-            "Data "
-        )
+            f"Source port: [{self.source}]",
+            f"Destination port: [{self.destination}]",
+            f"Sequence number: [{self.seq}]",
+            f"Acknowledgement number: [{self.ack}]",
+            f"Data offset: [{self.data_offset}]",
+            f"Flags: [{self.flags:08b}]",
+            f"Window size: [{self.window_size}]",
+            f"Checksum: [{self.checksum:04x}]",
+            f"Urgent: [{self.urg}]"
+        ))
 
 
 class udp_header:

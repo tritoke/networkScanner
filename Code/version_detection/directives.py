@@ -1,11 +1,72 @@
 #!/usr/bin/env python
 from collections import defaultdict
 from contextlib import closing
-from dataclasses import dataclass
-from typing import DefaultDict, Set, Dict
+from dataclasses import dataclass, field
+from typing import DefaultDict, Dict, Set, Union
 import ip_utils
 import re
 import socket
+
+
+class Match:
+    """
+    This class holds information for the match directive.
+    This includes optional version info as well as a service,
+    a pattern to match the response against and some pattern options.
+    """
+    version_info: DefaultDict[str, str] = defaultdict(str)
+    letter_to_name = {
+        "p": "vendorproductname",
+        "v": "version",
+        "i": "info",
+        "h": "hostname",
+        "o": "operatingsystem",
+        "d": "devicetype"
+    }
+
+    def __init__(
+            self,
+            service: str,
+            pattern: str,
+            pattern_options: str
+    ):
+        self.service: str = service
+        self.pattern: str = pattern
+        # inline regex options are the cool
+        self.pattern_options: str = pattern_options
+
+    def add_version_info(self, version_string: str):
+        # this regular expression matches one character from pvihod
+        # followed by a / then it non-greedily matches at least one of
+        # any character followed by another slash
+        regex = re.compile(r"[pvihod]/.+?/")
+        # find all the additional fields and iterate over them
+        fields = regex.findall(version_string)
+        for value in fields:
+            # add the field information to the match object
+            self.version_info[Match.letter_to_name[value[0]]] = value[2:-1]
+
+    def search(self, string: str):
+        pass
+
+
+class Softmatch:
+    """
+    This class holds infomation for the sortmatch directive.
+    Such as the service, the regex pattern and the pattern options.
+    """
+    def __init__(
+            self,
+            service: str,
+            pattern: str,
+            pattern_options: str
+    ):
+        self.service: str = service
+        self.pattern: str = pattern
+        self.pattern_options: str = pattern_options
+
+    def search(self, string: str):
+        pass
 
 
 @dataclass
@@ -21,6 +82,7 @@ class Target:
     address: str
     open_ports: DefaultDict[str, Set[int]]
     open_filtered_ports: DefaultDict[str, Set[int]]
+    services: Dict[int, Union[Match, Softmatch]] = field(default_factory=dict)
 
 
 class Probe:
@@ -59,14 +121,15 @@ class Probe:
         else:
             raise ValueError(
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
-        self.name = probename
-        self.string = probestring
+        self.name: str = probename
+        self.string: str = probestring
+        self.payload: bytes = bytes(probestring, "utf-8")
         self.matches: Set[Match] = set()
         self.softmatches: Set[Softmatch] = set()
         self.ports: DefaultDict[str, Set[int]] = defaultdict(set)
-        self.totalwaitms = 6000
-        self.tcpwrappedms = 3000
-        self.rarity = -1
+        self.totalwaitms: int = 6000
+        self.tcpwrappedms: int = 3000
+        self.rarity: int = -1
         self.fallback: Set[str] = set()
 
     def __repr__(self):
@@ -110,64 +173,31 @@ class Probe:
 
         for port in ports_to_scan:
             with closing(
-                    socket.socket(socket.AF_INET,
-                                  self.proto_to_socket_type[self.protocol]
-                                  )
+                    socket.socket(
+                        socket.AF_INET,
+                        self.proto_to_socket_type[self.protocol]
+                    )
             ) as sock:
-                sock.send(bytes(self.string, "utf-8"))
-                # TODO main scanning logic
+                # send the payload to the target
+                sock.connect((target.address, port))
+                sock.send(self.payload)
+                time_taken = ip_utils.wait_for_socket(
+                    sock,
+                    self.totalwaitms/1000
+                )
+                if time_taken != -1:
+                    data_recieved = sock.recv(4096).decode("utf-8")
+                    service_name = ""
+                    for softmatch in self.softmatches:
+                        search = softmatch.search(data_recieved)
+                        if search:
+                            service_name = search
+                            target.services[port] = softmatch
+                            break
 
-
-class Match:
-    """
-    This class holds information for the match directive.
-    This includes optional version info as well as a service,
-    a pattern to match the response against and some pattern options.
-    """
-    version_info: DefaultDict[str, str] = defaultdict(str)
-    letter_to_name = {
-        "p": "vendorproductname",
-        "v": "version",
-        "i": "info",
-        "h": "hostname",
-        "o": "operatingsystem",
-        "d": "devicetype"
-    }
-
-    def __init__(
-            self,
-            service: str,
-            pattern: str,
-            pattern_options: str
-    ):
-        self.service: str = service
-        self.pattern: str = pattern
-        # inline regex options are the cool
-        self.pattern_options: str = pattern_options
-
-    def add_version_info(self, version_string: str):
-        # this regular expression matches one character from pvihod
-        # followed by a / then it non-greedily matches at least one of
-        # any character followed by another slash
-        regex = re.compile(r"[pvihod]/.+?/")
-        # find all the additional fields and iterate over them
-        fields = regex.findall(version_string)
-        for field in fields:
-            # add the field information to the match object
-            self.version_info[Match.letter_to_name[field[0]]] = field[2:-1]
-
-
-class Softmatch:
-    """
-    This class holds infomation for the sortmatch directive.
-    Such as the service, the regex pattern and the pattern options.
-    """
-    def __init__(
-            self,
-            service: str,
-            pattern: str,
-            pattern_options: str
-    ):
-        self.service: str = service
-        self.pattern: str = pattern
-        self.pattern_options: str = pattern_options
+                    for match in self.matches:
+                        if service_name in match.service:
+                            search = match.search(data_recieved)
+                            if search:
+                                target.services[port] = match
+                                break

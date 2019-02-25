@@ -98,11 +98,10 @@ with closing(
     # get the local process id for use in creating packets.
     ID = getpid() & 0xFFFF
     # run the recieved_ping_from_addresses function asynchronously
-    replied = p.apply_async(recieved_ping_from_addresses, (ID, 2))
+    replied = p.apply_async(recieved_ping_from_addresses, (ID, 5))
     for address in zip(addresses, repeat(1)):
         try:
             packet = ip_utils.make_icmp_packet(ID)
-            print(f"scanning {address}")
             ping_sock.sendto(packet, address)
         except PermissionError:
             ip_utils.eprint("raw sockets require root priveleges, exiting")
@@ -117,7 +116,7 @@ with closing(
     print("\n".join(
         f"host: [{host}]\t" +
         "responded to an ICMP ECHO REQUEST in " +
-        f"{str(sig_figs(taken, 2))+ 's':<10s} " +
+        f"{str(sig_figs(taken, 2))+'s':<10s} " +
         f"ttl: [{ip_head.time_to_live}]"
         for host, taken, ip_head in hosts_up
     ))

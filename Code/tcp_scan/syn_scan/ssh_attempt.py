@@ -12,6 +12,9 @@ loc_long = ip_utils.dot_to_long(local_ip)
 
 SYN = 2
 RST = 4
+
+
+
 with closing(
         socket.socket(
             socket.AF_INET,

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-import directives
 from typing import Dict, Set, Pattern, Tuple, DefaultDict
 from functools import reduce
 from collections import defaultdict
+import directives
 import re
+import socket
 import operator
 
 
@@ -65,7 +66,6 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     return ports
 
 
-# TODO Continue readability refactor above and in all other files.
 def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     """
     Extracts all of the probe directives from the
@@ -191,8 +191,10 @@ def version_detect_scan(
 
 
 if __name__ == "__main__":
-    probes = parse_probes("./small-example-probes")
-    print(probes)
+    probes = parse_probes("./small_")
+
+    for probe in probes.values():
+        print(bytes(probe.string, "utf-8"))
     exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)

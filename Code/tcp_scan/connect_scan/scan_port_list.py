@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-from typing import List, Iterable
+from typing import List, Set
 
 
-def connect_scan(address: str, ports: Iterable[int]) -> List[int]:
+def connect_scan(address: str, ports: Set[int]) -> List[int]:
     import socket
     from contextlib import closing
     open_ports: List[int] = []
@@ -29,5 +29,5 @@ def connect_scan(address: str, ports: Iterable[int]) -> List[int]:
 
 
 if __name__ == "__main__":
-    open_ports = connect_scan("127.0.0.1", range(65535))
+    open_ports = connect_scan("127.0.0.1", set(range(65535)))
     print("\n".join(map(lambda x: f"port: [{x}]\tis open", open_ports)))

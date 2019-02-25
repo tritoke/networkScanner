@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import socket
 from typing import List
 from headers import ip_header, icmp_header
