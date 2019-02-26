@@ -191,11 +191,11 @@ def version_detect_scan(
 
 if __name__ == "__main__":
     probes = parse_probes("./small-example-probes")
+    for probe in probes.values():
+        for match in probe.matches:
+            print(match)
 
-    #  for probe in probes.values():
-    #      print(bytes(probe.string, "utf-8"))
-    #  exit()
-
+    exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,

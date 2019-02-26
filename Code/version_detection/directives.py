@@ -2,10 +2,8 @@
 from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
-from functools import reduce
 from typing import DefaultDict, Dict, Set, Union, List
 import ip_utils
-import operator
 import re
 import socket
 
@@ -36,6 +34,14 @@ class Match:
         self.pattern: str = pattern
         # inline regex options are the cool
         self.pattern_options: str = pattern_options
+
+    def __repr__(self):
+        return "Match(" + ", ".join((
+                f"service={self.service}",
+                f"pattern={self.pattern}",
+                f"pattern_options={self.pattern_options}",
+                f"version_info={self.version_info}"
+            )) + ")"
 
     def add_version_info(self, version_string: str):
         # this regular expression matches one character from pvihod
@@ -88,46 +94,45 @@ class Target:
 
     def __repr__(self):
         # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1..5,7,9..13,15
-        def collapse(values: dict.values) -> str:
-            result = ""
-            # becauss the objects in values are of
-            # type set we need to use operator.ior
-            # to reduce them to a combined set
-            # i.e. values = [a,b,c], items => a or b or c
-            items: List[int] = sorted(reduce(
-                operator.ior,
-                values,
-                set()
-            ))
-            # if its an empty list return now to avoid errors
-            if len(items) == 0:
-                return ""
-            else:
-                new_sequence = False
-                # enumerate up until the one before
-                # the last to prevent index errors.
-                for index, item in enumerate(items[:-1]):
-                    # if its the first one add it on
-                    if index == 0:
-                        result += f"{item}"
-                        # if its a sequence start one else put a comma
-                        if items[index+1] == item+1:
-                            result += ".."
-                        else:
-                            result += ","
-                    # if the sequence breaks then put a comma
-                    elif item+1 != items[index+1]:
-                        result += f"{item},"
-                        new_sequence = True
-                    # if its a new sequence the put the ..'s in
-                    elif item+1 == items[index+1] and new_sequence:
-                        result += f"{item}.."
-                        new_sequence = False
-                result += f"{items[-1]}"
-                return result
+        def collapse(port_dict: DefaultDict) -> str:
+            store_results = list()
+            for key in port_dict:
+                # items is a sorted list of a set of ports.
+                items: List[int] = sorted(port_dict[key])
+                key_result = f'"{key}":' + "{"
+                # if its an empty list return now to avoid errors
+                if len(items) == 0:
+                    return ""
+                else:
+                    new_sequence = False
+                    # enumerate up until the one before
+                    # the last to prevent index errors.
+                    for index, item in enumerate(items[:-1]):
+                        # if its the first one add it on
+                        if index == 0:
+                            key_result += f"{item}"
+                            # if its a sequence start one else put a comma
+                            if items[index+1] == item+1:
+                                key_result += ".."
+                            else:
+                                key_result += ","
+                        # if the sequence breaks then put a comma
+                        elif item+1 != items[index+1]:
+                            key_result += f"{item},"
+                            new_sequence = True
+                        # if its a new sequence the put the `..`s in
+                        elif item+1 == items[index+1] and new_sequence:
+                            key_result += f"{item}.."
+                            new_sequence = False
+                    # because we only iterate to the one before
+                    # the last element, add the last element on to the end.
+                    key_result += f"{items[-1]}" + "}"
+                    store_results.append(key_result)
+            result = "{" + ", ".join(store_results) + "}"
+            return result
 
-        open_ports = collapse(self.open_ports.values())
-        open_filtered_ports = collapse(self.open_filtered_ports.values())
+        open_ports = collapse(self.open_ports)
+        open_filtered_ports = collapse(self.open_filtered_ports)
         return "Target(" + ", ".join((
             f"address=[{self.address}]",
             f"open_ports=[{open_ports}]",
@@ -213,19 +218,18 @@ class Probe:
         # this particular probe, this means that,
         # we are only connecting to ports that we
         # know are not closed and are not to be excluded.
+
         ports_to_scan: Set[int] = (
             (
                 target.open_filtered_ports[self.protocol]
                 | target.open_ports[self.protocol]
             )
-            & self.ports[self.protocol]
         ) - Probe.exclude[self.protocol] - Probe.exclude["ANY"]
-        #  print(target.open_filtered_ports[self.protocol])
-        #  print(target.open_ports[self.protocol])
-        #  print(self.ports[self.protocol])
-        #  print(Probe.exclude[self.protocol])
-        #  print(Probe.exclude["ANY"])
-        #  print(f"Scanning ports: {ports_to_scan}")
+        if self.ports[self.protocol] != set():
+            ports_to_scan &= self.ports[self.protocol]
+        print(target.open_filtered_ports[self.protocol] |
+              target.open_ports[self.protocol])
+        print(f"Scanning {self.protocol} ports: {ports_to_scan}")
         for port in ports_to_scan:
             with closing(
                     socket.socket(
@@ -234,25 +238,37 @@ class Probe:
                     )
             ) as sock:
                 # setup the connection to the target
-                sock.connect((target.address, port))
+                try:
+                    sock.connect((target.address, port))
+                except ConnectionError:
+                    continue
                 # send the payload to the target
                 sock.send(self.payload)
+                # wait for the target to send a response
                 time_taken = ip_utils.wait_for_socket(
                     sock,
                     self.totalwaitms/1000
                 )
-
+                # if the response didn't time out
                 if time_taken != -1:
+                    # if the port was in open_filtered move it to open
+                    if port in target.open_filtered_ports[self.protocol]:
+                        target.open_filtered_ports[self.protocol].remove(port)
+                        target.open_ports[self.protocol].add(port)
+
+                    # recieve the data and decode it to a string
                     data_recieved = sock.recv(4096).decode("utf-8")
+                    # print the header
                     print(data_recieved)
                     service_name = ""
+                    # try and softmatch the service first
                     for softmatch in self.softmatches:
                         search = softmatch.search(data_recieved)
                         if search:
                             service_name = search
                             target.services[port] = softmatch
                             break
-
+                    # try and get a full match for the service
                     for match in self.matches:
                         # If the softmatch fails then
                         # service_name defaults to ""
