@@ -1,0 +1,178 @@
+softmatch apachemq m|^\0\0..\x01ActiveMQ\0| p/ActiveMQ OpenWire transport/
+softmatch adobe-crossdomain m|^<\?xml version=\"1\.0\"\?>.*<cross-domain-policy>|s
+softmatch bitcoin m|^\xf9\xbe\xb4\xd9version\0\0\0\0\0\x55\0\0\0..\0\0\x01\0\0\0\0\0\0\0........\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xff\xff......\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xff\xff..............\0....$|s p/Bitcoin digital currency server/ cpe:/a:bitcoin:bitcoind/
+softmatch clementine m|^\0\0\0.\x08.\x10\.\xa2\x01.\x08.|s p/Clementine music player remote control/ cpe:/a:clementine-player:clementine/
+softmatch crossfire m|^\0#version \d+ \d+ Crossfire Server\n| p/Crossfire game server/ cpe:/a:crossfire:crossfire/
+softmatch daytime m|^[0-2]\d:[0-5]\d:[0-5]\d [12]\d\d\d/\d\d?/\d\d?\n$|
+softmatch epp m|^\0...<\?xml version=\"1\.0\" encoding=\"UTF-8\" standalone=\"no\"\?><epp xmlns=\"urn:ietf:params:xml:ns:epp-1\.0\".*<svID>([^<]+)</svID>|s p/Extensible Provisioning Protocol/ h/$1/
+softmatch epp m|^\0...<\?xml version=\"1\.0\" encoding=\"UTF-8\" standalone=\"no\"\?><epp xmlns=\"urn:ietf:params:xml:ns:epp-1\.0\"|s
+softmatch fhem m|^OK 9 \d+ \d+ \d+ \d+ \d+\r\n|
+softmatch filenet-pch m|^protocol\x08([\d.]+)\napp_name\x08(\S+)\napp_version\x08([\d.]+)\nhostname\x08(\S+)\nos\.arch\x08\S+\npagesize\x08\d+\nprocessors\x08\d+\nos\.name\x08(\S+)\nos\.version\x08(\S+)\ntime\x08\d+\n\n| p/IBM FileNet System Manager Dashboard/ i/protocol: $1; app: $2 $3/ o/$5 $6/ h/$4/ cpe:/a:ibm:filenet_system_manager_dashboard/
+softmatch filezilla m|^FZS\0\x04...\0\0\x04\0..\0\0.| p/FileZilla Server admin service/ cpe:/a:filezilla-project:filezilla_server/
+softmatch ftp m|^220 Welcome to ([-.\w]+) FTP.*\r\n$|i h/$1/
+softmatch ftp m|^220 ([-.\w]+) [-.\w ]+ftp.*\r\n$|i h/$1/
+softmatch ftp m|^220-([-.\w]+) [-.\w ]+ftp.*\r\n220|i h/$1/
+softmatch ftp m|^220 [-.\w ]+ftp.*\r\n$|i
+softmatch ftp m|^220-[-.\w ]+ftp.*\r\n220|i
+softmatch ftp m|^220[- ].*ftp server.*\r\n|i
+softmatch ftp m|^220-\r?\n220 - ftp|i
+softmatch gkrellm m|^<error>\nClient limit exceeded\.\n| p/GKrellM System Monitor/
+softmatch gkrellm m|^<error>\nConnection not allowed from .*\n| p/GKrellM System Monitor/
+softmatch hptsvr m|^\(\0\0\0hpt_stor\x01..\0\0\0\0\0\0\0\0\0....\.\.\.E\0\0\0\0\0\0\0\0$|s p/HighPoint RAID management service/
+softmatch imap m|^\* OK ([-.\w]+) [-.\w,:+ ]+imap[-.\w,:+ ]+\r\n$|i h/$1/
+softmatch imap m|^\* OK [-.\w,:+ ]+imap[-.\w,:+ ]+\r\n$|i
+softmatch imap m|^\* OK \[CAPABILITY IMAP4[Rr][Ee][Vv]1|
+softmatch jetbrains-lock m|^\0./.*/config\0./.*/system\0\x03---| p/JetBrains socket lock/
+softmatch java-object m|^\xac\xed\x00\x05| p/Java Object Serialization/
+softmatch napster m|^1$|
+softmatch mtap m|^WATSON!WATSON!| p/GroupLogic MassTransit or Adobe Virtual Network/
+softmatch nntp m|^200 [-\[\]\(\)!,/+:<>@.\w ]*nntp[-\[\]\(\)!,/+:<>@.\w ]*\r\n$|i
+softmatch nntp m=^200 .*posting(?: ok| allowed| permitted)?[ ).]*\r\n=i
+softmatch openflow m|^\x01\0\0\x08....$| i/OpenFlow 1.0/
+softmatch openwebnet m|^\*#\*1##|
+softmatch pop3 m|^\+OK [^<]+ <[\d.]+@([\w.-]+)>\r\n$| h/$1/
+softmatch pop3 m|^\+OK [-\[\]\(\)!,/+:<>@.\w ]+\r\n$|
+softmatch reverse-ssl m|^\x16\x03[\x00-\x03]..\x01...\x03[\x00-\x03].{32}| p|SSL/TLS ClientHello|
+softmatch sieve m|^\"IMPLEMENTATION\" \"([^"])\"\r\n\"SIEVE\" \"| p/sieved/ i/$1/
+softmatch smtp m|^220[\s-].*?E?SMTP[^\r]*\r\n|
+softmatch smtp m|^572 Relay not authorized\r\n| i/Relay not authorized/
+softmatch smtp m|^550 (\d\.\d\.\d) ([^\r\n]{1,248})| p/Unrecognized SMTP service/ i/$1 $2/
+softmatch smtp m|^554-([\w.-]+)\r\n554 | p/SMTP Transaction Failed/ h/$1/
+softmatch socks-proxy m|^\x00\x5b......$| p/Socks4A/
+softmatch ssh m|^SSH-([\d.]+)-| i/protocol $1/
+softmatch beep m|^RPY \d \d \. \d \d+\r\nContent-Type: application/beep\+xml\r\n|
+softmatch vnc m|RFB \d\d(\d)\.\d\d\d\n| i/protocol $1/
+softmatch vport m|^\x02\x83\0vPORT Rev:\+D2Tech\+ VPORT  VPORT_R_([\d_]+) \n| p/D2Tech vPort/ v/$SUBST(1,"_",".")/ cpe:/a:d2tech:vport:$SUBST(1,"_",".")/
+softmatch ppp m|^\x7e\xff\x7d\x23.*\x7e|
+softmatch telnet m|^\xff\xfb\x01(?!\xff)| p|APC PDU/UPS devices or Windows CE telnetd|
+softmatch telnet m|^\xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\xff\xfd\x1f(?!\xff)| p/Aruba telnetd/
+softmatch telnet m|^\xff\xfd\x03(?!\xff)| p/Cisco telnetd/
+softmatch telnet m|^\xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfd\x1f(?!\xff)| p/Cisco IOS telnetd/
+softmatch telnet m|^\xff\xfd\x1f(?!\xff)| p/Cowrie Honeypot telnetd/
+softmatch telnet m|^\xff\xfd\x03\xff\xfb\x03\xff\xfb\x01(?!\xff)| p/Enterasys telnetd/
+softmatch telnet m|^\xff\xfb\x01\xff\xfb\x03(?!\xff)| p/HP LaserJet telnetd/ d/printer/
+softmatch telnet m|^\xff\xfb\x03\xff\xfb\x01(?!\xff)| p/HP Integrated Lights Out telnetd/ d/remote management/
+softmatch telnet m|^\xff\xfc\x01(?!\xff)| p/HP JetDirect telnetd/ d/printer/
+softmatch telnet m|^\xff\xfb\x01\xff\xfb\x01\xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfd\x1f(?!\xff)| p/Huawei telnetd/
+softmatch telnet m|^\xff\xfd\x18\xff\xfd\x20\xff\xfd\x23\xff\xfd\x27(?!\xff)| p/Linux telnetd/ o/Linux/ cpe:/o:linux:linux_kernel/a
+softmatch telnet m|^\xff\xfd\x25\xff\xfb\x01\xff\xfb\x03\xff\xfd\x27\xff\xfd\x1f\xff\xfd\x00\xff\xfb\x00(?!\xff)| p/Microsoft Telnet Service telnetd/
+softmatch telnet m|^\xff\xfd\x25\xff\xfb\x01\xff\xfd\x03\xff\xfd\x1f\xff\xfd\x00\xff\xfb\x00(?!\xff)| p/Windows NT 4.0 telnetd/ o/Windows/ cpe:/o:microsoft:windows_nt:4.0/a
+softmatch telnet m|^\xff\xfb\x01\xff\xfb\x03\xff\xfb\x00\xff\xfd\x01\xff\xfd\x00(?!\xff)| p/Moxa Serial to Ethernet telnetd/
+softmatch telnet m|^\xff\xfd\x01\xff\xfd\x1f\xff\xfb\x01\xff\xfb\x03[^\xff]| p/BusyBox telnetd/ v/1.14.0 or later/ cpe:/a:busybox:busybox:1.14.0 or later/a
+softmatch telnet m|^\xff\xfd\x01\xff\xfd\x1f\xff\xfd!\xff\xfb\x01\xff\xfb\x03[^\xff]| p/BusyBox telnetd/ v/1.00-pre7 - 1.14.0/ cpe:/a:busybox:busybox:1.00-pre7 - 1.14.0/a
+softmatch telnet m|^\xff\xfd\x01\xff\xfd!\xff\xfb\x01\xff\xfb\x03[^\xff]| p/BusyBox telnetd/ v/0.61 - 1.00-pre7/ cpe:/a:busybox:busybox:0.61 - 1.00-pre7/a
+softmatch telnet m|^\xff\xfd\x18$|
+softmatch telnet m=^(?:\xff(?:[\xfb-\xfe].|\xf0|\xfa..))+(?:[\0-\x7f]|$)=
+softmatch kerberos-sec m|^\0\0\0[\x40-\x90]~[\x3e-\x8e]\x30[\x3c-\x8c]\xa0\x03\x02\x01\x05\xa1\x03\x02\x01\x1e\xa4\x11\x18\x0f(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z|s i/server time: $1-$2-$3 $4:$5:$6Z/
+softmatch ms-pe-exe m|^.{0,4}MZ.{76}This program cannot be run in DOS mode\.|s p/Microsoft PE executable file/
+softmatch elf-exe m|^.{0,4}\x7fELF\x01[\x01\x02]\x01| p/ELF 32-bit executable file/
+softmatch elf-exe m|^.{0,4}\x7fELF\x02[\x01\x02]\x01| p/ELF 64-bit executable file/
+softmatch adobe-crossdomain m|^Goodbye\r\n| p/Unknown Adobe Flash socket policy daemon/
+softmatch clam m|^UNKNOWN COMMAND\n$| p/Clam AV/ cpe:/a:clamav:clamav/
+softmatch gkrellm m|^<error>\nBad connect string!| p/GKrellM System Monitor/
+softmatch gopher m|^i\t?[\x20-\x7f]+\tfake\t\(NULL\)\t0\r\n| p/Pygopherd or Phricken/
+softmatch gopher m|^[0-9ghisIT](?:\t?[\x20-\x7f]+\t){3}[0-9]+\r\n|
+softmatch haproxy-stats m|^Unknown command\. Please enter one of the following commands only :\n  | p/HAProxy stats socket/ cpe:/a:haproxy:haproxy/
+softmatch http m|^HTTP/1\.1 405 Method Not Allowed\r\nContent-Length: 0\r\nConnection: close\r\nAccept-Ranges: bytes\r\nDate: .* GMT\r\n\r\n| p/1Password Agent or Daylite Server Admin caldav/
+softmatch http m|^UNKNOWN 400 Bad Request\r\nServer: Check Point SVN foundation\r\n| p/Check Point SVN foundation/
+softmatch http m|^HTTP/1\.1 400 Bad Request\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n400 Bad Request| p|Golang net/http server| cpe:/a:golang:go/
+softmatch sharp-remote m|^ERR\rERR\rERR\rERR\r| p/Sharp TV remote control/ d/media device/
+softmatch upnp m|^ 501 Not Implemented\r.*\nServer: [^\r\n]*UPnP/([\d.]+) MiniUPnPd/([\d.]+)\r\n|s p/MiniUPnP/ i/UPnP $1/ v/$2/ cpe:/a:miniupnp_project:miniupnpd:$2/a
+softmatch clickhouse m|^HTTP/1\.0 400 Bad Request\r\n\r\nPort \d+ is for clickhouse-client program\.\r\nYou must use port \d+ for HTTP\.\r\n| p/ClickHouse DBMS/ cpe:/a:yandex:clickhouse/
+softmatch hadoop-ipc m|^HTTP/1\.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nIt looks like you are making an HTTP request to a Hadoop IPC port\. This is not the correct port for the web interface on this daemon\.\r\n| p/Hadoop IPC/ cpe:/a:apache:hadoop/
+softmatch http m|^HTTP/1\.[01] \d\d\d.*\r\nDate:.*\r\nServer: Stronghold| p/Apache Stronghold httpd/ i/based on Apache/ cpe:/a:redhat:stronghold/
+softmatch http-proxy m|^HTTP/1\.1 502 Proxy Error \( [^\r\n]+  \)\r\nVia: 1\.1 ([\w.-]+)\r\n| p/Microsoft ISA Server http proxy/ o/Windows/ h/$1/ cpe:/a:microsoft:isa_server/ cpe:/o:microsoft:windows/a
+softmatch http m|^HTTP/1\.0 404 Not Found\r\nSERVER: Linux/([\d.]+),  DSL Forum TR-064, LAN-Side DSL CPE Configuration\r\nCONTENT-LENGTH: 48\r\nCONTENT-TYPE: text/html\r\n\r\n<html><body><h1>404 Not Found</h1></body></html>| p/unknown TR-064/ o/Linux $1/ cpe:/o:linux:linux_kernel:$1/a d/broadband router/
+softmatch http m|^HTTP/1\.[01] (?:[^\r\n]*\r\n(?!\r\n))*?X-Powered-By: PHP/(\d[\w._-]+)|s i/PHP $1/ cpe:/a:php:php:$1/
+softmatch http-proxy m|^HTTP/1\.1 400 Bad request\r\nContent-Length: 53\r\nContent-Type: text/html\r\n\r\nCan't do transparent proxying without a Host: header\.|
+softmatch http-proxy m|^HTTP/1.[01] 407 | i/proxy authentication required/
+softmatch http-proxy m|^HTTP/1.[01] 502 | i/bad gateway/
+softmatch mongodb m|^HTTP/1\.0 200 OK\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 116\r\n\r\nYou are trying to access MongoDB on the native driver port\. For http diagnostic access, add 1000 to the port number\n| p/MongoDB/ v/2.5.0 or earlier/ cpe:/a:mongodb:mongodb/
+softmatch mongodb m|^HTTP/1\.0 200 OK\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 84\r\n\r\nIt looks like you are trying to access MongoDB over HTTP on the native driver port\.\n| p/MongoDB/ v/2.5.1 or later/ cpe:/a:mongodb:mongodb/
+softmatch icap m|^ICAP/1\.0 \d\d\d |
+softmatch lscp m|^ERR:0:syntax error, unexpected '/' \(line:1,column:5\)\.|
+softmatch rotctld m|^RPRT -1\n| p/Hamlib rotctld/
+softmatch rtsp m|^HTTP/1\.[01] \d\d\d(?:[^\r\n]*\r\n(?!\r\n))*?Content-Type: application/x-rtsp-tunnelled|s
+softmatch upnp m|^HTTP/1.[01] \d\d\d (?:[^\r\n]*\r\n(?!\r\n))*?Server:[^\r\n]*UPnP/1.0|si
+softmatch websocket m|^HTTP/1\.1 101 Web Socket Protocol Handshake\r\n|
+softmatch websocket m|^HTTP/1\.1 400 Bad Request\r\n(?:[^\r\n]+\r\n)*?Sec-WebSocket-Version: (\d+)\r\n|s i/WebSocket version: $1/
+softmatch rtsp m|^RTSP/1.0 .*\r\n|
+softmatch http m|^HTTP/1\.[01] (?!400)\d\d\d.*\r\nDate: .*\r\nServer: Apache ([^\r\n]+)\r\n| p/Apache httpd/ i/$1/ cpe:/a:apache:http_server/
+softmatch caldav m|^HTTP/1\.[01] 200 OK\r\n.*DAV: [^\r\n]*calendar.*\r\nAllow:|s
+softmatch webdav m|^HTTP/1\.[01] 200 OK.*\r\nDAV: *1.*\r\nAllow:[^\r\n]* PROPFIND|s
+softmatch webdav m|^HTTP/1\.[01] 200 OK.*\r\nAllow:[^\r\n]* PROPFIND.*\r\nDAV: *1|s
+softmatch jabber m|^<stream:error |
+softmatch quake3 m|^\xff\xff\xff\xffdisconnect$| p/Quake 3 game server/
+softmatch dtls m|^\x15\xfe[\xfd\xff]\0\0\0\0\0\0\0\0..\x02.\0\0\0\0\0|
+softmatch domain m|\x07version\x04bind\0\0\x10\0\x03\xc0\x0c\0\x10\0[\x01\x03].{7}Microsoft DNS (.+)|s p/Microsoft DNS/ v/$1/ o/Windows/ cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows/a
+softmatch domain m|\x07version\x04bind\0\0\x10\0\x03\xc0\x0c\0\x10\0\x03.{7}([^\0\xc0\x0c]+)|s i/unknown banner: $1/
+softmatch domain m|\x07version\x04bind\0\0\x10\0\x03\x07VERSION\x04BIND\0\0\x10\0\x03.{7}([^\0\xc0\x0c]+)|s i/unknown banner: $1/
+softmatch domain m|^(?:..)?\0\x06\x90[\x01\x81\x91]\0\0\0\0\0\0\0\0$| i/generic dns response: FORMERR/
+softmatch domain m|^(?:..)?\0\x06\x90[\x04\x84\x94]\0\0\0\0\0\0\0\0$| i/generic dns response: NOTIMP/
+softmatch domain m|^(?:..)?\0\x06\x90[\x05\x85\x95]\0\0\0\0\0\0\0\0$| i/generic dns response: REFUSED/
+softmatch isakmp m|^\0\x06\x01\0\0\x01\0\0\0\0\0\0\x07ver\x0b\x10\x05\0\0\0\0\0\0\0\0\(\0\0\0\x0c\0\0\0\x01\x01\0\0\x05|
+softmatch dtls m|^\x15\xfe[\xfd\xff]\0\0\0\0\0\0\0\0..\x02.\0\0\0\0\0|
+softmatch domain m|^(?:..)?..\x90[\x01\x81\x91]\0\0\0\0\0\0\0\0$| i/generic dns response: FORMERR/
+softmatch domain m|^(?:..)?..\x90[\x04\x84\x94]\0\0\0\0\0\0\0\0$| i/generic dns response: NOTIMP/
+softmatch domain m|^(?:..)?..\x90[\x05\x85\x95]\0\0\0\0\0\0\0\0$| i/generic dns response: REFUSED/
+softmatch tftp m|^\0\x05\0[\0-\x07][^\0]+\0$|
+softmatch domain m|^\x80\xf0[\x80\x81][\x02\x82\x92]\0\x01\0\0\0\0\0\0 CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\0\0!\0\x01$| i/generic dns response: SERVFAIL/
+softmatch domain m|^\x80\xf0[\x80\x81][\x03\x83\x93]\0\x01\0\0\0\0\0\0 CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\0\0!\0\x01$| i/generic dns response: NXDOMAIN/
+softmatch netbios-ns m|^\x80\xf0\x84\0\0\0\0\x01\0\0\0\0 CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\0\0!\0\x01\0\0\0\0...([\w\-]{1,15})[\s]{0,14}| p/Unknown netbios-ns/ h/$1/
+softmatch netbios-ns m|^\x80\xf0[\x80-\x8f].\0\0\0.\0\0\0\0 CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\0\0!\0\x01|
+softmatch smtp m|^220[\s-].*smtp[^\r]*\r\n214[\s-]|i
+softmatch ftp m|^220[\s-].*ftp[^\r]*\r\n214[\s-]|i
+softmatch echo m|^\x16\x03\0\0S\x01\0\0O\x03\0\?G\xd7\xf7\xba,\xee\xea\xb2`~\xf3\0\xfd\x82\{\xb9\xd5\x96\xc8w\x9b\xe6\xc4\xdb<=\xdbo\xef\x10n\0\0\(\0\x16\0\x13\0\n|
+softmatch afp m|^\x01\x03\0\0........\0\0\0\0.*AFP|s
+softmatch ftp m|^220 .*\r\n451 The parameter is incorrect\. \r\n| p/IIS ftpd/ o/Windows/ cpe:/a:microsoft:iis/ cpe:/o:microsoft:windows/a
+softmatch smpp m|^\0\0\0\x10\x80\0\0\0\0\0\0\x03....$|s
+softmatch microsoft-ds m|^\0\0..\xffSMBr\0\0\0\0[\x80-\xff]..\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\x06\0\0\x01\0\x11[\x01-\x07]\0.{42}(.*)\0\0(.*)\0\0$|s i/workgroup: $P(1)/ h/$P(2)/
+softmatch microsoft-ds m|^\0\0..\xffSMBr\0\0\0\0[\x80-\xff]..\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\x06\0\0\x01\0\x11[\x01-\x07]\0|s
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0MProtocole non support.{1,2}e de l'interface 65363| p/PostgreSQL DB/ i/French/ cpe:/a:postgresql:postgresql::::fr/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0Mel protocolo 65363| p/PostgreSQL DB/ i/Spanish/ cpe:/a:postgresql:postgresql::::es/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0Mnicht unterst.*?Frontend-Protokoll 65363\.19778:|s p/PostgreSQL DB/ i/German/ cpe:/a:postgresql:postgresql::::de/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0M\xe3\x83\x95\xe3\x83\xad\xe3\x83\xb3\xe3\x83\x88\xe3\x82\xa8\xe3\x83\xb3\xe3\x83\x89\xe3\x83\x97\xe3\x83\xad\xe3\x83\x88\xe3\x82\xb3\xe3\x83\xab|s p/PostgreSQL DB/ i/Japanese/ cpe:/a:postgresql:postgresql::::ja/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0M.*?65363\.19778.*?1\.0.*?3\.0.*?\0Fpostmaster\.c\0|s p/PostgreSQL DB/ cpe:/a:postgresql:postgresql/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0M.*?65363\.19778.*?1\.0.*?3\.0.*?\0F\.\\src\\backend\\postmaster\\postmaster\.c\0|s p/PostgreSQL DB/ o/Windows/ cpe:/a:postgresql:postgresql/ cpe:/o:microsoft:windows/a
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0C0A000\0Munsupported frontend protocol 65363| p/PostgreSQL DB/ cpe:/a:postgresql:postgresql/
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0VFATAL\0C0A000\0M.*?65363\.19778.*?1\.0.*?3\.0.*?\0F\.\\src\\backend\\postmaster\\postmaster\.c\0|s p/PostgreSQL DB/ v/9.6.0 or later/ o/Windows/ cpe:/a:postgresql:postgresql/ cpe:/o:microsoft:windows/a
+softmatch postgresql m|^E\0\0\0.S[^\0]+\0VFATAL\0C0A000\0Munsupported frontend protocol 65363| p/PostgreSQL DB/ v/9.6.0 or later/ cpe:/a:postgresql:postgresql/
+softmatch vertica m|^V\0\0\x01f:ErrorMsg\nelevel:23\nfilename:/scratch_a/release/vbuild/vertica/Session/ClientSession\.cpp\nlineno:(\d+)\ncaught:SessionRun\nsqlerrcode:16933376\nverticacode:3753\nmessage:Invalid startup packet layout: expected terminator as last byte\ndetail:\nhint:\nlog_message:Invalid startup packet layout: expected terminator as last byte\nlog_detail:\nlog_hint:\ncursorpos:0\n\.\n| p/HP Vertica database/ i/error line $1/ cpe:/a:hp:vertica/
+softmatch smpp m|^\0\0\0\x10\x80\0\0\0\0\0\0\x03....$|s
+softmatch X11 m|^\x01\0\x0b\0\0......\0\0\0.|s
+softmatch ldap m|^0..?\x02\x01\x01a..?\n\x01.\x04\0\x04|s
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r\n(?:[^\r\n]+\r\n)*?Server: ([-\w\s/_\.\(\)]+)\r\n|s p/$2/ i/Status: $1/
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r.*\nUser-[Aa]gent: ([-\w\s/_\.\(\)]+)\r\n|s p/$2/ i/Status: $1/
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r\n| i/SIP end point; Status: $1/
+softmatch quic m|^\rPTIONS sQ\d\d\d|
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r\n(?:[^\r\n]+\r\n)*?Server: ([-\w\s/_\.\(\)]+)\r\n|s p/$2/ i/Status: $1/
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r.*\nUser-[Aa]gent: ([-\w\s/_\.\(\)]+)\r\n|s p/$2/ i/Status: $1/
+softmatch sip m|^SIP/2\.0 ([-\w\s.]+)\r\n| i/SIP end point; Status: $1/
+softmatch ws-discovery m|^<\?xml version=\"1\.0\" encoding=\"UTF-8\"\?>\n<SOAP-ENV:Envelope .*xmlns:\w+=\"http://schemas\.xmlsoap\.org/ws/2005/04/discovery\" .*xmlns:\w+=\"http://www\.onvif\.org/ver10/network/wsdl/RemoteDiscoveryBinding\"| p/ONVIF 1.0 responder/ d/webcam/
+softmatch ws-discovery m|^<\?xml version=\"1\.0\" encoding=\"UTF-8\"\?>\n<SOAP-ENV:Envelope .*xmlns:\w+=\"http://schemas\.xmlsoap\.org/ws/2005/04/discovery\" .*xmlns:\w+=\"http://schemas\.microsoft\.com/windows/2006/08/wdp/print\"| p/WS-Print 1.0 responder/ d/printer/
+softmatch svrloc m|^\x02\x02\0\0.\0\0\0\0\0..\0.\w+|s p/SLP Service Agent/
+softmatch slp-srvreg m|^\x02\x05\0\0.\0\0\0\0\0..\0.\w+|s p/SLP Directory Agent/
+softmatch slmp m|^\xd4\0MP\x04\0\0\0TNM\x0b\0P\0\0\0.......|s p/Mitsubishi PLC SLMP/ d/specialized/
+softmatch radmin m|^\x01\x00\x00\x00\x25.\x00..\x08.\x00..|s p/Famatech Radmin/ o/Windows/ cpe:/a:famatech:radmin/ cpe:/o:microsoft:windows/a
+softmatch minecraft-pe m|^\x1c................\0\xff\xff\0\xfe\xfe\xfe\xfe\xfd\xfd\xfd\xfd\x12\x34\x56\x78| p/Minecraft Pocket Edition server/
+softmatch mdns m|^\0\0\x84\0\0\0\0\x05\0\0\0\0|
+softmatch snmp m|^..\x02\x01\x030.\x02\x02Ji\x02.{3,4}\x04\x01.\x02\x01\x03\x04|s p/SNMPv3 server/
+softmatch slmp m|^\xd4\0MP\x04\0\0\0TNM\x0b\0P\0\0\0.......|s p/Mitsubishi PLC SLMP/ d/specialized/
+softmatch oracle-tns m|^\0.\0\0[\x02\x04]\0\0\0|s p/Oracle TNS Listener/
+softmatch socks5 m|^\x05|
+softmatch ms-sql-s m|^\x04\x01\x00\x25\x00\x00\x01| p/Microsoft SQL Server/ o/Windows/ cpe:/a:microsoft:sql_server/ cpe:/o:microsoft:windows/
+softmatch memcached m|^STAT pid \d+\r\n|
+softmatch firebird m|^\0\0\0\x03\0\0\0.\0\0\0.|s p/Firebird RDBMS/ cpe:/a:firebirdsql:firebird/
+softmatch afp m|^\x01\x03\0\x01\0\0\0\0....\0\0\0\0.*AFP|s
+softmatch drda m|^\0.......\x14\x43..\x11\x5e.*\x11\x47|
+softmatch ibm-mqseries m|^TSH\x20\0\0\0| p/IBM WebSphere MQ/ cpe:/a:ibm:websphere_mq/
+softmatch memcached m|^\0\x01\0\0\0\x01\0\0STAT |
+softmatch telnet m|^\xff\xfd\x18\xff\xfa\x18\x01\xff\xf0\xff\xfb\x01\xff\xfb\x03\xff\xfd\x01| p/2.11BSD-derived telnetd/ o/Unix/
+softmatch giop m|^GIOP\x01\x00\x01\x01........\x01\x00\x00\x00|
+softmatch openvpn m|^\0\x1e@........\x02\0\0\0\0\0\0\0\x007\xa5&\x08\xa2\x1b\xa0\xb1\0\0\0\0\0\x0e@........\0\0\0\0\0|
+softmatch niagara-fox m|^fox a 0|
+softmatch asf-rmcp m|^\x06\0\xff\x07\0\0\0\0\0\0\0\0\0\x10|
+softmatch coap m|^`E|
+softmatch quic m|^\r\x89\xc1\x9c\x1c\*\xff\xfc\xf1((?:Q[0-8]\d\d)+)$| i/QUIC versions$SUBST(1,"Q",", Q")/
+softmatch adb m|^CNXN\0\0\0\x01\0\x10\0\0........\xbc\xb1\xa7\xb1(\w+):[^:]*:[^\0]+\0$|s p/Android Debug Bridge $1/ i/no auth/ o/Android/ cpe:/o:google:android/a cpe:/o:linux:linux_kernel/a
+softmatch adb m|^AUTH(.)\0\0\0\0\0\0\0........\xbc\xb1\xa7\xb1|s p/Android Debug Bridge/ i/auth required: $I(1,"<")/ o/Android/ cpe:/o:google:android/a cpe:/o:linux:linux_kernel/a
