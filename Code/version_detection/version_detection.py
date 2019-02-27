@@ -80,9 +80,7 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
     # list holding each of the probe directives.
     probes: Dict[str, directives.Probe] = {}
-
-    # this defines the string on which to form
-    # the regex which I use to match the match directives.
+    "sad;asdk;askd;lkas;l"
     match_string = " ".join([
         "match",
         r"(\S+)",
@@ -92,8 +90,11 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     match_regex = re.compile(match_string)
 
     regexes: Dict[str, Pattern]
+    # TODO versioninfo regex
     regexes = {
-        "probe":      re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
+        "probe":        re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
+        "match":        re.compile(r"match (\S+) m[\|=](.+)[\|=]([is]*)"),
+        "versioninfo":  re.compile(r""),
         "rarity":       re.compile(r"rarity (\d+)"),
         "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
         "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
@@ -112,6 +113,9 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                 # a search with the regex defined above.
                 for protocol, ports in parse_ports(search.group(1)).items():
                     directives.Probe.exclude[protocol].update(ports)
+            else:
+                print(line)
+                input()
 
         # new probe directive
         if line.startswith("Probe"):
@@ -127,19 +131,26 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                 probes[name] = directives.Probe(proto, name, string)
                 # assign current_probe to the most recently added probe
                 current_probe = probes[name]
+            else:
+                print(line)
+                input()
 
         # new match directive
         elif line.startswith("match") or line.startswith("softmatch"):
+            softmatch = line.startswith("softmatch")
+            search = regexes["match"].search(line)
+
             # service name, match string, version strings
             search = match_regex.search(line)
             if search:
                 # return any information matched by the regex
-                service, regex, regex_options, version_info = search.groups()
+                service, regex, regex_options = search.groups()
                 if line[0] == "m":  # new match object
                     match = directives.Match(
                         service,
                         regex[2:-1],
-                        regex_options)
+                        regex_options
+                    )
                     # add the version info to the match object
                     match.add_version_info(version_info)
                     # add the match directive to the current probe
@@ -152,6 +163,10 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                         regex_options
                     )
                     current_probe.softmatches.add(softmatch)
+            else:
+                continue
+                print(line)
+                print()
 
         # new ports directive
         elif line.startswith("ports"):
@@ -159,24 +174,35 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
             if search:
                 for protocol, ports in parse_ports(search.group(1)).items():
                     current_probe.ports[protocol].update(ports)
-
+            else:
+                print(line)
+                input()
         # new totalwaitms directive
         elif line.startswith("totalwaitms"):
             search = regexes["totalwaitms"].search(line)
             if search:
                 current_probe.totalwaitms = int(search.group(1))
+            else:
+                print(line)
+                input()
 
         # new rarity directive
         elif line.startswith("rarity"):
             search = regexes["rarity"].search(line)
             if search:
                 current_probe.rarity = int(search.group(1))
+            else:
+                print(line)
+                input()
 
         # new fallback directive
         elif line.startswith("fallback"):
             search = regexes["fallback"].search(line)
             if search:
                 current_probe.fallback = set(search.group(1).split(","))
+            else:
+                print(line)
+                input()
 
     return probes
 
@@ -184,17 +210,14 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 def version_detect_scan(
         target: directives.Target,
         probes: Dict[str, directives.Probe]
-):
+) -> directives.Target:
     for probe in probes.values():
-        probe.scan(target)
+        target = probe.scan(target)
+    return target
 
 
 if __name__ == "__main__":
-    probes = parse_probes("./small-example-probes")
-    for probe in probes.values():
-        for match in probe.matches:
-            print(match)
-
+    probes = parse_probes("./nmap-service-probes")
     exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
@@ -209,4 +232,4 @@ if __name__ == "__main__":
 
     target.open_ports["TCP"].update([1, 2, 3])
     # print(target)
-    version_detect_scan(target, probes)
+    scanned = version_detect_scan(target, probes)

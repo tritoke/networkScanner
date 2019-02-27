@@ -2,18 +2,22 @@
 from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
+from functools import reduce
 from typing import DefaultDict, Dict, Set, Union, List
 import ip_utils
-import re
+import operator
+import regex
 import socket
 
 
 class Match:
     """
-    This class holds information for the match directive.
-    This includes optional version info as well as a service,
-    a pattern to match the response against and some pattern options.
+    This is a class for both
     """
+    options_to_flags = {
+        "i": regex.IGNORECASE,
+        "s": regex.DOTALL
+    }
     version_info: DefaultDict[str, str] = defaultdict(str)
     letter_to_name = {
         "p": "vendorproductname",
@@ -31,50 +35,51 @@ class Match:
             pattern_options: str
     ):
         self.service: str = service
-        self.pattern: str = pattern
-        # inline regex options are the cool
-        self.pattern_options: str = pattern_options
+        # bitwise or is used to combine flags
+        # pattern options will never be anything but a
+        # combination of s and i.
+        # the default value of regex.V1 is so that
+        # regex uses the newer matching engine.
+        flags = reduce(
+            operator.ior,
+            [
+                self.options_to_flags[opt]
+                for opt in pattern_options
+            ],
+            regex.V1
+        )
+#        print(f"{flags:016b}")
 
-    def __repr__(self):
+        self.pattern: regex.Regex = regex.compile("\d+", flags=flags)
+        # regex.compile(pattern, flags=flags)
+        # inline regex options are the cool
+
+    def __repr__(self) -> str:
         return "Match(" + ", ".join((
                 f"service={self.service}",
                 f"pattern={self.pattern}",
-                f"pattern_options={self.pattern_options}",
                 f"version_info={self.version_info}"
             )) + ")"
 
-    def add_version_info(self, version_string: str):
+    def search(self, string: str) -> str:
+        re_search = self.pattern.search(string)
+        print(self.pattern.findall)
+        if re_search:
+            return self.service
+        else:
+            return ""
+
+    def add_version_info(self, version_string: str) -> None:
         # this regular expression matches one character from pvihod
         # followed by a / then it non-greedily matches at least one of
         # any character followed by another slash
-        regex = re.compile(r"[pvihod]/.+?/")
+        pattern = regex.compile(r"[pvihod]/.+?/")
+
         # find all the additional fields and iterate over them
-        fields = regex.findall(version_string)
+        fields = pattern.findall(version_string)
         for value in fields:
             # add the field information to the match object
             self.version_info[Match.letter_to_name[value[0]]] = value[2:-1]
-
-    def search(self, string: str):
-        pass
-
-
-class Softmatch:
-    """
-    This class holds infomation for the sortmatch directive.
-    Such as the service, the regex pattern and the pattern options.
-    """
-    def __init__(
-            self,
-            service: str,
-            pattern: str,
-            pattern_options: str
-    ):
-        self.service: str = service
-        self.pattern: str = pattern
-        self.pattern_options: str = pattern_options
-
-    def search(self, string: str):
-        pass
 
 
 @dataclass
@@ -92,8 +97,8 @@ class Target:
     open_filtered_ports: DefaultDict[str, Set[int]]
     services: Dict[int, Union[Match, Softmatch]] = field(default_factory=dict)
 
-    def __repr__(self):
-        # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1..5,7,9..13,15
+    def __repr__(self) -> str:
+        # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1-5,7,9-13,15
         def collapse(port_dict: DefaultDict) -> str:
             store_results = list()
             for key in port_dict:
@@ -113,21 +118,22 @@ class Target:
                             key_result += f"{item}"
                             # if its a sequence start one else put a comma
                             if items[index+1] == item+1:
-                                key_result += ".."
+                                key_result += "-"
                             else:
                                 key_result += ","
                         # if the sequence breaks then put a comma
                         elif item+1 != items[index+1]:
                             key_result += f"{item},"
                             new_sequence = True
-                        # if its a new sequence the put the `..`s in
+                        # if its a new sequence the put the `-`s in
                         elif item+1 == items[index+1] and new_sequence:
-                            key_result += f"{item}.."
+                            key_result += f"{item}-"
                             new_sequence = False
                     # because we only iterate to the one before
                     # the last element, add the last element on to the end.
                     key_result += f"{items[-1]}" + "}"
                     store_results.append(key_result)
+            # format the final result
             result = "{" + ", ".join(store_results) + "}"
             return result
 
@@ -187,7 +193,7 @@ class Probe:
         self.rarity: int = -1
         self.fallback: Set[str] = set()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         This is the function that is called when something
         tries to print an instance of this class.
@@ -205,7 +211,7 @@ class Probe:
             f"fallbacks: {self.fallback})"
         ])
 
-    def scan(self, target: Target):
+    def scan(self, target: Target) -> Target:
         """
         scan takes in an object of class Target to
         probe and attempts to detect the version of
@@ -225,12 +231,14 @@ class Probe:
                 | target.open_ports[self.protocol]
             )
         ) - Probe.exclude[self.protocol] - Probe.exclude["ANY"]
+        # if the probe defines a set of ports to scan
+        # then don't scan any that aren't defined for it
         if self.ports[self.protocol] != set():
             ports_to_scan &= self.ports[self.protocol]
-        print(target.open_filtered_ports[self.protocol] |
-              target.open_ports[self.protocol])
         print(f"Scanning {self.protocol} ports: {ports_to_scan}")
         for port in ports_to_scan:
+            # open a self closing IPV4 socket
+            # for the correct protocol for this probe.
             with closing(
                     socket.socket(
                         socket.AF_INET,
@@ -240,6 +248,8 @@ class Probe:
                 # setup the connection to the target
                 try:
                     sock.connect((target.address, port))
+                    # if the connection fails then continue scanning
+                    # the next ports, this shouldn't really happen.
                 except ConnectionError:
                     continue
                 # send the payload to the target
@@ -279,3 +289,4 @@ class Probe:
                             if search:
                                 target.services[port] = match
                                 break
+        return target
