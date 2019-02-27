@@ -13,6 +13,7 @@ from multiprocessing import Pool
 from typing import Set, DefaultDict
 
 
+# TODO add to module for listeners
 def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
     """
     This listener detects UDP packets from dest_ip in the given timespan,
@@ -43,7 +44,8 @@ def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
     return ports
 
 
-def icmp_listener(src_ip: str, timeout=2) -> int:
+# add to module of listeners
+def icmp_listener(src_ip: str, timeout: float = 2) -> int:
     """
     This listener detects ICMP destination unreachable
     packets and returns the icmp code.

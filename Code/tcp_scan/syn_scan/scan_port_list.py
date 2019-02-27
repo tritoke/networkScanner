@@ -3,11 +3,11 @@ from contextlib import closing
 from headers import tcp_header
 from multiprocessing import Pool
 from typing import List, Tuple, Set
-import struct
 import socket
 import ip_utils
 
 
+# TODO make into a generic TCP listener and place in module
 def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
     """
     This function is run asynchronously and listens for

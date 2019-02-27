@@ -95,7 +95,7 @@ class Target:
     address: str
     open_ports: DefaultDict[str, Set[int]]
     open_filtered_ports: DefaultDict[str, Set[int]]
-    services: Dict[int, Union[Match, Softmatch]] = field(default_factory=dict)
+    services: Dict[int, Match] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1-5,7,9-13,15

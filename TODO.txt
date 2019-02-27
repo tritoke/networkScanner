@@ -1,1 +1,2 @@
 move udp/tcp/icmp listeners to a seperate listeners module in the modules directory.
+move all scanners to a scanners module.

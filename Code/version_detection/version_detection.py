@@ -139,7 +139,7 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
         elif line.startswith("match") or line.startswith("softmatch"):
             softmatch = line.startswith("softmatch")
             search = regexes["match"].search(line)
-
+            # TODO convert regex to the new style
             # service name, match string, version strings
             search = match_regex.search(line)
             if search:
