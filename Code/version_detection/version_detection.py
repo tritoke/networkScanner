@@ -65,7 +65,8 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     return ports
 
 
-def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
+def parse_probes(probe_file: str) -> DefaultDict[str,
+                                                 Dict[str, directives.Probe]]:
     """
     Extracts all of the probe directives from the
     file pointed to by probe_file.
@@ -79,7 +80,7 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
     ]
 
     # list holding each of the probe directives.
-    probes: Dict[str, directives.Probe] = {}
+    probes: DefaultDict[str, Dict[str, directives.Probe]] = defaultdict(dict)
 
     regexes: Dict[str, Pattern] = {
         "probe":        re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
@@ -120,14 +121,9 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                 except ValueError:
                     print(line)
                     raise
-                # TODO deal with the issue of probes with the same name
-                if name in probes:
-                    print(probes[name])
-                    print(line)
-                # add the new probe to the end of the list of probes
-                probes[name] = directives.Probe(proto, name, string)
+                probes[name][proto] = directives.Probe(proto, name, string)
                 # assign current_probe to the most recently added probe
-                current_probe = probes[name]
+                current_probe = probes[name][proto]
             else:
                 print(line)
                 input()
@@ -203,6 +199,11 @@ def version_detect_scan(
 
 if __name__ == "__main__":
     probes = parse_probes("./nmap-service-probes")
+    tot = 0
+    for name in probes:
+        print(probes[name])
+        tot += len(probes[name])
+    print(tot)
     exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
