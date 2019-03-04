@@ -3,7 +3,7 @@ from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
 from functools import reduce
-from typing import DefaultDict, Dict, Set, Union, List
+from typing import DefaultDict, Dict, Set, List
 import ip_utils
 import operator
 import regex
@@ -12,7 +12,9 @@ import socket
 
 class Match:
     """
-    This is a class for both
+    This is a class for both Matches and
+    Softmatches as they are actually the same
+    thing except that softmatches have less information.
     """
     options_to_flags = {
         "i": regex.IGNORECASE,
@@ -27,12 +29,14 @@ class Match:
         "o": "operatingsystem",
         "d": "devicetype"
     }
+    # look into match.expand when looking at the substring version info things.
 
     def __init__(
             self,
             service: str,
             pattern: str,
-            pattern_options: str
+            pattern_options: str,
+            version_info: str
     ):
         self.service: str = service
         # bitwise or is used to combine flags
@@ -50,7 +54,7 @@ class Match:
         )
 #        print(f"{flags:016b}")
 
-        self.pattern: regex.Regex = regex.compile("\d+", flags=flags)
+        self.pattern: regex.Regex = regex.compile(r"\d+", flags=flags)
         # regex.compile(pattern, flags=flags)
         # inline regex options are the cool
 
@@ -186,7 +190,7 @@ class Probe:
         self.string: str = probestring
         self.payload: bytes = bytes(probestring, "utf-8")
         self.matches: Set[Match] = set()
-        self.softmatches: Set[Softmatch] = set()
+        self.softmatches: Set[Match] = set()
         self.ports: DefaultDict[str, Set[int]] = defaultdict(set)
         self.totalwaitms: int = 6000
         self.tcpwrappedms: int = 3000

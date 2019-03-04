@@ -80,21 +80,14 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
     # list holding each of the probe directives.
     probes: Dict[str, directives.Probe] = {}
-    "sad;asdk;askd;lkas;l"
-    match_string = " ".join([
-        "match",
-        r"(\S+)",
-        r"(m\|.*\||m=.*=|m@.*@|m%.*%)(s?i?)",
-        r"([pvihod]/.+/)"
-    ])
-    match_regex = re.compile(match_string)
 
-    regexes: Dict[str, Pattern]
-    # TODO versioninfo regex
-    regexes = {
+    regexes: Dict[str, Pattern] = {
         "probe":        re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
-        "match":        re.compile(r"match (\S+) m[\|=](.+)[\|=]([is]*)"),
-        "versioninfo":  re.compile(r""),
+        "match":        re.compile(" ".join([
+            r"(?P<type>softmatch|match)",
+            r"(?P<service>\S+)",
+            r"m([@/%=|])(?P<regex>.+)\3(?P<flags>[si]*)"
+        ])),
         "rarity":       re.compile(r"rarity (\d+)"),
         "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
         "tcpwrappedms": re.compile(r"tcpwrappedms (\d+)"),
@@ -127,6 +120,10 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
                 except ValueError:
                     print(line)
                     raise
+                # TODO deal with the issue of probes with the same name
+                if name in probes:
+                    print(probes[name])
+                    print(line)
                 # add the new probe to the end of the list of probes
                 probes[name] = directives.Probe(proto, name, string)
                 # assign current_probe to the most recently added probe
@@ -137,34 +134,23 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
 
         # new match directive
         elif line.startswith("match") or line.startswith("softmatch"):
-            softmatch = line.startswith("softmatch")
             search = regexes["match"].search(line)
-            # TODO convert regex to the new style
-            # service name, match string, version strings
-            search = match_regex.search(line)
             if search:
-                # return any information matched by the regex
-                service, regex, regex_options = search.groups()
-                if line[0] == "m":  # new match object
-                    match = directives.Match(
-                        service,
-                        regex[2:-1],
-                        regex_options
-                    )
-                    # add the version info to the match object
-                    match.add_version_info(version_info)
-                    # add the match directive to the current probe
-                    current_probe.matches.add(match)
+                # the remainder of the string after the match
+                version_info = line[search.end()+1:]
 
+                matcher = directives.Match(
+                    search.group("service"),
+                    search.group("regex"),
+                    search.group("flags"),
+                    version_info
+                )
+                if search.group("type") == "match":
+                    current_probe.matches.add(matcher)
                 else:
-                    softmatch = directives.Softmatch(
-                        service,
-                        regex[2:-1],
-                        regex_options
-                    )
-                    current_probe.softmatches.add(softmatch)
+                    current_probe.softmatches.add(matcher)
+
             else:
-                continue
                 print(line)
                 print()
 
@@ -203,7 +189,6 @@ def parse_probes(probe_file: str) -> Dict[str, directives.Probe]:
             else:
                 print(line)
                 input()
-
     return probes
 
 
