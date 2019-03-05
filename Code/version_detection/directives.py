@@ -52,9 +52,12 @@ class Match:
             ],
             regex.V1
         )
-#        print(f"{flags:016b}")
-
-        self.pattern: regex.Regex = regex.compile(r"\d+", flags=flags)
+        try:
+            self.pattern: regex.Regex = regex.compile(
+                regex.escape(pattern),
+                flags=flags)
+        except Exception:
+            print(regex.escape(pattern), "\n\n")
         # regex.compile(pattern, flags=flags)
         # inline regex options are the cool
 
@@ -67,7 +70,7 @@ class Match:
 
     def search(self, string: str) -> str:
         re_search = self.pattern.search(string)
-        print(self.pattern.findall)
+        # print(self.pattern.findall)
         if re_search:
             return self.service
         else:
@@ -143,11 +146,12 @@ class Target:
 
         open_ports = collapse(self.open_ports)
         open_filtered_ports = collapse(self.open_filtered_ports)
-        return "Target(" + ", ".join((
-            f"address=[{self.address}]",
+        return ", ".join((
+            f"Target(address=[{self.address}]",
             f"open_ports=[{open_ports}]",
-            f"open_filtered_ports=[{open_filtered_ports}]"
-        )) + ")"
+            f"open_filtered_ports=[{open_filtered_ports}]",
+            f"services={self.services})"
+        ))
 
 
 class Probe:
@@ -221,7 +225,6 @@ class Probe:
         probe and attempts to detect the version of
         any services running on the machine.
         """
-        print(f"Scanning {target}")
         # this constructs the set of all ports,
         # that are either open or open_filtered,
         # and are in the set of ports to scan for
@@ -239,7 +242,6 @@ class Probe:
         # then don't scan any that aren't defined for it
         if self.ports[self.protocol] != set():
             ports_to_scan &= self.ports[self.protocol]
-        print(f"Scanning {self.protocol} ports: {ports_to_scan}")
         for port in ports_to_scan:
             # open a self closing IPV4 socket
             # for the correct protocol for this probe.
@@ -274,23 +276,24 @@ class Probe:
                     data_recieved = sock.recv(4096).decode("utf-8")
                     # print the header
                     print(data_recieved)
-                    service_name = ""
+                    service = ""
                     # try and softmatch the service first
                     for softmatch in self.softmatches:
                         search = softmatch.search(data_recieved)
-                        if search:
-                            service_name = search
+                        if search != "":
+                            service = softmatch.service
                             target.services[port] = softmatch
                             break
                     # try and get a full match for the service
                     for match in self.matches:
                         # If the softmatch fails then
-                        # service_name defaults to ""
+                        # service defaults to ""
                         # this makes the below statement true
                         # for all match.service names.
-                        if service_name in match.service:
+                        if service in match.service:
                             search = match.search(data_recieved)
-                            if search:
+                            if search != "":
+                                print(f"Matched: {match}")
                                 target.services[port] = match
                                 break
         return target

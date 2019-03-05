@@ -6,6 +6,13 @@ import directives
 import re
 import operator
 
+# type annotaion for the container which
+# holds the probes. I have abstracted it from
+# the function definition because multiple functions
+# depend on it and they weren't all getting updated
+# if I needed to change the function signature.
+PROBE_CONTAINER = DefaultDict[str, Dict[str, directives.Probe]]
+
 
 def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     """
@@ -65,8 +72,7 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     return ports
 
 
-def parse_probes(probe_file: str) -> DefaultDict[str,
-                                                 Dict[str, directives.Probe]]:
+def parse_probes(probe_file: str) -> PROBE_CONTAINER:
     """
     Extracts all of the probe directives from the
     file pointed to by probe_file.
@@ -80,7 +86,7 @@ def parse_probes(probe_file: str) -> DefaultDict[str,
     ]
 
     # list holding each of the probe directives.
-    probes: DefaultDict[str, Dict[str, directives.Probe]] = defaultdict(dict)
+    probes: PROBE_CONTAINER = defaultdict(dict)
 
     regexes: Dict[str, Pattern] = {
         "probe":        re.compile(r"Probe (TCP|UDP) (\S+) q\|(.*)\|"),
@@ -190,21 +196,17 @@ def parse_probes(probe_file: str) -> DefaultDict[str,
 
 def version_detect_scan(
         target: directives.Target,
-        probes: Dict[str, directives.Probe]
+        probes: PROBE_CONTAINER
 ) -> directives.Target:
-    for probe in probes.values():
-        target = probe.scan(target)
+    for probe_dict in probes.values():
+        for proto in probe_dict:
+            target = probe_dict[proto].scan(target)
     return target
 
 
 if __name__ == "__main__":
     probes = parse_probes("./nmap-service-probes")
-    tot = 0
-    for name in probes:
-        print(probes[name])
-        tot += len(probes[name])
-    print(tot)
-    exit()
+
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,
@@ -215,7 +217,9 @@ if __name__ == "__main__":
         open_ports,
         open_filtered_ports
     )
-
     target.open_ports["TCP"].update([1, 2, 3])
-    # print(target)
+    print("BEFORE")
+    print(target)
     scanned = version_detect_scan(target, probes)
+    print("AFTER")
+    print(scanned)
