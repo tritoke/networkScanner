@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# LaTeX files
+*.aux
+*.log
+
 # mypy cache directories
 .mypy_cache/
 
