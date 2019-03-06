@@ -50,14 +50,15 @@ class Match:
                 self.options_to_flags[opt]
                 for opt in pattern_options
             ],
-            regex.V1
+            regex.V0
         )
         try:
             self.pattern: regex.Regex = regex.compile(
-                regex.escape(pattern),
-                flags=flags)
+                pattern,
+                flags=flags
+            )
         except Exception:
-            print(regex.escape(pattern), "\n\n")
+            print(pattern)
         # regex.compile(pattern, flags=flags)
         # inline regex options are the cool
 
@@ -274,8 +275,6 @@ class Probe:
 
                     # recieve the data and decode it to a string
                     data_recieved = sock.recv(4096).decode("utf-8")
-                    # print the header
-                    print(data_recieved)
                     service = ""
                     # try and softmatch the service first
                     for softmatch in self.softmatches:

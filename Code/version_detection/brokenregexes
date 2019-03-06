@@ -1,0 +1,17 @@
+=====
+These regexes were causing problems because they wouldn't compile.
+most of these compile if you remove the regex.V1 flag
+=====
+^DRINASD\0\x01\x01\0\0\0\0..<\?xml version=\"1\.0\" encoding=\"utf-8\"\?>\n\n<ESATMUpdate>\n    <mESAUpdateSignature>ESAINFO</mESAUpdateSignature>\n    <mESAUpdateVersion>\d+</mESAUpdateVersion>\n    <mESAUpdateSize>\d+</mESAUpdateSize>\n    <mESAID>\w+</mESAID>\n    <mSerial>\w+</mSerial>\n    <mName>(Drobo(?:-FS|5N))?</mName>\n    <mVersion>([][\w._ ]+)</mVersion>\n    <mReleaseDate>([^<]+)</mReleaseDate>\n
+^DRIDDSVC\x07\x01.\0\0\0..<ESATMUpdate>\r\n\t<mESAUpdateSignature>ESAINFO</mESAUpdateSignature>\r\n\t<mESAUpdateVersion>\d+</mESAUpdateVersion>\r\n\t<mESAUpdateSize>\d+</mESAUpdateSize>\r\n\t<mESAID>0db\d+</mESAID>\r\n\t<mSerial>tDB\d+</mSerial>\r\n\t<mName>Drobo(?:-FS)?</mName>\r\n\t<mVersion>([][\w._ ]+)</mVersion>\r\n\t<mReleaseDate>([^<]+)</mReleaseDate>\r\n
+^<h1>\xd5\xca\xba\xc5\xc8\xcf\xd6\xa4\xca\xa7\xb0\xdc \.\.\.</h1>\r\n<h2>IP \xb5\xd8\xd6\xb7: [][\w:.]+<br>\r\nMAC \xb5\xd8\xd6\xb7: <br>\r\n\xb7\xfe\xce\xf1\xb6\xcb\xca\xb1\xbc\xe4: \d+-\d+-\d+ \d+:\d+:\d+<br>\r\n\xd1\xe9\xd6\xa4\xbd\xe1\xb9\xfb: Invalid user\.</h2>$
+^\d+{infopark tcl-Interface-Server} {CM ([\w._-]+)
+^Microsoft Windows ([^[]+) \[[^]]+ ([\d.]+)\]\r\n\(C\) Copyright 1985-\d\d\d\d Microsoft Corp\.\r\n\r\n(.*)>
+^421 Cannot establish SSL with SMTP server ([][\w._:-]+), SSL_connect error 336031996\r\n
+^\0\0\0d\0\0\0\x18$| p/ISC (BIND
+^{type INIT} {up \d+} {auth \d+} {name {([^}]+)}} {ip [\d.]+} {max \d+} {port (\d+)}\r\n
+^HTTP/1\.1 200 OK\r\n.*<TITLE>(PA168S) V([\w._-]+) +</TITLE>.*<script>function sf\(\){document\.f\.auth\.focus\(\);}</script>.*<FONT size=5>Willkommen zur Administration des Telefons</FONT>
+^HTTP/1\.0 200 OK\r\nDate: .*\r\nContent-Type: text/html\r\nX-Your-Address-Is: [][\w.:]+\r\nContent-Encoding: identity\r\nContent-Length: \d+\r\nExpires: .*\r\n\r\n
+^HTTP/1\.0 200 OK\r\nServer: Miner WEB Server\r\n.*<td align='right'>Total MHS:</td><td align='left'>([\d.]+)</td>.*<td align='right'>Up Time:</td><td align='left'>([\w,]+)</td>.*Current Server: ([][\w._:-]+)|s p/Asicminer Block Eruptor Blade bitcoin miner httpd/ i|Mhash/s: $1; uptime: $2; server: $3
+^220 FTP Server[^[]* \[([\w.-]+)\]\r\n214-The following commands are recognized \(\* =>'s unimplemented\)\.\r\n USER    PASS    ACCT\*   CWD     XCWD    CDUP    XCUP    SMNT\*   \r\n QUIT    REIN\*   PORT    PASV    TYPE    STRU\*   MODE\*   RETR    \r\n STOR    STOU\*   APPE    ALLO\*   REST    RNFR    RNTO    ABOR    \r\n DELE    MDTM    RMD     XRMD    MKD     XMKD    PWD     XPWD    \r\n SIZE    LIST    NLST    SITE    SYST    STAT    HELP    NOOP    \r\n214 Direct comments to 
+^(?:DRIDDSVC\x07\x01.\0\0\0..[^\0]*\0)?DRIDDSVC\x07\x01.\0\0\0..<ESATMUpdate>\r\n\t<mESAUpdateSignature>ESAINFO</mESAUpdateSignature>\r\n\t<mESAUpdateVersion>\d+</mESAUpdateVersion>\r\n\t<mESAUpdateSize>\d+</mESAUpdateSize>\r\n\t<mESAID>\w+</mESAID>\r\n\t<mSerial>\w+</mSerial>\r\n\t<mName>Drobo(?:-FS)?</mName>\r\n\t<mVersion>([][\w._ ]+)</mVersion>\r\n\t<mReleaseDate>([^<]+)</mReleaseDate>\r\n

@@ -1,0 +1,9 @@
+=====
+these are the regexes that were still broken after switching back to the version zero matching engine.
+=====
+most of these seem to be miss matched brackets and unescaped curly braces
+=====
+^\d+{infopark tcl-Interface-Server} {CM ([\w._-]+)
+^\0\0\0d\0\0\0\x18$| p/ISC (BIND
+^{type INIT} {up \d+} {auth \d+} {name {([^}]+)}} {ip [\d.]+} {max \d+} {port (\d+)}\r\n
+^HTTP/1\.1 200 OK\r\n.*<TITLE>(PA168S) V([\w._-]+) +</TITLE>.*<script>function sf\(\){document\.f\.auth\.focus\(\);}</script>.*<FONT size=5>Willkommen zur Administration des Telefons</FONT>

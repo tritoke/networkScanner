@@ -93,7 +93,7 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
         "match":        re.compile(" ".join([
             r"(?P<type>softmatch|match)",
             r"(?P<service>\S+)",
-            r"m([@/%=|])(?P<regex>.+)\3(?P<flags>[si]*)"
+            r"m([@/%=|])(?P<regex>.+?)\3(?P<flags>[si]*)"
         ])),
         "rarity":       re.compile(r"rarity (\d+)"),
         "totalwaitms":  re.compile(r"totalwaitms (\d+)"),
@@ -140,10 +140,13 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
             if search:
                 # the remainder of the string after the match
                 version_info = line[search.end()+1:]
-
+                # escape the curly braces so the regex engine doesn't
+                # consider them to be special characters
+                pattern = search.group("regex").replace("{", r"\{")
+                pattern = pattern.replace("}", r"\}")
                 matcher = directives.Match(
                     search.group("service"),
-                    search.group("regex"),
+                    pattern,
                     search.group("flags"),
                     version_info
                 )
