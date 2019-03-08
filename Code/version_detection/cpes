@@ -1,0 +1,1183 @@
+cpe:/h:netgear:ps121v2/a
+cpe:/o:cisco:ios/a
+cpe:/a:sybase:backup_server/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:9.5.7/ cpe:/o:microsoft:windows/a
+cpe:/a:busybox:busybox:1.13/ cpe:/o:linux:linux_kernel/a
+cpe:/o:ibm:os_400/a
+cpe:/o:hp:openvms/a
+cpe:/a:tftp:tftp_server_sp/ cpe:/o:microsoft:windows/a
+cpe:/a:matt_johnston:dropbear_ssh_server:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:plutinosoft:platinum:$4/ cpe:/o:linux:linux_kernel/a
+cpe:/h:epson:980n/a
+cpe:/a:redhat:jboss_enterprise_web_platform:$1/ cpe:/h:vormetric:data_security_manager/
+cpe:/h:emersonnetworkpower:liebert_nxc/ cpe:/o:precise:mqx:$1/
+cpe:/h:adtran:netvanta_3200/a
+cpe:/a:microsoft:windows_services_for_unix/ cpe:/o:microsoft:windows/a
+cpe:/h:packet8:bpa430/a
+cpe:/h:snom:$1/a
+cpe:/o:linux:linux_kernel/a
+cpe:/h:tp-link:td-w8968/a
+cpe:/a:busybox:busybox:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/o:fedoraproject:fedora/ cpe:/o:linux:linux_kernel/a
+cpe:/a:microsoft:sql_server:2000:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:netgear:wag102/a
+cpe:/h:linksys:rvl200/a
+cpe:/h:foundrynet:netiron_xmr_4000/a
+cpe:/a:cisco:evolution_media_server/ cpe:/o:linux:linux_kernel:$1/a
+cpe:/h:3com:wx4400/a
+cpe:/h:dlink:dwl-700ap/a
+cpe:/a:microsoft:isa_server::::zh_tw/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dsl2-300g/a
+cpe:/a:microsoft:cassini:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:efssoft:easy_file_sharing_ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:hummingbird:exceed/ cpe:/o:microsoft:windows/a
+cpe:/a:ipswitch:whatsup/ cpe:/o:microsoft:windows/a
+cpe:/h:polycom:vsx_8000/a
+cpe:/a:postgresql:postgresql:9.2.14/ cpe:/o:microsoft:windows/a
+cpe:/a:busybox:busybox/a
+cpe:/h:lg:lw5700/ cpe:/o:linux:linux_kernel/
+cpe:/a:ipswitch:imail:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:sendmail:sendmail:$1p$2/ cpe:/o:hp:hp-ux/a
+cpe:/a:apache:http_server/ cpe:/a:openssl:openssl:$1/
+cpe:/h:arris:cm450/a
+cpe:/a:hp:linux_imaging_and_printing_project/ cpe:/o:linux:linux_kernel/a
+cpe:/a:debian:cfingerd/ cpe:/o:debian:debian_linux/
+cpe:/a:iss:realsecure_workgroup_manager/ cpe:/o:microsoft:windows/a
+cpe:/h:lg:lw5700/ cpe:/o:linux:linux_kernel:$1/
+cpe:/a:ehttp:ehttp:$1/ cpe:/h:hp:2530/
+cpe:/a:postgresql:postgresql:8.2/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:linksys:wrt55ag/a
+cpe:/h:siemens:hg_1500/a
+cpe:/h:fortinet:fortigate:50b/ cpe:/h:fortinet:fortiwifi:60c/
+cpe:/a:cisco:tftp_server/ cpe:/o:cisco:ios/a
+cpe:/a:microsoft:sql_server:2012:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:debian:apt-cacher:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:3cx:3cx_phonesystem:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:avaya:x330wan-2ds1/a
+cpe:/h:netcomm:nb5580/a
+cpe:/a:citadel:ux:$2/ cpe:/a:citadel:webcit:$1/
+cpe:/h:alliedtelesyn:8326gb/a
+cpe:/h:cisco:wap2000/a
+cpe:/h:hp:$1/a
+cpe:/a:busybox:busybox:0.61 - 1.00-pre7/a
+cpe:/a:mailenable:mailenable:2.0:-:enterprise/ cpe:/o:microsoft:windows/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:cisco:cp-7940g/a
+cpe:/a:postgresql:postgresql:9.2/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dva-g3170i/a
+cpe:/a:digion:dixim_media_player:$4/ cpe:/o:linux:linux_kernel:$2/
+cpe:/h:linksys:wap51ab/a
+cpe:/o:sco:sco_unix/a
+cpe:/a:microsoft:asp.net:$2/ cpe:/a:microsoft:cassini:$1/
+cpe:/a:boa:boa:$1/ cpe:/h:netgear:wg602v2/a
+cpe:/a:liferay:liferay_portal:$3:$4:$2/ cpe:/a:redhat:jboss_wildfly_application_server:$1/
+cpe:/a:avg:anti-virus:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:isa_server::::zh/ cpe:/o:microsoft:windows/a
+cpe:/a:ipswitch:ws_ftp:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:python:python:$2/ cpe:/a:trouch:webiopi:$1/
+cpe:/a:acritum:femitter_server/ cpe:/o:microsoft:windows/a
+cpe:/a:digifort:digifort:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:vg248/a
+cpe:/h:airlive:poe-100hd/a
+cpe:/a:acme:micro_httpd/ cpe:/h:asus:wl-600g/a
+cpe:/h:epson:$3/ cpe:/o:linux:linux_kernel/
+cpe:/h:emc:clariion_cx300/a
+cpe:/a:apache:tomcat/ cpe:/o:sun:sunos/a
+cpe:/a:postgresql:postgresql:9.2.17/ cpe:/o:microsoft:windows/a
+cpe:/a:virata:emweb:$SUBST(1,"_",".")/a
+cpe:/a:acme:thttpd/ cpe:/h:linksys:$1/a
+cpe:/a:minidlna:minidlna:$5/a
+cpe:/a:php:php:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:minix:httpd:$1/ cpe:/o:minix:minix/a
+cpe:/h:kyocera:ns-30g/a
+cpe:/a:postgresql:postgresql:9.4.9/ cpe:/o:microsoft:windows/a
+cpe:/a:busybox:busybox:1.19.4/ cpe:/o:linux:linux_kernel/a
+cpe:/a:microsoft:isa_server::::it/ cpe:/o:microsoft:windows/a
+cpe:/a:openbsd:openssh:$2/a
+cpe:/a:postgresql:postgresql:9.4/ cpe:/o:microsoft:windows/a
+cpe:/a:hp:compaqhttpserver:$1/ cpe:/a:hp:system_management_homepage/
+cpe:/a:netsarang:xmanager/ cpe:/o:microsoft:windows/a
+cpe:/h:conceptronic:c54apt/a
+cpe:/a:microsoft:activesync/ cpe:/o:microsoft:windows/a
+cpe:/h:konicaminolta:bizhub_c224e/a
+cpe:/a:progrium:cometcatchr/ cpe:/a:watchguard:fireware_xtm/
+cpe:/a:famatech:radmin/ cpe:/o:microsoft:windows/a
+cpe:/a:ntop:ntop:$1/ cpe:/o:freebsd:freebsd/a
+cpe:/h:dlink:dvg-2032s/a
+cpe:/h:levelone:$1/a
+cpe:/a:mbedthis:appweb:$1/ cpe:/h:iomega:storcenter_ix2/a
+cpe:/a:microsoft:sql_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:3500l/a
+cpe:/a:serv-u:serv-u/ cpe:/o:microsoft:windows/a
+cpe:/a:dovecot:dovecot/ cpe:/o:canonical:ubuntu_linux/
+cpe:/a:sybase:monitor_server/ cpe:/o:microsoft:windows/a
+cpe:/h:tp-link:$3/ cpe:/o:ubicom:ipos:$1/
+cpe:/a:ibm:datacap:$2/ cpe:/a:ibm:filenet_system_manager_dashboard/
+cpe:/a:hummingbird:exceed:6/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:linksys:$2/a
+cpe:/a:x:x.org_x11:$1/ cpe:/o:gentoo:linux/
+cpe:/h:netopia:$1/a
+cpe:/h:zksoftware:$1/ cpe:/o:linux:linux_kernel:$2/
+cpe:/h:huawei:quidway_s8500/a
+cpe:/a:globalscape:eft_server/ cpe:/o:microsoft:windows/a
+cpe:/h:siemens:$3/a
+cpe:/h:vivotek:ip7131/ cpe:/h:vivotek:ip7138/
+cpe:/a:stuart_hughes:ltib/ cpe:/h:freescale:p2020ds/
+cpe:/a:netapp:data_ontap/ cpe:/o:netapp:data_ontap/a
+cpe:/a:microsoft:sql_server:2005:sp3/ cpe:/o:microsoft:windows/
+cpe:/h:netgear:dm602/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:westell:c90/a
+cpe:/a:microsoft:windows_media_services:$1:::es/ cpe:/o:microsoft:windows/a
+cpe:/h:ibm:infoprint_$2/a
+cpe:/h:hp:procurve_switch_1810g/ cpe:/o:hp:procurve_switch_software/
+cpe:/h:lexmark:optra_t610/a
+cpe:/a:busybox:busybox:$1/a
+cpe:/h:funkwerk:bintec_$3/a
+cpe:/a:windriver:ftp_server:$1/ cpe:/o:windriver:vxworks/
+cpe:/h:gemtek:p560/a
+cpe:/a:arachnoid:sshelper/ cpe:/o:google:android/a
+cpe:/h:brother:mfc-820cw/a
+cpe:/a:microsoft:sql_server:2014:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:ipswitch:whatsup::professional/ cpe:/o:microsoft:windows/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:router_2621/
+cpe:/a:allegro:rompager:$1/ cpe:/h:cisco:cp-7960/a
+cpe:/a:postgresql:postgresql:8.0.5/ cpe:/a:postgresql:postgresql:8.2/
+cpe:/a:isc:bind:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:xfree86:xfree86:$1/ cpe:/o:mandrakesoft:mandrake_linux/
+cpe:/o:cisco:asyncos/a
+cpe:/a:microsoft:sql_server:2008/ cpe:/o:microsoft:windows/
+cpe:/a:proftpd:proftpd:1.2.5/a
+cpe:/a:ben_software:bbvs:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/h:3com:baseline_2816/a
+cpe:/h:3com:5500g-ei/a
+cpe:/h:belkin:encore_3g/a
+cpe:/h:trendnet:te4100-ps1u/a
+cpe:/a:postgresql:postgresql:8.4.0/ cpe:/o:microsoft:windows/a
+cpe:/a:teamspeak:teamspeak2:2.0.23.19/ cpe:/o:microsoft:windows/
+cpe:/h:konicaminolta:di3510/a
+cpe:/h:pirelli:drg_a125g/a
+cpe:/a:postgresql:postgresql:9.4.11/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:ftp_service:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:netopia_$1/a
+cpe:/o:novell:netware/a
+cpe:/a:ricoh:dc_software/ cpe:/o:microsoft:windows/a
+cpe:/h:ibm:8275-416/a
+cpe:/a:cisco:telnet:$1/ cpe:/h:cisco:aironet_br500e/
+cpe:/h:lanier:$1/a
+cpe:/a:miniupnp_project:miniupnpd:$2/a
+cpe:/h:konicaminolta:c360/a
+cpe:/a:shoutcast:dnas/a
+cpe:/a:microsoft:isa_server::::ru/ cpe:/o:microsoft:windows/a
+cpe:/a:pragmasys:fortress_ssh_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dwl-624/a
+cpe:/a:cmu:cyrus_imap_server:$2/ cpe:/o:redhat:linux/
+cpe:/o:apple:iphone_os/a
+cpe:/h:epson:workforce_$3/ cpe:/o:linux:linux_kernel/a
+cpe:/a:ibm:os2_ftp_server::::de/ cpe:/o:ibm:os2/
+cpe:/h:zoom:x5/a
+cpe:/h:zte:zxdsl_$1/a
+cpe:/a:postgresql:postgresql:8.4/ cpe:/o:microsoft:windows/a
+cpe:/a:vicftps:vicftps/ cpe:/o:microsoft:windows/a
+cpe:/h:epson:artisan_$3/ cpe:/o:linux:linux_kernel/a
+cpe:/a:safenet-inc:hasp_license_manager:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:busybox:busybox:1.01/ cpe:/o:linux:linux_kernel/a
+cpe:/a:microsoft:sql_server:2016/ cpe:/o:microsoft:windows/
+cpe:/h:epson:wf-2650/a
+cpe:/h:cisco:spa112/a
+cpe:/h:kyocera:fs-1030d/a
+cpe:/a:famatech:radmin:2/ cpe:/o:microsoft:windows/a
+cpe:/h:aastra:480i/a
+cpe:/a:hp:ftp_print_server:3.0/ cpe:/h:hp:laserjet_4250/a
+cpe:/h:huawei:$1/a
+cpe:/h:hp:laserjet_cp1205nw/ cpe:/h:hp:laserjet_p1606/
+cpe:/h:linksys:befsr41v3/a
+cpe:/o:microsoft:windows_vista/a
+cpe:/a:postgresql:postgresql:8.3.19/ cpe:/o:microsoft:windows/a
+cpe:/a:proftpd:proftpd/a
+cpe:/a:teamspeak:teamspeak2:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:dlink:des-2108/a
+cpe:/h:epson:wf-2540/ cpe:/o:linux:linux_kernel/
+cpe:/a:openbsd:ftpd:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:universal_media_server:universal_media_server:$4/ cpe:/o:apple:mac_os_x:$2/
+cpe:/a:goahead:goahead_webserver/ cpe:/h:zyxel:$1/a
+cpe:/a:virata:emweb:$SUBST(3,"_",".")/a
+cpe:/a:microsoft:sql_server:2012:gold/ cpe:/o:microsoft:windows/
+cpe:/a:microsoft:qotd::::it/ cpe:/o:microsoft:windows/a
+cpe:/h:motorola:vt1000v/a
+cpe:/a:minidlna:minidlna/a
+cpe:/h:funkwerk:bintec_r232b/a
+cpe:/a:cisco:ssh:$2/ cpe:/o:cisco:ios/a
+cpe:/a:microsoft:isa_server/ cpe:/o:microsoft:windows/a
+cpe:/a:python:python:$2/ cpe:/a:timothy_farrell:rocket:$1/
+cpe:/a:microsoft:sql_server:2005:sp1/ cpe:/o:microsoft:windows/
+cpe:/h:snom:300/a
+cpe:/a:microsoft:sql_server:2008:sp1/ cpe:/o:microsoft:windows/
+cpe:/h:dlink:dvg-5112s/a
+cpe:/o:apple:mac_os_x:10.11/ cpe:/o:apple:mac_os_x:10.9/
+cpe:/h:alliedtelesyn:at-8748xl/a
+cpe:/a:ipswitch:imail:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:smartertools:smartertools_web:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:commerce_server:2002/ cpe:/o:microsoft:windows/a
+cpe:/o:microsoft:windows_server_2012:r2/a
+cpe:/a:postgresql:postgresql:9.1.19/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:$1/a
+cpe:/a:apache:http_server/ cpe:/o:linux:linux_kernel/a
+cpe:/a:mailenable:mailenable:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:oki:data_$2/a
+cpe:/h:netgear:fvs318/a
+cpe:/h:starmicronics:tsp828l/a
+cpe:/a:lighttpd:lighttpd/a
+cpe:/a:damiapp:software_data_cable:$1/ cpe:/o:google:android/a
+cpe:/a:plutinosoft:platinum:$3/ cpe:/o:linux:linux_kernel/
+cpe:/a:ubicom:httpd:$1/ cpe:/h:linksys:wga600n/a
+cpe:/a:elgato:eyeconnect:$2/ cpe:/o:apple:mac_os_x/a
+cpe:/h:adtran:$1/a
+cpe:/h:avaya:9670/a
+cpe:/a:cisco:telnet/ cpe:/o:cisco:ios/a
+cpe:/o:microsoft:windows_10/a
+cpe:/o:ibm:aix/a
+cpe:/a:apache:http_server/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:srw2016/
+cpe:/a:microsoft:exchange_server:2000/ cpe:/o:microsoft:windows/a
+cpe:/a:hornbill:supportworks_itsm:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:thomson:st2030/a
+cpe:/h:usrobotics:usr8200/a
+cpe:/a:packetvideo:twonky/ cpe:/o:linux:linux_kernel:$1/a
+cpe:/h:tandberg:codec_t150/a
+cpe:/a:cisco:application_and_content_networking_system_software:$1/ cpe:/o:cisco:ios/a
+cpe:/a:postgresql:postgresql:9.0.23/ cpe:/o:microsoft:windows/a
+cpe:/h:linksys:srw2024/a
+cpe:/a:microsoft:windows_media_services:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:mobatek:mobaxterm/ cpe:/o:microsoft:windows/a
+cpe:/a:python:python:$2/ cpe:/o:cisco:asyncos/a
+cpe:/a:microsoft:exchange_server::::cs/ cpe:/o:microsoft:windows/a
+cpe:/a:symantec:antivirus/ cpe:/a:symantec:antivirus_scan_engine/
+cpe:/a:alliedtelesyn:ip_sharer_web:$1/ cpe:/h:alliedtelesyn:$2/a
+cpe:/a:theolivetree:webdavserver/ cpe:/o:google:android/a
+cpe:/h:konicaminolta:$1/a
+cpe:/a:apache:tomcat:$3/a
+cpe:/h:hp:laserjet_p4014/a
+cpe:/a:cherokee-project:cherokee:$1/ cpe:/o:debian:debian_linux/
+cpe:/a:twistedmatrix:twisted:$1/ cpe:/a:twistedmatrix:twistedweb:svn-trunk/
+cpe:/a:microsoft:windows_media_services:$1:::pt/ cpe:/o:microsoft:windows/a
+cpe:/a:citadel:ux/ cpe:/a:citadel:webcit:$1/
+cpe:/a:aprelium:abyss_web_server_x1:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:hp:color_laserjet_3500/a
+cpe:/h:moxa:$1/ cpe:/o:moxa:$SUBST(1,"-","_")_firmware:$5/
+cpe:/h:hp:v1810/a
+cpe:/o:belllabs:plan_9/a
+cpe:/h:siemens:gigaset_$1/a
+cpe:/a:lighttpd:lighttpd/ cpe:/h:apple:ipad/
+cpe:/a:cisco:telnet/ cpe:/h:cisco:router_806/
+cpe:/a:apple:quicktime_streaming_server:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:epson:stylus_nx230/ cpe:/o:linux:linux_kernel/
+cpe:/a:allegro:rompager:$1/ cpe:/h:minolta:9100/a
+cpe:/h:fuji:xerox_b6300/a
+cpe:/a:cisco:identity_services_engine_software/ cpe:/h:cisco:identity_services_engine:-/
+cpe:/a:openssl:openssl:$5/ cpe:/a:puc-rio:lua:$4/
+cpe:/a:trendnet:ip_sharer_web:$1/ cpe:/h:trendnet:tw100-brv204/a
+cpe:/h:alliedtelesyn:$1/a
+cpe:/h:dlink:dcs-2130/ cpe:/h:pelco:ide10dn/
+cpe:/a:postgresql:postgresql:8.0/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:hp:business_inkjet_$2/a
+cpe:/h:d-link:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/h:alliedtelesyn:rapier_$2/a
+cpe:/a:novell:open_enterprise_server:2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:python:basehttpserver:0.3/a
+cpe:/a:apple:apple_tv/ cpe:/o:apple:mac_os_x/
+cpe:/a:postgresql:postgresql:10/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:qotd::::pt/ cpe:/o:microsoft:windows/a
+cpe:/h:linksys:wrt300n/a
+cpe:/a:typsoft:typsoft_ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:famatech:radmin:3.0/ cpe:/o:microsoft:windows/a
+cpe:/h:hp:procurve_switch_$1/ cpe:/o:hp:procurve_switch_software:$2/
+cpe:/a:microsoft:exchange_server:2003:::zh_tw/ cpe:/o:microsoft:windows/a
+cpe:/h:hp:designjet_800ps/a
+cpe:/a:cerberusftp:ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:teamspeak:teamspeak2:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:exchange_server::::hu/ cpe:/o:microsoft:windows/a
+cpe:/a:mcafee:webshield_smtp/ cpe:/o:microsoft:windows/a
+cpe:/a:sap:j2ee_engine:$2/ cpe:/a:sap:netweaver/
+cpe:/h:belkin:$1/a
+cpe:/h:dlink:des-1100/a
+cpe:/a:ice_cold_apps:ssh_server/ cpe:/o:google:android/a
+cpe:/a:nodejs:node.js/ cpe:/a:vates:xen_orchestra/
+cpe:/h:allieddata:copperjet_$1/a
+cpe:/h:siemens:gigaset_dx800a/a
+cpe:/a:isc:bind/ cpe:/o:apple:mac_os_x/a
+cpe:/h:ricoh:pro_$1/a
+cpe:/h:dell:1815dn/a
+cpe:/a:freefloat:freefloat_ftp_server:$1/ cpe:/o:microsoft:windows/
+cpe:/a:cmu:cyrus_imap_server:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:goahead:goahead_webserver/ cpe:/h:dell:powerconnect_3024/
+cpe:/h:telewell:715/a
+cpe:/h:linksys:wap11/a
+cpe:/h:hp:laserjet_4200tn/a
+cpe:/a:ulrich_voelkel:fuppes:$2/ cpe:/o:freebsd:freebsd:$1/
+cpe:/a:redhat:ns-slapd/ cpe:/o:redhat:directory_server/
+cpe:/h:sharp:$1/a
+cpe:/h:dlink:di-514/a
+cpe:/h:philips:snb5600/a
+cpe:/a:apple:quicktime_streaming_server:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/h:kyocera:mita_taskalfa_300ci/a
+cpe:/a:acme:micro_httpd/ cpe:/h:linksys:wrt54gxv2/a
+cpe:/a:goahead:goahead_webserver/ cpe:/h:trendnet:tew-637ap/a
+cpe:/a:golang:go/ cpe:/a:influxdata:influxdb/
+cpe:/a:apache:http_server/ cpe:/a:php:php:$1/
+cpe:/h:lexmark:optra_$1/a
+cpe:/a:microsoft:sql_server:2008_r2:sp3/ cpe:/o:microsoft:windows/
+cpe:/a:sysax:multi_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:motorola:sb5101/ cpe:/h:motorola:sb6120/
+cpe:/h:trendnet:tv-ip110w/ cpe:/h:trendnet:tv-ip422w/
+cpe:/h:trendnet:$2/a
+cpe:/a:acme:thttpd/ cpe:/h:zebra:zte_f660/a
+cpe:/a:rapidlogic:httpd:$1/a
+cpe:/h:huawei:ar28-09/a
+cpe:/a:postgresql:postgresql:9.5.5/ cpe:/o:microsoft:windows/a
+cpe:/a:tightvnc:tightvnc:1.2.8/a
+cpe:/a:d-link:shareport_web_access:$1/ cpe:/h:d-link:$2/
+cpe:/a:mbedthis:appweb/ cpe:/h:dell:idrac6/
+cpe:/o:google:android/ cpe:/o:linux:linux_kernel:$1/
+cpe:/a:apache:http_server:$1/ cpe:/o:mandriva:linux/
+cpe:/a:microsoft:sql_server:2005:gold/ cpe:/o:microsoft:windows/
+cpe:/h:alliedtelesyn:ar410/a
+cpe:/h:kyocera:mita_$1/a
+cpe:/h:kyocera:mita_fs-1350dn/a
+cpe:/a:mongodb:mongodb:$2/ cpe:/o:linux:linux_kernel:$5/
+cpe:/a:jetbrains:pycharm:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/h:dlink:dgl-4500/a
+cpe:/a:altn:mdaemon:$2:::zh/ cpe:/o:microsoft:windows/a
+cpe:/h:aastra:$1/a
+cpe:/a:aclogic:cesarftpd:$1/ cpe:/o:microsoft:windows/
+cpe:/a:univention:univention_corporate_server/ cpe:/o:linux:linux_kernel/a
+cpe:/a:microsoft:asp.net:$2/ cpe:/a:smartertools:smartertools_web:$1/
+cpe:/a:busybox:busybox:1.14.0 or later/a
+cpe:/a:conexant:emweb:$SUBST(3,"_",".")/a
+cpe:/a:vaestgoeta-data:zftpserver/ cpe:/o:microsoft:windows/a
+cpe:/a:apple:afp_server/ cpe:/o:apple:mac_os_x/a
+cpe:/a:xfree86:xfree86:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:proftpd:proftpd:1.2.9rc1/a
+cpe:/o:sgi:irix/a
+cpe:/h:draytek:vigor_3300/a
+cpe:/h:dlink:dir-100/a
+cpe:/a:efs:easy_file_management_web_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:goahead:goahead_webserver:$1/a
+cpe:/h:kyocera:4050/a
+cpe:/a:alphainventor:filemanager/ cpe:/o:google:android/a
+cpe:/h:linksys:spa2102/a
+cpe:/a:mbedthis:appweb:$1/ cpe:/o:juniper:junos/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:kyocera:7035/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2008:r2:sp1/a
+cpe:/a:openssl:openssl:$3/ cpe:/a:puc-rio:lua:$2/
+cpe:/a:novell:groupwise/ cpe:/o:novell:netware/a
+cpe:/h:smc:$1/a
+cpe:/h:zte:$2/a
+cpe:/a:jetbrains:phpstorm:$1/ cpe:/a:yourkit:java_profiler:$2/
+cpe:/o:linux:linux_kernel:$1/a
+cpe:/a:altn:mdaemon:$2:::es/ cpe:/o:microsoft:windows/a
+cpe:/o:debian:debian_linux/ cpe:/o:linux:linux_kernel/a
+cpe:/a:goahead:goahead_webserver/a
+cpe:/a:ultravnc:ultravnc:1.0.8.0/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:sph200d/a
+cpe:/h:avaya:4602/a
+cpe:/h:zyxel:$1/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:nrg:$2/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2012/a
+cpe:/h:canon:ipf6100/a
+cpe:/a:mongodb:mongodb:$2/ cpe:/o:linux:linux_kernel:$4/
+cpe:/a:apache:activemq:$4/ cpe:/o:linux:linux_kernel:$2/a
+cpe:/h:avtech:avn801/ cpe:/o:linux:linux_kernel/a
+cpe:/a:apache:tomcat:$1/a
+cpe:/h:asus:$1/a
+cpe:/h:billion:800vgt/a
+cpe:/h:kyocera:$1/a
+cpe:/h:zoom:a6/a
+cpe:/a:smartertools:smarterstats/ cpe:/a:smartertools:smartertools_web:$1/
+cpe:/a:code-crafters:ability_mail_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:qotd::::cs/ cpe:/o:microsoft:windows/a
+cpe:/h:xerox:docucolor_$1/a
+cpe:/a:apple:afp_server/a
+cpe:/a:indy:httpd:$1/ cpe:/a:teamspeak:teamspeak2/
+cpe:/h:buffalo:wli-tx4-g54hp/a
+cpe:/a:quasar:quasarrat/ cpe:/o:microsoft:windows/a
+cpe:/h:sony:bravia_$3:$4/ cpe:/o:greenhills:rtos:$1/
+cpe:/h:cisco:aironet_br500e/a
+cpe:/a:minix:telnetd:$1/ cpe:/o:minix:minix/a
+cpe:/a:ibm:informix_dynamic_server/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:isa_server::::fr/ cpe:/o:microsoft:windows/a
+cpe:/h:lantronix:lps1/a
+cpe:/h:apple:ipad/ cpe:/o:apple:iphone_os/
+cpe:/a:twistedmatrix:twisted:$3/ cpe:/a:twistedmatrix:twistedweb:$4/a
+cpe:/a:cherokee-project:cherokee:$1/ cpe:/o:gentoo:linux/
+cpe:/a:intervations:filecopa/ cpe:/o:microsoft:windows/a
+cpe:/h:cisco:asr_9010/ cpe:/o:cisco:ios_xr:3/
+cpe:/a:acme:micro_httpd/ cpe:/h:linksys:befcmu10/a
+cpe:/a:microsoft:isa_server::::pt/ cpe:/o:microsoft:windows/a
+cpe:/a:analogx:simpleserver_www:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:matt_johnston:dropbear_ssh_server/ cpe:/o:linux:linux_kernel/a
+cpe:/a:acme:mini_httpd:$1/ cpe:/o:linux:linux_kernel:$2/
+cpe:/a:busybox:busybox:1.19.4/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:9.5/ cpe:/o:microsoft:windows/a
+cpe:/a:netgear:print_server_web:$1/ cpe:/h:netgear:$2/a
+cpe:/h:dlink:dsl-500b/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:router_1601r/
+cpe:/a:tightvnc:tightvnc:1.2.9/a
+cpe:/a:bluecoat:winproxy/ cpe:/o:microsoft:windows/a
+cpe:/a:trafficreg:tmeter:$1/ cpe:/o:microsoft:windows/
+cpe:/a:postgresql:postgresql:9.4.5/ cpe:/o:microsoft:windows/a
+cpe:/o:debian:debian_linux:$3/ cpe:/o:linux:linux_kernel/
+cpe:/h:dlink:dcs-2121/a
+cpe:/a:sendmail:sendmail:$1/ cpe:/o:apple:a_ux:$2/
+cpe:/a:securax:zoiper_for_windows:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:tightvnc:tightvnc:1.2.2/a
+cpe:/a:hummingbird:exceed:7/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2008_r2:sp1/ cpe:/o:microsoft:windows/
+cpe:/a:mailenable:mailenable/ cpe:/o:microsoft:windows/a
+cpe:/a:tightvnc:tightvnc:1.2.3/a
+cpe:/a:busybox:busybox/ cpe:/h:phicomm:m1/
+cpe:/a:cmu:cyrus_imap_server:$1/ cpe:/o:debian:debian_linux/
+cpe:/a:netgear:ip_sharer_web:$1/ cpe:/h:netgear:mr814v2/a
+cpe:/a:sybase:adaptive_server/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:asp.net:$2/ cpe:/a:southrivertech:titan_ftp_server:$1/
+cpe:/h:cisco:linksys_$1/a
+cpe:/h:hp:laserjet_$2/a
+cpe:/a:cherrypy:cherrypy:$2/ cpe:/a:martin_wendt:wsgidav:$1/
+cpe:/a:ubicom:httpd:$1/ cpe:/h:netgear:wnhde111/a
+cpe:/a:ibm:http_server:$1/ cpe:/a:php:php:$3/
+cpe:/a:microsoft:qotd::::en/ cpe:/o:microsoft:windows/a
+cpe:/h:xerox:8560dn/a
+cpe:/a:cisco:identity_services_engine_software/ cpe:/h:cisco:identity_services_engine/
+cpe:/a:busybox:busybox/ cpe:/h:dlink:dcs-932l/
+cpe:/a:aprelium:abyss_web_server_x1:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/o:harman:amx_firmware:$1/ cpe:/o:windriver:vxworks/a
+cpe:/h:epson:aculaser_$1/a
+cpe:/a:microsoft:sql_server:2000:gold/ cpe:/o:microsoft:windows/
+cpe:/h:smc:7004abr/a
+cpe:/a:memcached:memcached:$2/ cpe:/o:canonical:ubuntu_linux/
+cpe:/h:dlink:di-804v/a
+cpe:/h:dlink:dgs-1224t/a
+cpe:/a:sun:jre:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:blunk:targetweb:$1/ cpe:/h:lenel:lnl-2220/
+cpe:/a:openbsd:openssh:$2/ cpe:/o:ibm:aix/a
+cpe:/a:netatalk:netatalk:$2/ cpe:/o:freebsd:freebsd/
+cpe:/h:hp:color_laserjet_2840/a
+cpe:/a:microsoft:netmeeting/ cpe:/o:microsoft:windows/a
+cpe:/h:actiontec:gt704-wgb/a
+cpe:/h:belkin:f5d8235-4/a
+cpe:/a:microsoft:exchange_server::::fr/ cpe:/o:microsoft:windows/a
+cpe:/h:zyxel:zywall_$1/a
+cpe:/a:miniupnp_project:miniupnpd/a
+cpe:/h:netcomm:v300/a
+cpe:/a:oracle:vm_virtualbox/ cpe:/o:microsoft:windows/a
+cpe:/h:ruckus:vf7811/a
+cpe:/a:boa:boa:$1/ cpe:/h:fujitsu:siemens_connect2air_ap-600rp-usb/a
+cpe:/a:cisco:telnet/ cpe:/o:cisco:aironet_350/
+cpe:/a:hc-consult:vcxsrv/ cpe:/o:microsoft:windows/a
+cpe:/a:goahead:goahead_webserver/ cpe:/h:zyxel:p-330w/a
+cpe:/a:filezilla-project:filezilla_server:ftpd/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:asp.net:$3/ cpe:/a:termika:olimpoks/
+cpe:/h:nomadix:ag_$1/a
+cpe:/a:cisco:secure_access_control_server/ cpe:/o:cisco:ios/a
+cpe:/a:oracle:glassfish_server:$3/ cpe:/a:oracle:jsp:$2/
+cpe:/h:planet:ica-hm132/ cpe:/h:trendnet:tv_ip302pi/
+cpe:/a:allegro:rompager:$2/ cpe:/h:netopia:$1/a
+cpe:/h:alcatel:$2_service_router/ cpe:/o:alcatel:timos:$1/
+cpe:/a:apache:lucene:$3/ cpe:/a:elasticsearch:elasticsearch:$2/
+cpe:/a:postgresql:postgresql:11.0/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:windows_media_services:$1.$2$3.$4$5.$6$7$8$9/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:infocus:in2116/
+cpe:/o:google:android/ cpe:/o:linux:linux_kernel/
+cpe:/h:cisco:7937/a
+cpe:/h:nortel:passport_8010/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:cradlepoint:$2/
+cpe:/h:ricoh:aficio_sp_$1/a
+cpe:/a:gecad:axigen_mail_server:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:cisco:secure_access_control_server/ cpe:/o:microsoft:windows/a
+cpe:/h:lg:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:acme:micro_httpd/a
+cpe:/a:acme:thttpd:$1/ cpe:/a:php:php:$2/
+cpe:/h:hp:officejet_$2/a
+cpe:/o:fedoraproject:fedora:$1/ cpe:/o:linux:linux_kernel/
+cpe:/h:samsung:$1/a
+cpe:/a:linksys:ip_sharer_web:$1/ cpe:/h:linksys:befsr41w/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:oneaccess:one100a/a
+cpe:/a:ibm:tivoli_storage_manager:$2/ cpe:/o:ibm:aix/a
+cpe:/a:ibm:informix_dynamic_server:11.50/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:cvg834g/a
+cpe:/h:savin:8055/a
+cpe:/a:conexant:emweb:$SUBST(2,"_",".")/a
+cpe:/h:nortel:baystack_470-24t/a
+cpe:/a:windriver:windweb:$1/ cpe:/h:nomadix:$2/a
+cpe:/a:shoutcast:dnas:$1/ cpe:/o:sun:sunos/a
+cpe:/a:proftpd:proftpd:$2/a
+cpe:/h:zyxel:g-570s/a
+cpe:/a:bqt:bqtftp/ cpe:/o:dec:$1/
+cpe:/h:konicaminolta:bixhub_350/a
+cpe:/h:dlink:dsl-2542b/a
+cpe:/a:packetvideo:twonky/ cpe:/o:microsoft:windows_nt/
+cpe:/a:microsoft:sql_server:2008:gold/ cpe:/o:microsoft:windows/
+cpe:/a:apache:tomcat:$2/ cpe:/a:symantec:endpoint_protection_manager/
+cpe:/a:citrix:secure_gateway/ cpe:/o:microsoft:windows/a
+cpe:/h:billion:741ge/a
+cpe:/a:microsoft:sql_server:2000:sp1/ cpe:/o:microsoft:windows/
+cpe:/a:memcached:memcached:$1/ cpe:/o:canonical:ubuntu_linux/
+cpe:/a:allegro:rompager:$1/ cpe:/o:extremenetworks:extremeware/
+cpe:/a:hp:storageworks_secure_path/ cpe:/o:microsoft:windows/a
+cpe:/h:tp-link:tl-sg2008/a
+cpe:/h:axis:$1/a
+cpe:/a:monkey-project:monkey_http_daemon/ cpe:/o:linux:linux_kernel/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:sharp:$2/a
+cpe:/h:kyocera:ib-21e/a
+cpe:/a:wakanda:wakanda_application_framework:$2/ cpe:/a:wakanda:wakanda_server:$1/
+cpe:/a:allegro:rompager:$1/ cpe:/h:audiocodes:mediant_200/a
+cpe:/h:motorola:homenet_wr850g/a
+cpe:/h:siemens:gigaset_c610/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2008::sp1/a
+cpe:/o:linux:linux_kernel/ cpe:/o:slackware:slackware_linux:3.5/
+cpe:/a:paul_lutus:sshelper/ cpe:/o:google:android/a
+cpe:/h:panasonic:wv-np1000/a
+cpe:/a:kozea:radicale/ cpe:/a:python:python:$2/
+cpe:/a:goahead:goahead_webserver/ cpe:/h:linksys:srw2024/a
+cpe:/a:apache:tomcat/a
+cpe:/a:microsoft:exchange_server::::de/ cpe:/o:microsoft:windows/a
+cpe:/h:nortel:4548/a
+cpe:/a:sap:j2ee_engine:$1/ cpe:/a:sap:netweaver/
+cpe:/h:tandberg:codian_ip_gw_3510/a
+cpe:/a:microsoft:sql_server:2008_r2:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:openbsd:ftpd:$2/ cpe:/o:openbsd:openbsd/
+cpe:/a:teamspeak:teamspeak2:2.0.23.19/ cpe:/o:linux:linux_kernel/
+cpe:/h:linksys:wrt54g/a
+cpe:/a:oracle:jsp:$2/ cpe:/a:sun:glassfish_server:$3::open_source/
+cpe:/a:busybox:busybox:$1/ cpe:/h:syabas:popcorn_hour/
+cpe:/a:cmu:cyrus_imap_server:$2/ cpe:/o:canonical:ubuntu_linux/
+cpe:/h:trendnet:tv-ip301/a
+cpe:/a:smart-soft:traffic_inspector:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:goahead:goahead_webserver:$1/ cpe:/a:peersec:matrixssl:$2/
+cpe:/h:dlink:di-524/a
+cpe:/a:sendmail:sendmail:$3/ cpe:/o:ibm:aix/a
+cpe:/a:microsoft:exchange_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dhp-540/a
+cpe:/a:igor_sysoev:nginx:$1/ cpe:/o:canonical:ubuntu_linux/
+cpe:/a:mortbay:jetty/ cpe:/a:sybase:easerver:$1/
+cpe:/a:microsoft:sql_server:2008:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:postgresql:postgresql:9.4.10/ cpe:/o:microsoft:windows/a
+cpe:/a:oracle:jre:$4/ cpe:/a:payara:payara:$1/
+cpe:/a:ben_software:bbvs:$1/ cpe:/a:ben_software:securityspy/
+cpe:/h:dlink:dph-140/a
+cpe:/h:d-link:dgl-4300/ cpe:/o:ubicom:ipos:$1/
+cpe:/h:netgear:dg632/a
+cpe:/o:apple:mac_os_x/a
+cpe:/a:ben_software:bbvs/ cpe:/o:apple:mac_os_x/a
+cpe:/h:starmicronics:tsp700/a
+cpe:/h:adtran:netvanta_6355/a
+cpe:/o:apple:mac_os_x:10.6/ cpe:/o:apple:mac_os_x:10.7/
+cpe:/h:kyocera:$2/a
+cpe:/a:netkit:netkit/ cpe:/o:linux:linux_kernel:$1/a
+cpe:/a:acme:mini_httpd/ cpe:/h:linksys:rvs4000/a
+cpe:/a:microsoft:qotd::::es/ cpe:/o:microsoft:windows/a
+cpe:/h:zte:zxv10_w300/ cpe:/o:montavista:linux_kernel:2.4.17/
+cpe:/a:icecoldapps:ftp_server_ultimate/ cpe:/o:google:android/a
+cpe:/h:nortel:baystack_420/a
+cpe:/o:archlinux:arch_linux/ cpe:/o:linux:linux_kernel/
+cpe:/h:crestron/ cpe:/o:microsoft:windows_ce:$1/
+cpe:/h:huawei:quidway_s8505/a
+cpe:/h:symbol:cb-1000/a
+cpe:/a:apache:tomcat:$1/ cpe:/a:sun:jre:$2/
+cpe:/h:hp:deskjet_5800/a
+cpe:/a:mbedthis:appweb:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:linksys:wap55ag/a
+cpe:/a:postgresql:postgresql:8.4.12/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dgl-4300/a
+cpe:/a:apache:lucene:$4/ cpe:/a:elasticsearch:elasticsearch:$3/
+cpe:/h:hp:officejet_pro_$2/a
+cpe:/h:netgear:gs108t/a
+cpe:/a:microsoft:isa_server::::es/ cpe:/o:microsoft:windows/a
+cpe:/a:enterprisedt:completeftp:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:twistedmatrix:twistedweb:$1/a
+cpe:/h:dlink:$2/a
+cpe:/a:alphanetworks:thttpd:$1/ cpe:/h:dlink:$2/a
+cpe:/a:ringcentral:softphone:$1/ cpe:/o:microsoft:$2/
+cpe:/a:ulrich_voelkel:fuppes:$2/ cpe:/o:linux:linux_kernel:$1/
+cpe:/a:nodejs:node.js/ cpe:/a:typicode:hotel/
+cpe:/a:freesshd:freesshd/ cpe:/o:microsoft:windows/a
+cpe:/a:mozilla:durian_web_application_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:48-port/a
+cpe:/a:netgear:ip_sharer_web:$1/ cpe:/h:netgear:prosafe_fvs114/a
+cpe:/h:dlink:d-500g/a
+cpe:/h:linksys:rv082/a
+cpe:/h:netgear:fsm7352s/a
+cpe:/a:sofia-sip:sofia-sip:$2/ cpe:/h:eltex:tau-1m.ip:$1/
+cpe:/h:checkpoint:r65/a
+cpe:/a:httrack:httrack/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:forefront_threat_management_gateway/ cpe:/o:microsoft:windows/a
+cpe:/h:hp:officejet_pro_8600/a
+cpe:/o:ibm:os2/a
+cpe:/h:harris:flexstar_hdx-fm/ cpe:/o:precise:mqx:$1/
+cpe:/a:ibm:lotus_domino_web_server/ cpe:/a:oracle:application_server_web_cache:$2/
+cpe:/a:sun:ray_server_software/ cpe:/o:sun:sunos/a
+cpe:/a:sendmail:sendmail/a
+cpe:/h:dlink:dwl-2100ap/a
+cpe:/h:grandstream:$1/a
+cpe:/h:apple:iphone/ cpe:/o:apple:iphone_os/
+cpe:/h:huawei:ec506/a
+cpe:/a:oracle:glassfish_server:$3::open_source/ cpe:/a:oracle:jre:$4/
+cpe:/h:linksys:spa400/a
+cpe:/h:patton:sl4020/ cpe:/o:patton:smartware/
+cpe:/o:canonical:ubuntu_linux/ cpe:/o:linux:linux_kernel/
+cpe:/a:sendmail:sendmail:$2/ cpe:/o:sgi:irix/a
+cpe:/a:conexant:emweb:$SUBST(1,"_",".")/a
+cpe:/o:apc:aos/a
+cpe:/a:ehttp:ehttp:$1/ cpe:/h:hp:$2/a
+cpe:/a:digium:asterisk:$2/ cpe:/a:sangoma:freepbx:$1/
+cpe:/a:iss:realsecure_server_sensor/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2008:r2/a
+cpe:/h:alcatel-lucent:ess_7450/a
+cpe:/a:microsoft:iis::::fr/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:dm111/a
+cpe:/a:microsoft:iis::::de/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:sharp:mx-2700n/a
+cpe:/a:yaniv_danan:ioscallrecorder/ cpe:/o:apple:iphone_os/a
+cpe:/o:microsoft:windows_server_2008:r2/a
+cpe:/a:python:python:$2/ cpe:/a:python:wsgiref:$1/
+cpe:/a:packetvideo:twonky/ cpe:/o:linux:linux_kernel:$2/a
+cpe:/h:hp:officejet_pro_l7680/a
+cpe:/h:dell:photo_aio_$1/a
+cpe:/a:postgresql:postgresql:9.1/ cpe:/o:microsoft:windows/a
+cpe:/a:goahead:goahead_webserver/ cpe:/o:harman:amx_firmware/
+cpe:/h:sharp:mx-m350n/a
+cpe:/h:intermec:pm4i/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:westell:versalink_model_c90-327w30-06/a
+cpe:/a:utorrent:utorrent/ cpe:/o:microsoft:windows/a
+cpe:/a:smarterdroid:wifi_file_transfer/ cpe:/o:google:android/a
+cpe:/a:mcafee:epolicy_orchestrator_agent/ cpe:/o:microsoft:windows/a
+cpe:/a:mailenable:mailenable:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:alliedtelesyn:802x/a
+cpe:/h:watchguard:soho_$1/a
+cpe:/h:toshiba:e-studio5500c/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:xerox:phaser_8560dn/a
+cpe:/h:hp:procurve_switch_$2/ cpe:/o:hp:procurve_switch_software:$3/
+cpe:/a:serv-u:serv-u:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:rob_swindell:synchronet:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:exchange_server:2007/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2005/ cpe:/o:microsoft:windows/
+cpe:/a:busybox:busybox/ cpe:/o:linux:linux_kernel/a
+cpe:/h:tp-link:a$3/ cpe:/o:ubicom:ipos:$1/
+cpe:/a:microsoft:sql_server:2012/ cpe:/o:microsoft:windows/
+cpe:/a:altn:mdaemon/ cpe:/o:microsoft:windows/a
+cpe:/a:avg:anti-virus:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:djb:qmail/ cpe:/o:gentoo:linux/
+cpe:/a:acme:thttpd/ cpe:/h:lexmark:$1/
+cpe:/h:arubanetworks:networks_ap_61/a
+cpe:/a:mbedthis:appweb:$1/ cpe:/h:dell:idrac6/
+cpe:/a:shoutcast:dnas:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:tp-link:$1/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:dlink:$2/a
+cpe:/a:minidlna:minidlna:$4/a
+cpe:/h:samsung:clx-3175fw/a
+cpe:/h:motorola:homenet_we800g/a
+cpe:/a:smartertools:smarterstats:$2/ cpe:/a:smartertools:smartertools_web:$1/
+cpe:/a:code-crafters:ability_mail_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:agranat:emweb:$SUBST(1,"_",".")/a
+cpe:/a:postgresql:postgresql:8.1/ cpe:/o:microsoft:windows/a
+cpe:/a:x:x.org_x11:$1/ cpe:/o:mandrakesoft:mandrake_linux/
+cpe:/h:arris:tm602g/a
+cpe:/h:netgear:dg834gt/a
+cpe:/a:filezilla-project:filezilla_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:intervations:filecopa:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:decisive_tactics:printopia:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/h:ibm:infoprint_$1/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:debian:debian_linux/
+cpe:/a:ehttp:ehttp:$1/ cpe:/h:hp:procurve_switch_$2/
+cpe:/a:directadmin:directadmin/ cpe:/a:dovecot:dovecot/
+cpe:/h:ricoh:aficio_$1/a
+cpe:/h:dlink:dsl-504g/a
+cpe:/a:oracle:http_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:xerox:phaser_4400dx/a
+cpe:/h:netgear:$2/a
+cpe:/o:harman:amx_firmware:$1/ cpe:/o:windriver:vxworks:$1/
+cpe:/h:zoom:x6/a
+cpe:/a:lighttpd:lighttpd:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:code-crafters:ability_ftp_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:openwrt:uhttpd/ cpe:/o:linux:linux_kernel/a
+cpe:/a:ntop:ntop:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:citrix:access_gateway/ cpe:/o:microsoft:windows/a
+cpe:/h:pirelli:netgate_voip_v2/a
+cpe:/a:postgresql:postgresql:9.4.12/ cpe:/o:microsoft:windows/a
+cpe:/h:draytek:vigor_2820n/a
+cpe:/h:epson:$1/a
+cpe:/h:dlink:des-1526/a
+cpe:/a:bitvise:winsshd:$3/ cpe:/o:microsoft:windows/a
+cpe:/a:shoutcast:dnas:$1/a
+cpe:/a:altn:mdaemon:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:kerberos/ cpe:/o:microsoft:windows/a
+cpe:/h:alliedtelesyn:$2/a
+cpe:/o:bluecoat:sgos/a
+cpe:/h:intertex:ix68/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:freebsd:freebsd/a
+cpe:/a:meteor:meteor:$2/ cpe:/a:rocketchat:rocket.chat:$1/
+cpe:/h:starmicronics:$1/a
+cpe:/a:acme:thttpd/ cpe:/h:bluecoat:packetshaper_3500/
+cpe:/a:microsoft:sql_server:2008:sp3/ cpe:/o:microsoft:windows/
+cpe:/h:3com:5500-ei/a
+cpe:/a:mailgate:mailgate/ cpe:/o:microsoft:windows/a
+cpe:/a:miniupnp_project:miniupnpd:$3/a
+cpe:/a:minidlna:minidlna:$3/a
+cpe:/h:zonealarm:z100g/a
+cpe:/o:compaq:tru64/a
+cpe:/a:isc:bind:$1/ cpe:/o:fedoraproject:fedora_core:$2/
+cpe:/a:microsoft:exchange_server:2003:::it/ cpe:/o:microsoft:windows/a
+cpe:/h:netgear:wg102/a
+cpe:/a:redhat:cygwin/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2012:sp1/ cpe:/o:microsoft:windows/
+cpe:/o:microsoft:windows_server_2003/a
+cpe:/a:southrivertech:titan_ftp_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:dell:openmanage_server_administrator/ cpe:/o:microsoft:windows/a
+cpe:/a:cmu:cyrus_imap_server:$1/ cpe:/o:redhat:linux/
+cpe:/a:microsoft:sql_server:2014/ cpe:/o:microsoft:windows/
+cpe:/a:trafficreg:tmeter:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:hp:procurve_switch_1800/ cpe:/o:hp:procurve_switch_software/
+cpe:/a:allegro:rompager:$1/ cpe:/o:windriver:vxworks/a
+cpe:/h:ericsson:hm410dp/a
+cpe:/a:atrium:mercur:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:dlink:dir-625/a
+cpe:/a:apache:http_server:$2/ cpe:/a:ecos:embperl:$1/
+cpe:/a:allegro:rompager:$1/ cpe:/h:siemens:gigaset_sx762/a
+cpe:/a:famatech:radmin:3/ cpe:/o:microsoft:windows/a
+cpe:/a:aclogic:cesarftpd:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:oneaccess:one100a/a
+cpe:/a:apache:http_server:$1/ cpe:/a:php:php:$1/
+cpe:/o:canonical:ubuntu_linux/ cpe:/o:canonical:ubuntu_linux/
+cpe:/h:foundrynet:fastiron_1500/a
+cpe:/a:indy:httpd:$1/a
+cpe:/h:canon:webview_vb150/a
+cpe:/a:mailenable:mailenable:::professional/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2003::sp2/a
+cpe:/a:postgresql:postgresql:8.3/ cpe:/o:microsoft:windows/a
+cpe:/a:golang:go/ cpe:/a:google:cadvisor/
+cpe:/a:microsoft:iis:5.0/ cpe:/o:microsoft:windows/a
+cpe:/a:shoutcast:dnas:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:aethra:starvoice_$4/a
+cpe:/h:linksys:spa942/a
+cpe:/a:mailtraq:mailtraq/ cpe:/o:microsoft:windows/a
+cpe:/a:symantec:pcanywhere/ cpe:/o:microsoft:windows/a
+cpe:/a:acme:thttpd/ cpe:/h:panasonic:$1/
+cpe:/a:python:basehttpserver:$1/a
+cpe:/a:acme:thttpd:$2/ cpe:/a:php:php:$1/
+cpe:/a:microsoft:isa_server::::de/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:qotd::::fr/ cpe:/o:microsoft:windows/a
+cpe:/o:microsoft:windows_7/a
+cpe:/a:buffalo:ip_sharer_web:$1/ cpe:/h:buffalo:airstation_wyr-g54/a
+cpe:/a:microsoft:ftp_service/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:windows_media_services:$1.$2.$3.$4$5$6$7/a
+cpe:/h:sharp:ar-m550n/a
+cpe:/a:mikrotik:hotspot/ cpe:/o:mikrotik:routeros/
+cpe:/h:siemens:optipoint_$2/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:3com:3crwe454g75/a
+cpe:/h:netgear:wg602/a
+cpe:/a:indy:httpd:$1/ cpe:/a:teamspeak:teamspeak_classic/
+cpe:/a:postgresql:postgresql/ cpe:/o:microsoft:windows/a
+cpe:/a:apple:afp_server/ cpe:/o:apple:mac_os_x:10.10/
+cpe:/a:winpcap:winpcap/ cpe:/o:microsoft:windows/a
+cpe:/h:lexmark:$2/a
+cpe:/h:oki:$2/a
+cpe:/a:universal_media_server:universal_media_server:$4/ cpe:/o:microsoft:$1/
+cpe:/h:trendnet:smart24b/a
+cpe:/h:huawei:hg532e/a
+cpe:/a:ipswitch:imail/ cpe:/o:microsoft:windows/a
+cpe:/h:grandstream:gxp2000/a
+cpe:/a:code-crafters:ability_ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:ibm:http_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server/ cpe:/o:microsoft:windows/
+cpe:/a:postgresql:postgresql:8.1.1/ cpe:/o:microsoft:windows/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:netopia:cayman_334x/a
+cpe:/h:kyocera:fs-3900dn/a
+cpe:/o:linux:linux_kernel/ cpe:/o:redhat:enterprise_linux:$1/
+cpe:/o:microsoft:windows_xp/a
+cpe:/a:microsoft:sql_server:2008_r2/ cpe:/o:microsoft:windows/
+cpe:/h:aethra:v3000/a
+cpe:/a:microsoft:virtual_server/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2005:sp4/ cpe:/o:microsoft:windows/
+cpe:/a:packetvideo:twonky/ cpe:/o:linux:linux_kernel:2/
+cpe:/a:microsoft:sql_server:2000/ cpe:/o:microsoft:windows/
+cpe:/a:netatalk:netatalk:$SUBST(2,"-",".")/ cpe:/o:linux:linux_kernel:2.6/
+cpe:/h:netgear:dg834g/ cpe:/h:netgear:wndr3300/
+cpe:/a:postgresql:postgresql:9.5.6/ cpe:/o:microsoft:windows/a
+cpe:/a:isc:inn:$2/ cpe:/o:debian:debian_linux/
+cpe:/a:safenet-inc:sentinel_protection_installer:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2012:sp3/ cpe:/o:microsoft:windows/
+cpe:/o:dec:digital_unix/a
+cpe:/a:busybox:busybox:1.0/a
+cpe:/a:drweb:enterprise_security_suite:$1/ cpe:/a:gnu:zlib:$6/
+cpe:/a:postgresql:postgresql:8.2.0/ cpe:/o:microsoft:windows/a
+cpe:/a:nchsoftware:broadcam/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:dcs-900/a
+cpe:/h:alcatel-lucent:i-240w-a/a
+cpe:/a:novell:zenworks_patch_management_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:linksys:wrt54gv5/a
+cpe:/a:microsoft:isa_server::::ko/ cpe:/o:microsoft:windows/a
+cpe:/h:enterasys:rbt-8200/a
+cpe:/h:konicaminolta:magicolor_$1/a
+cpe:/a:proftpd:proftpd:1.2.0/a
+cpe:/a:cherokee-project:cherokee:$1/ cpe:/o:canonical:ubuntu_linux/
+cpe:/h:linksys:wvc54gc/ cpe:/o:linux:linux_kernel/a
+cpe:/a:pleis:psftpd/ cpe:/o:microsoft:windows/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:3com:7760/a
+cpe:/h:trendnet:tvip-422w/a
+cpe:/o:google:android/a
+cpe:/a:cmu:cyrus_imap_server:$1/ cpe:/o:apple:mac_os_x:$2/
+cpe:/a:intel:developer_tools_for_upnp:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:netgear:ip_sharer_web:$1/ cpe:/h:netgear:fwg114p/a
+cpe:/h:zebra:ztc_105sl/a
+cpe:/a:apache:http_server:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:xfree86:xfree86:$1/ cpe:/o:gentoo:linux/
+cpe:/o:debian:debian_linux/ cpe:/o:linux:linux_kernel/
+cpe:/a:media5corp:m5t_sip_client_engine:$2/ cpe:/h:patton:$1/
+cpe:/a:microsoft:systems_management_server/ cpe:/o:microsoft:windows/a
+cpe:/a:plex:plex_media_server/ cpe:/o:linux:linux_kernel:$3/
+cpe:/a:microsoft:asp.net:$2/ cpe:/a:mono:xsp:$1/
+cpe:/h:draytek:vigor_$1/a
+cpe:/a:microsoft:exchange_server:2003/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:9/ cpe:/o:microsoft:windows/a
+cpe:/a:openbsd:openssh/a
+cpe:/h:linksys:wag54gs/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:smc:smc2870w/a
+cpe:/a:microsoft:exchange_server/ cpe:/o:microsoft:windows/a
+cpe:/a:atrium:mercur/ cpe:/o:microsoft:windows/a
+cpe:/a:smartertools:smartermail/ cpe:/o:microsoft:windows/a
+cpe:/h:winwebmail:winwebmail_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:zyxel:prestige_$1/a
+cpe:/a:virata:emweb:$SUBST(2,"_",".")/a
+cpe:/a:cmu:cyrus_imap_server:$2/ cpe:/o:debian:debian_linux/
+cpe:/h:hp:procurve_access_point_$1/a
+cpe:/a:windriver:windweb:$1/ cpe:/h:xerox:8830/a
+cpe:/o:debian:debian_linux:$1/ cpe:/o:linux:linux_kernel/
+cpe:/a:cisco:telnet/ cpe:/h:cisco:aironet_1200/
+cpe:/a:aclogic:cesarftpd:$1:::zh/ cpe:/o:microsoft:windows/a
+cpe:/h:ibm:ds4400/a
+cpe:/h:levelone:wcs-2030/a
+cpe:/a:nikos_mavroyanopoulos:hydra:$1/ cpe:/h:kozumi:air_force_one_5/
+cpe:/a:microsoft:asp.net/ cpe:/o:microsoft:windows/a
+cpe:/h:lantronix:mps100/a
+cpe:/h:cisco:$1/a
+cpe:/h:huawei:quidway_$1/a
+cpe:/h:siemens:gigaset_se505/a
+cpe:/a:aprelium:abyss_web_server_x1:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:2008:sp4/ cpe:/o:microsoft:windows/
+cpe:/a:microsoft:iis/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:sql_server:6.5/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:8.1.0/ cpe:/o:microsoft:windows/a
+cpe:/a:proftpd:proftpd:1.2.6/a
+cpe:/h:sony:bdp-bx58/ cpe:/o:linux:linux_kernel:$1/a
+cpe:/a:jgaa:warftpd/ cpe:/o:microsoft:windows/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:canonical:ubuntu_linux/
+cpe:/h:huawei:smartax_mt882/a
+cpe:/h:cisco:ata_186/a
+cpe:/a:4d_sas:4d:$1/ cpe:/a:topix:topix8/
+cpe:/a:novell:ichain/ cpe:/o:novell:netware/a
+cpe:/h:philips:dect_voip841/a
+cpe:/o:beck-ipc:chip-rtos:$2/ cpe:/a:matt_johnston:dropbear_ssh_server/
+cpe:/h:lexmark:$1/a
+cpe:/h:nortel:baystack_470-48t/a
+cpe:/h:kyocera:uio_umc_10base/a
+cpe:/o:linux:linux_kernel:$2/a
+cpe:/h:allnet:all0277dsl/a
+cpe:/a:universal_media_server:universal_media_server:$5/ cpe:/o:microsoft:$1:$2/
+cpe:/o:google:android/ cpe:/o:linux:linux_kernel:$2/
+cpe:/a:apple:quicktime_streaming_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:rejetto:httpfileserver:$1/ cpe:/o:microsoft:windows/a
+cpe:/o:debian:debian_linux:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:postgresql:postgresql:7.4/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:9.6.3/ cpe:/o:microsoft:windows/a
+cpe:/a:redhat:cockpit/ cpe:/o:linux:linux_kernel/a
+cpe:/h:funkwerk:ip50/a
+cpe:/h:aastra:a150/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2008/a
+cpe:/a:real:realplayer_cloud:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:sendmail:sendmail:$2/ cpe:/o:ibm:os2/
+cpe:/a:sendmail:sendmail:$2r$3/ cpe:/o:hp:hp-ux/a
+cpe:/a:sebastian_warin:streamwhatyouhear/ cpe:/o:microsoft:windows/a
+cpe:/a:globalscape:cuteftp/ cpe:/o:microsoft:windows/a
+cpe:/a:hp:sendmail:$2/ cpe:/o:hp:hp-ux/a
+cpe:/h:dell:$1/a
+cpe:/h:muratec:f-320/ cpe:/h:muratec:if-300/
+cpe:/a:mailtraq:mailtraq:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:$1/a
+cpe:/a:postfix:postfix:$2/a
+cpe:/a:typsoft:typsoft_ftp_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:famatech:radmin:3.3/ cpe:/o:microsoft:windows/a
+cpe:/h:western_digital:n$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:patton:sn$1/ cpe:/o:patton:smartware:$3/
+cpe:/o:microsoft:windows_nt:4.0/a
+cpe:/h:zebra:$2/a
+cpe:/o:apple:mac_os_x:10.5/ cpe:/o:apple:mac_os_x:10.6/
+cpe:/a:acme:thttpd/ cpe:/h:linksys:rv082/
+cpe:/a:allegro:rompager:$2/ cpe:/h:zyxel:$1/a
+cpe:/a:postgresql:postgresql:9.3.10/ cpe:/o:microsoft:windows/a
+cpe:/a:hp:compaqhttpserver:$1/ cpe:/a:hp:system_management_homepage:$2/
+cpe:/h:panasonic:$1/a
+cpe:/a:ibm:sametime/ cpe:/o:microsoft:windows/a
+cpe:/h:trendnet:$1/a
+cpe:/a:postfix:postfix:$3/a
+cpe:/a:symantec:mail_security/ cpe:/o:microsoft:windows/a
+cpe:/a:zope:zope:$1.$2/ cpe:/a:zope:zope_enterprise_objects/
+cpe:/h:siemens:hipath_$1/a
+cpe:/a:smartertools:smarterstats:8.2/ cpe:/o:microsoft:windows/a
+cpe:/a:encoral:corrad/ cpe:/a:meteor:meteor:$1/
+cpe:/h:3com:8760/a
+cpe:/a:filezilla-project:filezilla_server/ cpe:/o:microsoft:windows/a
+cpe:/h:arris:tg862g/a
+cpe:/h:adtran:atlass_500_t1/a
+cpe:/h:hp:laserjet_400/a
+cpe:/a:efssoft:easy_file_sharing_web_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:postgresql:postgresql:9.0/ cpe:/o:microsoft:windows/a
+cpe:/a:extenua:silvershield/ cpe:/o:microsoft:windows/a
+cpe:/a:synology:dns/ cpe:/h:synology/
+cpe:/a:ehttp:ehttp:$1/ cpe:/h:hp:procurve_switch_$3/
+cpe:/h:sony:webcam_$1/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:router_2514/
+cpe:/a:airdroid:airdroid:$1/ cpe:/o:google:android/
+cpe:/a:growl:growl:$1/ cpe:/o:apple:mac_os_x:$2/
+cpe:/h:iogear:gmfpsu22w6/a
+cpe:/a:apache:http_server:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/h:novatel:mifi_$1/a
+cpe:/h:patton:sn4638/ cpe:/o:patton:smartware/
+cpe:/a:netgear:ip_sharer_web:$1/ cpe:/h:netgear:$2/a
+cpe:/h:polycom:vsx_7000a/a
+cpe:/h:kyocera:mita_km-1530/a
+cpe:/a:postgresql:postgresql:9.6.2/ cpe:/o:microsoft:windows/a
+cpe:/o:ethernut:nut_os/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:lexmark:c500/a
+cpe:/o:microsoft:windows/a
+cpe:/a:linksys:ip_sharer_web:$1/ cpe:/h:linksys:wrt54gc/a
+cpe:/a:microsoft:sql_server:2005:sp2/ cpe:/o:microsoft:windows/
+cpe:/a:southrivertech:titan_ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:plutinosoft:neptune:$1/ cpe:/a:plutinosoft:platinum/
+cpe:/a:boa:boa:$1/ cpe:/h:linksys:$3/a
+cpe:/h:xerox:phaser_$1/a
+cpe:/h:actiontec:r1524su/a
+cpe:/a:safer-networking:spybot_search_and_destroy/ cpe:/o:microsoft:windows/a
+cpe:/h:dlink:$1:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:twistedmatrix:twisted:$2/ cpe:/a:twistedmatrix:twistedweb:$3/a
+cpe:/h:thomson:$1/a
+cpe:/a:shoutcast:dnas:$1/ cpe:/o:apple:mac_os_x/a
+cpe:/a:ipswitch:ws_ftp:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:acme:micro_httpd/ cpe:/h:huawei:smartax_$1/a
+cpe:/a:shoutcast:dnas:$1/ cpe:/o:freebsd:freebsd/a
+cpe:/a:vaestgoeta-data:zftpserver:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:hp:apache-based_web_server/ cpe:/o:hp:hp-ux/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2008::sp2/a
+cpe:/h:fuji:xerox_docucentre_color_$1/a
+cpe:/a:hp:system_management_homepage/ cpe:/o:hp:hp-ux/a
+cpe:/a:filezilla-project:filezilla_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:keil:eweb:$1/ cpe:/a:keil:rl-arm/
+cpe:/a:monkey-project:monkey_http_daemon:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:red-gate:sql_monitor/ cpe:/o:microsoft:windows/a
+cpe:/a:sap:j2ee_engine/ cpe:/a:sap:netweaver/
+cpe:/h:fortinet:fortiwifi_60/a
+cpe:/a:pcman%27s_ftp_server_project:pcman%27s_ftp_server:$1/ cpe:/o:microsoft:windows/a
+cpe:/a:rob_swindell:synchronet:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:xerox:workcentre_5225/a
+cpe:/a:proftpd:proftpd:1.2.10/a
+cpe:/h:3com:7760/a
+cpe:/h:compaq:5450/a
+cpe:/a:rapidlogic:httpd:$1/ cpe:/h:motorola:vt1000v/a
+cpe:/h:usrobotics:usr997748/a
+cpe:/a:solarwinds:tftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:trillian:trillian/ cpe:/o:microsoft:windows/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:ip_phone_7940/
+cpe:/o:freebsd:freebsd/a
+cpe:/a:apache:coyote_http_connector:$1/ cpe:/a:apache:tomcat:$2/
+cpe:/h:wdc:my_net_$1/ cpe:/o:wdc:my_net_firmware:$2/
+cpe:/a:kerio:winroute/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:iis:3/ cpe:/o:microsoft:windows/a
+cpe:/h:panasonic:dp-1820e/a
+cpe:/h:huawei:smartax_mt880/a
+cpe:/a:davide_libenzi:xmail:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/h:xerox:phaser_3500/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:dlink:$2/a
+cpe:/a:axence:nvision/ cpe:/o:microsoft:windows/a
+cpe:/h:brother:mfc-8860dn/a
+cpe:/a:ubicom:httpd:$1/ cpe:/h:linksys:wet54g/a
+cpe:/h:trendnet:tv-ip100/a
+cpe:/h:levelone:fps-3001txu/a
+cpe:/h:lexmark:c500/a
+cpe:/h:lexmark:w810/a
+cpe:/h:planet:$1/a
+cpe:/o:sun:sunos/a
+cpe:/o:hp:hp-ux/a
+cpe:/a:novell:nsure_audit/ cpe:/o:novell:netware/a
+cpe:/a:postgresql:postgresql:9.0.8/ cpe:/o:microsoft:windows/a
+cpe:/h:samsung:clp-315w/a
+cpe:/h:3com:4500/a
+cpe:/a:novell:groupwise/ cpe:/o:linux:linux_kernel/
+cpe:/a:davide_librenzi:xmail/ cpe:/a:ibm:lotus_protector_for_mail_security/
+cpe:/a:minix:ftpd:$1/ cpe:/o:minix:minix/a
+cpe:/a:ftprush:ftprush/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:windows_media_services:$1/a
+cpe:/h:cisco:asa_5510/a
+cpe:/a:miniupnp_project:miniupnpd:$4/a
+cpe:/h:dlink:dvg-5121sp/a
+cpe:/a:microsoft:.net_framework:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:fuji:xerox_docuprint_$1/a
+cpe:/h:rim:blackberry_playbook_tablet/ cpe:/o:rim:blackberry_playbook_os:2.0/
+cpe:/a:aiohttp:aiohttp:$2/ cpe:/a:python:python:$1/
+cpe:/h:cisco:aironet_$2/a
+cpe:/a:ibm:tivoli_storage_manager:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:microsoft:iis:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:engenius:esr600/a
+cpe:/h:huawei:quidway_s5624p-pwr/a
+cpe:/a:adobe:flash_media_server:$1/ cpe:/a:wowza:wowza_media_server:$SUBST(2,"
+cpe:/a:kozea:radicale/ cpe:/a:python:python/
+cpe:/h:tp-link:td-8901n/a
+cpe:/a:scottygroup:filetransfer/ cpe:/o:microsoft:windows/a
+cpe:/a:packetvideo:twonky/ cpe:/o:linux:linux_kernel:$1/
+cpe:/a:ubicom:httpd:$1/ cpe:/h:dlink:dir-655/a
+cpe:/h:hp:laserjet_2430/a
+cpe:/a:postgresql:postgresql:9.6/ cpe:/o:microsoft:windows/a
+cpe:/o:microsoft:windows_ce/a
+cpe:/a:ari_pikivirta:home_ftp_server/ cpe:/o:microsoft:windows/a
+cpe:/a:turbosoft:turboftp:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:minolta:pagepro_20/a
+cpe:/h:perfectone:ip301/a
+cpe:/a:microsoft:sql_server:2014:sp1/ cpe:/o:microsoft:windows/
+cpe:/h:belkin:f5d76324/a
+cpe:/a:microsoft:sql_server:2000:sp3a/ cpe:/o:microsoft:windows/
+cpe:/a:python:python:$2/ cpe:/a:python:simplehttpserver:$1/
+cpe:/a:acme:micro_httpd/ cpe:/h:dlink:$1/a
+cpe:/a:hummingbird:exceed:11/ cpe:/o:microsoft:windows/a
+cpe:/o:juniper:junos/a
+cpe:/a:allegro:rompager:$1/ cpe:/h:cisco:$2/a
+cpe:/a:dell:kace_$1_systems_management_appliance_software:$3/ cpe:/h:dell:kace_$1_systems_management_appliance/
+cpe:/h:ricoh:aficio_mp_c4000/a
+cpe:/a:apple:apple_tv/ cpe:/o:apple:mac_os_x/a
+cpe:/h:hp:apache-based_web_server:$1/ cpe:/o:hp:hp-ux/a
+cpe:/o:ibm:os_390/a
+cpe:/a:isc:bind:$1/ cpe:/o:redhat:enterprise_linux:$2/
+cpe:/h:fuji:xerox_$1/a
+cpe:/a:tornadoweb:tornado:$1/a
+cpe:/h:tp-link:$3/ cpe:/h:zero_one_tech:$1/
+cpe:/a:microsoft:exchange_server:2003:::es/ cpe:/o:microsoft:windows/a
+cpe:/a:netkit:netkit/ cpe:/o:linux:linux_kernel/a
+cpe:/a:plex:plex_media_server:$4/ cpe:/o:linux:linux_kernel:$3/
+cpe:/h:samsung:ml-2251n/a
+cpe:/a:microsoft:sql_server:2000:sp4/ cpe:/o:microsoft:windows/
+cpe:/a:straightrunning:xming/ cpe:/o:microsoft:windows/a
+cpe:/h:cisco:ata186/a
+cpe:/a:microsoft:sql_server:2008_r2:gold/ cpe:/o:microsoft:windows/
+cpe:/h:nortel:460-24t-pwr/a
+cpe:/a:cmu:cyrus_imap_server:$2/ cpe:/o:apple:mac_os_x/a
+cpe:/a:ibm:zos_explorer/ cpe:/o:ibm:z%2fos/
+cpe:/h:enterasys:1h582-25/a
+cpe:/h:linksys:wag354g/a
+cpe:/a:microsoft:iis::::es/ cpe:/o:microsoft:windows/a
+cpe:/a:busybox:busybox:1.00-pre7 - 1.14.0/a
+cpe:/h:dlink:xtreme_$1/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2016/a
+cpe:/h:siemens:5940_t1e1/a
+cpe:/a:proftpd:proftpd:$1/a
+cpe:/h:sipura:spa-2100/a
+cpe:/h:thomson:tg508/a
+cpe:/h:linksys:befw11s4/a
+cpe:/h:alcatel:7800/a
+cpe:/a:avg:anti-virus:$1_beta/ cpe:/o:microsoft:windows/a
+cpe:/h:intermec:$1/a
+cpe:/h:compal:ch7465lg-zg/a
+cpe:/a:oracle:glassfish_server:$3/ cpe:/a:oracle:jre:$4/
+cpe:/h:linksys:4400n/a
+cpe:/h:lancom:$1/a
+cpe:/a:acme:micro_httpd/ cpe:/h:siemens:sl2-141/a
+cpe:/h:samsung:swl-6100ap/a
+cpe:/a:microsoft:sql_server:2000:sp3/ cpe:/o:microsoft:windows/
+cpe:/a:ehttp:ehttp:$1/ cpe:/h:hp:procurve_switch_2626/
+cpe:/a:microsoft:sql_server:2016:sp1/ cpe:/o:microsoft:windows/
+cpe:/a:twistedmatrix:twisted:$1/ cpe:/a:twistedmatrix:twistedweb:$2/a
+cpe:/a:trendnet:ip_sharer_web:$1/ cpe:/h:trendnet:tw100-brf114/a
+cpe:/h:conceptronic:c54apra/a
+cpe:/h:linksys:$1/a
+cpe:/a:cisco:ssh/ cpe:/o:cisco:ios/a
+cpe:/a:ibm:hardware_management_console/ cpe:/o:ibm:aix/
+cpe:/h:adtran:tso_120e/a
+cpe:/o:canonical:ubuntu_linux/ cpe:/o:linux:linux_kernel/a
+cpe:/a:davide_libenzi:xmail:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/a:indy:httpd:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:belkin:n1_f5d8231-4/a
+cpe:/a:apple:kerberos:5/ cpe:/o:apple:mac_os_x/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:netbsd:netbsd/
+cpe:/h:lg:$2/ cpe:/o:linux:linux_kernel/a
+cpe:/a:southrivertech:titan_ftp_server:$2/ cpe:/o:microsoft:windows/a
+cpe:/h:avaya:p333r/a
+cpe:/a:microsoft:exchange_server:2003:::ko/ cpe:/o:microsoft:windows/a
+cpe:/h:trendnet:tv-ip100/ cpe:/h:trendnet:tv-ip110/
+cpe:/a:microsoft:exchange_server:2000:::de/ cpe:/o:microsoft:windows/a
+cpe:/h:motorola:$1/a
+cpe:/a:postgresql:postgresql:9.4.0/ cpe:/o:microsoft:windows/a
+cpe:/a:mailenable:mailenable:$2:-:enterprise/ cpe:/o:microsoft:windows/a
+cpe:/h:foundrynet:$1/a
+cpe:/h:huawei:quidway_ar28-09/a
+cpe:/a:rejetto:httpfileserver/ cpe:/o:microsoft:windows/a
+cpe:/a:linuxmagic:magicmail/ cpe:/o:linux:linux_kernel/a
+cpe:/a:brocade:vyatta_vrouter_software/ cpe:/o:linux:linux_kernel/
+cpe:/o:qnx:qnx/a
+cpe:/h:lexmark:optra_sc_$1/a
+cpe:/h:draytek:vigor_2820/a
+cpe:/a:ibm:os2_ftp_server:$1/ cpe:/o:ibm:os2/
+cpe:/h:atcom:at-320/a
+cpe:/a:novell:groupwise:$1/ cpe:/o:novell:netware/a
+cpe:/o:microsoft:windows_nt/a
+cpe:/h:linksys:cit400/a
+cpe:/a:digifort:digifort:6.5.0_final/ cpe:/o:microsoft:windows/a
+cpe:/h:snom:105/a
+cpe:/a:universal_media_server:universal_media_server:$4/ cpe:/o:linux:linux_kernel:$2/a
+cpe:/h:xerox:workcentre_$1/a
+cpe:/a:microsoft:isa_server::::ja/ cpe:/o:microsoft:windows/a
+cpe:/h:siemens:c2-010-i/a
+cpe:/o:canonical:ubuntu_linux:$1/ cpe:/o:linux:linux_kernel/a
+cpe:/h:funkwerk:bintec_$1/a
+cpe:/a:igniterealtime:openfire/ cpe:/a:mortbay:jetty/
+cpe:/a:python:basehttpserver:$1/ cpe:/a:python:python:$2/
+cpe:/h:axis:560/a
+cpe:/a:avg:anti-virus/ cpe:/o:microsoft:windows/a
+cpe:/h:lexmark:t642/a
+cpe:/a:utorrent:utorrent/ cpe:/o:linux:linux_kernel/
+cpe:/a:microsoft:qotd::::de/ cpe:/o:microsoft:windows/a
+cpe:/a:tightvnc:tightvnc/a
+cpe:/o:windriver:vxworks/a
+cpe:/a:airdroid:airdroid/ cpe:/o:google:android/
+cpe:/h:funkwerk:bintec_rs230a/a
+cpe:/h:linksys:srw224/a
+cpe:/a:microsoft:dns/ cpe:/o:microsoft:windows_server_2012:r2/a
+cpe:/h:avaya:p330/a
+cpe:/a:microsoft:exchange_server:2003:::zh/ cpe:/o:microsoft:windows/a
+cpe:/o:apple:mac_os/a
+cpe:/a:microsoft:exchange_server:2003:::de/ cpe:/o:microsoft:windows/a
+cpe:/o:microsoft:windows_2000/a
+cpe:/a:nvidia:nvidia_streamer_service/ cpe:/o:microsoft:windows/a
+cpe:/a:openbsd:openssh:$2/ cpe:/o:fedoraproject:fedora_core:$3/
+cpe:/a:openbsd:openssh:$2/ cpe:/o:microsoft:windows/a
+cpe:/a:sun:jre:$1/ cpe:/o:sun:sunos/a
+cpe:/h:allworx:6x/a
+cpe:/a:microsoft:windows_media_services/ cpe:/o:microsoft:windows/a
+cpe:/a:bitvise:winsshd/ cpe:/o:microsoft:windows/a
+cpe:/a:sun:advanced_lights_out_manager:$1/ cpe:/o:sun:sunos/a
+cpe:/h:motorola:nvg589/a
+cpe:/a:cisco:telnet/ cpe:/h:cisco:router_1721/
+cpe:/h:firebrick:$1/a
+cpe:/h:rosewill:$3/ cpe:/o:ubicom:ipos:$1/
+cpe:/a:allegro:rompager:$1/ cpe:/h:xerox:phaser_4500/a
+cpe:/a:djb:qmail/ cpe:/o:linux:linux_kernel/a
+cpe:/h:nrg:$1/a
+cpe:/a:postgresql:postgresql:9.3/ cpe:/o:microsoft:windows/a
+cpe:/h:linksys:wag200g/a
+cpe:/a:ultidev:cassini:$1/ cpe:/o:microsoft:windows/a
+cpe:/h:usrobotics:$2/a
+cpe:/a:ibm:os2_ftp_server/ cpe:/o:ibm:os2/
+cpe:/a:mbedthis:appweb:$1/ cpe:/a:php:php:$2/
+cpe:/a:python:python/ cpe:/a:zope:zope/
+cpe:/a:postfix:postfix/a
+cpe:/a:cherokee-project:cherokee:$1/ cpe:/o:novell:opensuse/
+cpe:/h:huawei:hg8245t/a
+cpe:/a:openssl:openssl:$4/ cpe:/a:ruby-lang:ruby:$2/
+cpe:/a:postgresql:postgresql:9.1.4/ cpe:/o:microsoft:windows/a
+cpe:/a:oracle:jsp:$2/ cpe:/a:oracle:weblogic_server/
+cpe:/h:kyocera:laserstation_1940/a

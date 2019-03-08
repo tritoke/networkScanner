@@ -20,7 +20,6 @@ class Match:
         "i": regex.IGNORECASE,
         "s": regex.DOTALL
     }
-    version_info: DefaultDict[str, str] = defaultdict(str)
     letter_to_name = {
         "p": "vendorproductname",
         "v": "version",
@@ -38,6 +37,8 @@ class Match:
             pattern_options: str,
             version_info: str
     ):
+        self.version_info: DefaultDict[str, str] = defaultdict(str)
+        self.cpes: Set[str] = set()
         self.service: str = service
         # bitwise or is used to combine flags
         # pattern options will never be anything but a
@@ -59,8 +60,16 @@ class Match:
             )
         except Exception:
             print(pattern)
-        # regex.compile(pattern, flags=flags)
-        # inline regex options are the cool
+        # TODO add in the version info with CPEs.
+        vinfo_regex = regex.compile(r"([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
+        # cpe:/(?P<part>.+?:)(?P<vendor>.+?:)?(?P<product>.+?:)?(?P<version>.+?:)?(?P<update>.+?:)?(?P<edition>.+?:?)?(<language>)?/a?[ $]?
+        cpe_regex = regex.compile(r"\d+")
+        for fieldname, delim, val, opts in vinfo_regex.findall(version_info):
+            if fieldname == "cpe:":
+                cpe_field = fieldname + delim + val
+
+            else:
+                self.version_info[Match.letter_to_name[fieldname]] = val
 
     def __repr__(self) -> str:
         return "Match(" + ", ".join((
@@ -69,25 +78,16 @@ class Match:
                 f"version_info={self.version_info}"
             )) + ")"
 
-    def search(self, string: str) -> str:
+    #  TODO if the search was a success then add fill in the
+    #  fields of the versioninfo that contain strings like $1
+    #  which are the different groups of the regex
+    def matches(self, string: str) -> bool:
         re_search = self.pattern.search(string)
         # print(self.pattern.findall)
         if re_search:
-            return self.service
+            return True
         else:
-            return ""
-
-    def add_version_info(self, version_string: str) -> None:
-        # this regular expression matches one character from pvihod
-        # followed by a / then it non-greedily matches at least one of
-        # any character followed by another slash
-        pattern = regex.compile(r"[pvihod]/.+?/")
-
-        # find all the additional fields and iterate over them
-        fields = pattern.findall(version_string)
-        for value in fields:
-            # add the field information to the match object
-            self.version_info[Match.letter_to_name[value[0]]] = value[2:-1]
+            return False
 
 
 @dataclass
@@ -275,23 +275,21 @@ class Probe:
 
                     # recieve the data and decode it to a string
                     data_recieved = sock.recv(4096).decode("utf-8")
+                    print("Recieved", data_recieved)
                     service = ""
                     # try and softmatch the service first
                     for softmatch in self.softmatches:
-                        search = softmatch.search(data_recieved)
-                        if search != "":
+                        if softmatch.matches(data_recieved):
+                            print(f"Softmatched: {softmatch}")
                             service = softmatch.service
                             target.services[port] = softmatch
                             break
                     # try and get a full match for the service
                     for match in self.matches:
-                        # If the softmatch fails then
-                        # service defaults to ""
-                        # this makes the below statement true
-                        # for all match.service names.
-                        if service in match.service:
-                            search = match.search(data_recieved)
-                            if search != "":
+                        if service in match.service.lower():
+                            if "ssh" in match.service.lower():
+                                print(f"Trying to match: {match}")
+                            if match.matches(data_recieved):
                                 print(f"Matched: {match}")
                                 target.services[port] = match
                                 break

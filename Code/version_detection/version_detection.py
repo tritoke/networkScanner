@@ -140,6 +140,7 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
             if search:
                 # the remainder of the string after the match
                 version_info = line[search.end()+1:]
+                print(version_info)
                 # escape the curly braces so the regex engine doesn't
                 # consider them to be special characters
                 pattern = search.group("regex").replace("{", r"\{")
@@ -209,7 +210,7 @@ def version_detect_scan(
 
 if __name__ == "__main__":
     probes = parse_probes("./nmap-service-probes")
-
+    exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,
