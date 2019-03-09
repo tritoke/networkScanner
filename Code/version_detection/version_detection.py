@@ -140,7 +140,6 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
             if search:
                 # the remainder of the string after the match
                 version_info = line[search.end()+1:]
-                print(version_info)
                 # escape the curly braces so the regex engine doesn't
                 # consider them to be special characters
                 pattern = search.group("regex").replace("{", r"\{")

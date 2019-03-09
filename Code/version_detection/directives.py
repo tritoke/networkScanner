@@ -38,7 +38,7 @@ class Match:
             version_info: str
     ):
         self.version_info: DefaultDict[str, str] = defaultdict(str)
-        self.cpes: Set[str] = set()
+        self.cpes: DefaultDict[str, str] = defaultdict(str)
         self.service: str = service
         # bitwise or is used to combine flags
         # pattern options will never be anything but a
@@ -60,14 +60,27 @@ class Match:
             )
         except Exception:
             print(pattern)
+
         # TODO add in the version info with CPEs.
         vinfo_regex = regex.compile(r"([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
-        # cpe:/(?P<part>.+?:)(?P<vendor>.+?:)?(?P<product>.+?:)?(?P<version>.+?:)?(?P<update>.+?:)?(?P<edition>.+?:?)?(<language>)?/a?[ $]?
-        cpe_regex = regex.compile(r"\d+")
-        for fieldname, delim, val, opts in vinfo_regex.findall(version_info):
+        cpe_regex = regex.compile(
+            r":?".join((
+                r"(?P<part>[aho])",
+                r"(?P<vendor>[^:]*)",
+                r"(?P<product>[^:]*)",
+                r"(?P<version>[^:]*)",
+                r"(?P<update>[^:]*)",
+                r"(?P<edition>[^:]*)",
+                r"(?P<language>[^:]*)"
+            ))
+        )
+        for fieldname, _, val, opts in vinfo_regex.findall(version_info):
             if fieldname == "cpe:":
-                cpe_field = fieldname + delim + val
-
+                search = cpe_regex.search(val)
+                if search:
+                    pass
+                    # TODO: decide how to structure storing CPEs
+                    # maybe a dictionary with the <part> as a key?
             else:
                 self.version_info[Match.letter_to_name[fieldname]] = val
 
