@@ -3,11 +3,13 @@ from collections import defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
 from functools import reduce
+from string import whitespace, printable
 from typing import DefaultDict, Dict, Set, List
 import ip_utils
 import operator
 import regex
 import socket
+import struct
 
 
 class Match:
@@ -28,6 +30,11 @@ class Match:
         "o": "operatingsystem",
         "d": "devicetype"
     }
+    cpe_part_map: Dict[str, str] = {
+        "a": "applications",
+        "h": "hardware platforms",
+        "o": "operating systems"
+    }
     # look into match.expand when looking at the substring version info things.
 
     def __init__(
@@ -37,8 +44,8 @@ class Match:
             pattern_options: str,
             version_info: str
     ):
-        self.version_info: DefaultDict[str, str] = defaultdict(str)
-        self.cpes: DefaultDict[str, str] = defaultdict(str)
+        self.version_info: Dict[str, str] = dict()
+        self.cpes: Dict[str, Dict[str, str]] = dict()
         self.service: str = service
         # bitwise or is used to combine flags
         # pattern options will never be anything but a
@@ -61,26 +68,25 @@ class Match:
         except Exception:
             print(pattern)
 
-        # TODO add in the version info with CPEs.
         vinfo_regex = regex.compile(r"([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
         cpe_regex = regex.compile(
-            r":?".join((
-                r"(?P<part>[aho])",
-                r"(?P<vendor>[^:]*)",
-                r"(?P<product>[^:]*)",
-                r"(?P<version>[^:]*)",
-                r"(?P<update>[^:]*)",
-                r"(?P<edition>[^:]*)",
-                r"(?P<language>[^:]*)"
+            ":?".join((
+                "(?P<part>[aho])",
+                "(?P<vendor>[^:]*)",
+                "(?P<product>[^:]*)",
+                "(?P<version>[^:]*)",
+                "(?P<update>[^:]*)",
+                "(?P<edition>[^:]*)",
+                "(?P<language>[^:]*)"
             ))
         )
+
         for fieldname, _, val, opts in vinfo_regex.findall(version_info):
             if fieldname == "cpe:":
                 search = cpe_regex.search(val)
                 if search:
-                    pass
-                    # TODO: decide how to structure storing CPEs
-                    # maybe a dictionary with the <part> as a key?
+                    part = search.group("part")
+                    self.cpes[Match.cpe_part_map[part]] = search.groupdict()
             else:
                 self.version_info[Match.letter_to_name[fieldname]] = val
 
@@ -95,9 +101,57 @@ class Match:
     #  fields of the versioninfo that contain strings like $1
     #  which are the different groups of the regex
     def matches(self, string: str) -> bool:
-        re_search = self.pattern.search(string)
-        # print(self.pattern.findall)
-        if re_search:
+        search = self.pattern.search(string)
+        if search:
+            def print_printable(group_number: int) -> str:
+                """
+                Mirrors the P function from nmap which
+                is used to print only printable characters.
+                i.e. W\0O\0R\0K\0G\0R\0O\0U\0P -> WORKGROUP
+                """
+                return "".join(
+                    i for i in search.group(group_number)
+                    if i in (
+                        set(printable)
+                        - set(whitespace)
+                        | {" "}
+                    )
+                )
+
+            def substitute(
+                group_number: int,
+                before: str,
+                after: str
+            ) -> str:
+                """
+                Mirrors the SUBST function from nmap which is used to
+                format some information found by the regex.
+                by substituting all instances of `before` with `after`.
+                """
+                return search.group(group_number).replace(before, after)
+
+            def unpack_uint(group_number: int, endianness: str) -> str:
+                """
+                Mirrors the I function from nmap which is used to
+                unpack an unsigned int from some bytes.
+                """
+                return str(struct.unpack(
+                    endianness + "I",
+                    search.group(group_number)
+                ))
+            # fill in the version information from the regex match
+
+            def replace_groups(string: str) -> str:
+                # find all the dollar groups:
+                dollar_regex = regex.compile(r"\$(\d)")
+                numbers = set(int(i) for i in dollar_regex.findall())
+                for group_number in numbers:
+                    string = string.replace(
+                        f"${group_number}",
+                        search.group(group_number)
+                    )
+                return string
+
             return True
         else:
             return False

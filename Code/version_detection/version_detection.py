@@ -209,7 +209,6 @@ def version_detect_scan(
 
 if __name__ == "__main__":
     probes = parse_probes("./nmap-service-probes")
-    exit()
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,
