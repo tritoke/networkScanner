@@ -97,60 +97,134 @@ class Match:
                 f"version_info={self.version_info}"
             )) + ")"
 
-    #  TODO if the search was a success then add fill in the
-    #  fields of the versioninfo that contain strings like $1
-    #  which are the different groups of the regex
+
+    def replace_groups(
+            string: str,
+            original_match: regex.Match
+    ) -> str:
+        """
+        This function takes in a string and the original
+        regex search performed on the data recieved and
+        replaces all of the $i, $SUBST, $I, $P occurances
+        with the relavant formatted text that they produce.
+        """
+        def remove_unprintable(
+                group_number: int,
+                original_match: regex.Match
+        ) -> str:
+            """
+            Mirrors the P function from nmap which
+            is used to print only printable characters.
+            i.e. W\0O\0R\0K\0G\0R\0O\0U\0P -> WORKGROUP
+            """
+            return "".join(
+                i for i in original_match.group(group_number)
+                if i in (
+                    set(printable)
+                    - set(whitespace)
+                    | {" "}
+                )
+            )
+            # if i in the set of all printable characters,
+            # excluding those of which that are whitespace characters
+            # but including space.
+
+        def substitute(
+            group_number: int,
+            before: str,
+            after: str,
+            original_match: regex.Match
+        ) -> str:
+            """
+            Mirrors the SUBST function from nmap which is used to
+            format some information found by the regex.
+            by substituting all instances of `before` with `after`.
+            """
+            return original_match.group(group_number).replace(before, after)
+
+        def unpack_uint(
+                group_number: int,
+                endianness: str,
+                original_match: regex.Match
+        ) -> str:
+            """
+            Mirrors the I function from nmap which is used to
+            unpack an unsigned int from some bytes.
+            """
+            return str(struct.unpack(
+                endianness + "I",
+                original_match.group(group_number)
+            ))
+
+        # fill in the version information from the regex match
+        # find all the dollar groups:
+        dollar_regex = regex.compile(r"\$(\d)")
+        # find all the $i's in string
+        numbers = set(int(i) for i in dollar_regex.findall(string))
+        # for each $i found i
+        for group_number in numbers:
+            string = string.replace(
+                f"${group_number}",
+                original_match.group(group_number)
+            )
+        # having replaced all of the groups we can now
+        # start doing the SUBST, P and I commands.
+        subst_regex = regex.compile(r"\$SUBST\((\d),(.+),(.+)\)")
+        # iterate over all of the matches found by the SUBST regex
+        for match in subst_regex.finditer(original_match):
+            num, before, after = match.groups()
+            # replace the full match (group 0)
+            # with the output of substitute
+            # with the specific arguments
+            string.replace(
+                match.group(0),
+                substitute(int(num), before, after, original_match)
+            )
+
+        p_regex = regex.compile(r"\$P\((\d)\)")
+        for match in p_regex.finditer(original_match):
+            num = match.group(1)
+            # replace the full match (group 0)
+            # with the output of remove_unprintable
+            # with the specific arguments
+            string.replace(
+                match.group(0),
+                remove_unprintable(int(num), original_match)
+            )
+
+        i_regex = regex.compile(r"\$I\(\d),\"(\S)\"\)")
+        for match in i_regex.finditer(original_match):
+            num, endianness = match.groups()
+            # this means replace group 0 -> the whole match
+            # with the output of the unpack_uint
+            # with the specified arguments
+            string.replace(
+                match.group(0),
+                unpack_uint(
+                    int(num),
+                    endianness,
+                    original_match
+                )
+            )
+
+        return string
+
     def matches(self, string: str) -> bool:
         search = self.pattern.search(string)
         if search:
-            def print_printable(group_number: int) -> str:
-                """
-                Mirrors the P function from nmap which
-                is used to print only printable characters.
-                i.e. W\0O\0R\0K\0G\0R\0O\0U\0P -> WORKGROUP
-                """
-                return "".join(
-                    i for i in search.group(group_number)
-                    if i in (
-                        set(printable)
-                        - set(whitespace)
-                        | {" "}
-                    )
-                )
-
-            def substitute(
-                group_number: int,
-                before: str,
-                after: str
-            ) -> str:
-                """
-                Mirrors the SUBST function from nmap which is used to
-                format some information found by the regex.
-                by substituting all instances of `before` with `after`.
-                """
-                return search.group(group_number).replace(before, after)
-
-            def unpack_uint(group_number: int, endianness: str) -> str:
-                """
-                Mirrors the I function from nmap which is used to
-                unpack an unsigned int from some bytes.
-                """
-                return str(struct.unpack(
-                    endianness + "I",
-                    search.group(group_number)
-                ))
-            # fill in the version information from the regex match
-
-            def replace_groups(string: str) -> str:
-                # find all the dollar groups:
-                dollar_regex = regex.compile(r"\$(\d)")
-                numbers = set(int(i) for i in dollar_regex.findall())
-                for group_number in numbers:
-                    string = string.replace(
-                        f"${group_number}",
-                        search.group(group_number)
-                    )
-                return string
+            # the fields to replace are all the CPE groups,
+            # all of the version info fields.
+            self.version_info = {
+                key: replace_groups(value, search)
+                for key, value in self.version_info.items()
+            }
+            self.cpes = {
+                outer_key: {
+                    inner_key: replace_groups(value, search)
+                    for inner_key, value in outer_dict.items()
+                }
+                for outer_key, outer_dict in self.cpes.items()
+            }
 
             return True
         else:
