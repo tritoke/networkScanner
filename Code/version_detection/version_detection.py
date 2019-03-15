@@ -142,8 +142,9 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
                 version_info = line[search.end()+1:]
                 # escape the curly braces so the regex engine doesn't
                 # consider them to be special characters
-                pattern = search.group("regex").replace("{", r"\{")
-                pattern = pattern.replace("}", r"\}")
+                pattern = bytes(search.group("regex"), "utf-8")
+                pattern = pattern.replace(b"\\n", b"\n")
+                pattern = pattern.replace(b"\\r", b"\r")
                 matcher = directives.Match(
                     search.group("service"),
                     pattern,

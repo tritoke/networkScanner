@@ -4,10 +4,11 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from functools import reduce
 from string import whitespace, printable
-from typing import DefaultDict, Dict, Set, List
+# TODO fix this namespace clash
+from typing import DefaultDict, Dict, Set, List, Pattern, Match
 import ip_utils
 import operator
-import regex
+import re
 import socket
 import struct
 
@@ -19,8 +20,8 @@ class Match:
     thing except that softmatches have less information.
     """
     options_to_flags = {
-        "i": regex.IGNORECASE,
-        "s": regex.DOTALL
+        "i": re.IGNORECASE,
+        "s": re.DOTALL
     }
     letter_to_name = {
         "p": "vendorproductname",
@@ -40,7 +41,7 @@ class Match:
     def __init__(
             self,
             service: str,
-            pattern: str,
+            pattern: bytes,
             pattern_options: str,
             version_info: str
     ):
@@ -50,26 +51,28 @@ class Match:
         # bitwise or is used to combine flags
         # pattern options will never be anything but a
         # combination of s and i.
-        # the default value of regex.V1 is so that
-        # regex uses the newer matching engine.
+        # the default value of re.V1 is so that
+        # re uses the newer matching engine.
         flags = reduce(
             operator.ior,
             [
                 self.options_to_flags[opt]
                 for opt in pattern_options
             ],
-            regex.V0
+            0
         )
         try:
-            self.pattern: regex.Regex = regex.compile(
+            self.pattern: re.Regex = re.compile(
                 pattern,
                 flags=flags
             )
-        except Exception:
+        except Exception as e:
+            print(e)
             print(pattern)
+            input()
 
-        vinfo_regex = regex.compile(r"([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
-        cpe_regex = regex.compile(
+        vinfo_regex = re.compile("([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
+        cpe_regex = re.compile(
             ":?".join((
                 "(?P<part>[aho])",
                 "(?P<vendor>[^:]*)",
@@ -82,13 +85,21 @@ class Match:
         )
 
         for fieldname, _, val, opts in vinfo_regex.findall(version_info):
-            if fieldname == "cpe:":
+            if fieldname == b"cpe:":
                 search = cpe_regex.search(val)
                 if search:
                     part = search.group("part")
-                    self.cpes[Match.cpe_part_map[part]] = search.groupdict()
+                    # this next bit is so that the bytes produced by the regex
+                    # are turned to strings
+                    self.cpes[Match.cpe_part_map[part]] = {
+                        key: value
+                        for key, value
+                        in search.groupdict().items()
+                    }
             else:
-                self.version_info[Match.letter_to_name[fieldname]] = val
+                self.version_info[
+                    Match.letter_to_name[fieldname]
+                ] = val.decode()
 
     def __repr__(self) -> str:
         return "Match(" + ", ".join((
@@ -97,10 +108,10 @@ class Match:
                 f"version_info={self.version_info}"
             )) + ")"
 
-    def matches(self, string: str) -> bool:
+    def matches(self, string: bytes) -> bool:
         def replace_groups(
                 string: str,
-                original_match: regex.Match
+                original_match: re.Match
         ) -> str:
             """
             This function takes in a string and the original
@@ -110,16 +121,16 @@ class Match:
             """
             def remove_unprintable(
                     group: int,
-                    original_match: regex.Match
-            ) -> str:
+                    original_match: re.Match
+            ) -> bytes:
                 """
                 Mirrors the P function from nmap which
                 is used to print only printable characters.
                 i.e. W\0O\0R\0K\0G\0R\0O\0U\0P -> WORKGROUP
                 """
-                return "".join(
+                return b"".join(
                     i for i in original_match.group(group)
-                    if i in (
+                    if ord(i) in (
                         set(printable)
                         - set(whitespace)
                         | {" "}
@@ -131,10 +142,10 @@ class Match:
 
             def substitute(
                 group: int,
-                before: str,
-                after: str,
-                original_match: regex.Match
-            ) -> str:
+                before: bytes,
+                after: bytes,
+                original_match: re.Match
+            ) -> bytes:
                 """
                 Mirrors the SUBST function from nmap which is used to
                 format some information found by the regex.
@@ -145,69 +156,70 @@ class Match:
             def unpack_uint(
                     group: int,
                     endianness: str,
-                    original_match: regex.Match
-            ) -> str:
+                    original_match: re.Match
+            ) -> bytes:
                 """
                 Mirrors the I function from nmap which is used to
                 unpack an unsigned int from some bytes.
                 """
-                return str(struct.unpack(
+                return bytes(struct.unpack(
                     endianness + "I",
                     original_match.group(group)
                 ))
 
+            text = bytes(string, "utf-8")
             # fill in the version information from the regex match
             # find all the dollar groups:
-            dollar_regex = regex.compile(r"\$(\d)")
+            dollar_regex = re.compile(r"\$(\d)")
             # find all the $i's in string
             numbers = set(int(i) for i in dollar_regex.findall(string))
             # for each $i found i
             for group in numbers:
-                string = string.replace(
-                    f"${group}",
+                text = text.replace(
+                    bytes(f"${group}", "utf-8"),
                     original_match.group(group)
                 )
             # having replaced all of the groups we can now
             # start doing the SUBST, P and I commands.
-            subst_regex = regex.compile(r"\$SUBST\((\d),(.+),(.+)\)")
+            subst_regex = re.compile(r"\$SUBST\((\d),(.+),(.+)\)")
             # iterate over all of the matches found by the SUBST regex
             for match in subst_regex.finditer(string):
                 num, before, after = match.groups()
                 # replace the full match (group 0)
                 # with the output of substitute
                 # with the specific arguments
-                string.replace(
+                text.replace(
                     match.group(0),
                     substitute(int(num), before, after, original_match)
                 )
 
-            p_regex = regex.compile(r"\$P\((\d)\)")
+            p_regex = re.compile(r"\$P\((\d)\)")
             for match in p_regex.finditer(string):
                 num = match.group(1)
                 # replace the full match (group 0)
                 # with the output of remove_unprintable
                 # with the specific arguments
-                string.replace(
+                text.replace(
                     match.group(0),
                     remove_unprintable(int(num), original_match)
                 )
 
-            i_regex = regex.compile(r"\$I\((\d),\"(\S)\"\)")
-            for match in i_regex.finditer(string):
+            i_regex = re.compile(br"\$I\((\d),\"(\S)\"\)")
+            for match in i_regex.finditer(text):
                 num, endianness = match.groups()
                 # this means replace group 0 -> the whole match
                 # with the output of the unpack_uint
                 # with the specified arguments
-                string.replace(
+                text.replace(
                     match.group(0),
                     unpack_uint(
-                        int(num),
-                        endianness,
+                        int(num.decode()),
+                        endianness.decode(),
                         original_match
                     )
                 )
 
-            return string
+            return text.decode()
 
         search = self.pattern.search(string)
         if search:
@@ -319,7 +331,7 @@ class Probe:
         "UDP": socket.SOCK_DGRAM
     }
 
-    def __init__(self, protocol: str, probename: str, probestring: str):
+    def __init__(self, protocol: str, probename: str, probe: str):
         """
         This is the initial function that is called by the
         constructor of the Probe class, it is used to define
@@ -332,8 +344,8 @@ class Probe:
             raise ValueError(
                 f"Probe object must have protocol TCP or UDP not {protocol}.")
         self.name: str = probename
-        self.string: str = probestring
-        self.payload: bytes = bytes(probestring, "utf-8")
+        self.string: str = probe
+        self.payload: bytes = bytes(probe, "utf-8")
         self.matches: Set[Match] = set()
         self.softmatches: Set[Match] = set()
         self.ports: DefaultDict[str, Set[int]] = defaultdict(set)
@@ -414,7 +426,7 @@ class Probe:
                         target.open_ports[self.protocol].add(port)
 
                     # recieve the data and decode it to a string
-                    data_recieved = sock.recv(4096).decode("utf-8")
+                    data_recieved = sock.recv(4096)
                     print("Recieved", data_recieved)
                     service = ""
                     # try and softmatch the service first
