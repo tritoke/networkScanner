@@ -3,7 +3,7 @@ import socket
 from typing import Dict
 
 
-class ip_header:
+class ip:
     """
     A class for parsing, storing and displaying
     data from an IP header.
@@ -55,7 +55,7 @@ class ip_header:
         self.source: str = src_addr
         self.destination: str = dst_addr
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "\n\t".join((
             "IP header:",
             f"Version: [{self.version}]",
@@ -74,7 +74,7 @@ class ip_header:
         ))
 
 
-class icmp_header:
+class icmp:
     """
     A class for parsing, storing and displaying
     data from an IP header.
@@ -163,7 +163,7 @@ class icmp_header:
 
         self.message: str
         try:
-            self.message = icmp_header.messages[self.type][self.code]
+            self.message = icmp.messages[self.type][self.code]
         except KeyError:
             # if we can't assign a message then just set a description
             # as to what caused the failure.
@@ -178,7 +178,7 @@ class icmp_header:
             self.id = -1
             self.sequence = -1
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "\n\t".join((
             "ICMP header:",
             f"Message: [{self.message}]",
@@ -190,7 +190,7 @@ class icmp_header:
         ))
 
 
-class tcp_header:
+class tcp:
     def __init__(self, header: bytes):
         (
             src_prt,
@@ -214,7 +214,7 @@ class tcp_header:
         self.checksum: int = checksum
         self.urg: int = urg
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "\n\t".join((
             "TCP header:",
             f"Source port: [{self.source}]",
@@ -229,7 +229,7 @@ class tcp_header:
         ))
 
 
-class udp_header:
+class udp:
     def __init__(self, header: bytes):
         # parse udp header
         (
@@ -244,11 +244,11 @@ class udp_header:
         self.length: int = length
         self.checksum: int = checksum
 
-    def __repr__(self):
-        return "\n\t".join(
+    def __repr__(self) -> str:
+        return "\n\t".join((
             "UDP header:",
             f"Source port: {self.src}",
             f"Destination port: {self.dest}",
             f"Length: {self.length}",
             f"Checksum: {self.checksum:04x}"
-        )
+        ))

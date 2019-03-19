@@ -20,7 +20,7 @@ def sig_figs(x: float, n: int) -> float:
     return round(x, n - (1 + int(floor(log10(abs(x))))))
 
 
-def recieved_ping_from_addresses(
+def ping_listener(
         ID: int,
         timeout: float
 ) -> List[Tuple[str, float, ip_header]]:
@@ -97,8 +97,8 @@ with closing(
     p = Pool(1)
     # get the local process id for use in creating packets.
     ID = getpid() & 0xFFFF
-    # run the recieved_ping_from_addresses function asynchronously
-    replied = p.apply_async(recieved_ping_from_addresses, (ID, 5))
+    # run the ping_listener function asynchronously
+    replied = p.apply_async(ping_listener, (ID, 5))
     for address in zip(addresses, repeat(1)):
         try:
             packet = ip_utils.make_icmp_packet(ID)
