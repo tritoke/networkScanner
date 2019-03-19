@@ -27,7 +27,7 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     proto_regex = re.compile(r"([ TU]):?([0-9,-]+)")
     # THE SPACE IS IMPORTANT!!!
     # it allows ports specified before TCP/UDP ports
-    # to be specified globally
+    # to be specified globally as in for all protocols.
 
     pair_regex = re.compile(r"(\d+)-(\d+)")
     single_regex = re.compile(r"(\d+)")
@@ -51,9 +51,11 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
             "T": "TCP"
         }
         if pairs:
-            # a function to go from a port pair i.e. (80-85)
-            # to the set of specified ports: {80,81,82,83,84,85}
             def pair_to_ports(pair: Tuple[int, int]) -> Set[int]:
+                """
+                a function to go from a port pair i.e. (80-85)
+                to the set of specified ports: {80,81,82,83,84,85}
+                """
                 start, end = pair
                 return set(range(start, end+1))
             # ports contains the set of all ANY/TCP/UDP specified ports
@@ -61,7 +63,6 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
                 operator.ior,
                 map(pair_to_ports, pairs)
             ))
-            print(ports)
 
         singles = single_regex.findall(portstring)
         # for each of the ports that are specified on their own
@@ -143,8 +144,12 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
                 # escape the curly braces so the regex engine doesn't
                 # consider them to be special characters
                 pattern = bytes(search.group("regex"), "utf-8")
+                # these replace the literal \n, \r and \t
+                # strings with their actual characters
+                # i.e. \n -> newline character
                 pattern = pattern.replace(b"\\n", b"\n")
                 pattern = pattern.replace(b"\\r", b"\r")
+                pattern = pattern.replace(b"\\t", b"\t")
                 matcher = directives.Match(
                     search.group("service"),
                     pattern,
@@ -158,7 +163,7 @@ def parse_probes(probe_file: str) -> PROBE_CONTAINER:
 
             else:
                 print(line)
-                print()
+                input()
 
         # new ports directive
         elif line.startswith("ports"):
@@ -212,8 +217,9 @@ if __name__ == "__main__":
     probes = parse_probes("./nmap-service-probes")
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
-    open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65, 2389, 1498,
-                              20, 21, 22, 23, 24, 25])
+    open_filtered_ports["TCP"].add(22)
+    open_ports["TCP"].update([1, 2, 3, 4, 5, 6, 8, 65,
+                              20, 21, 23, 24, 25])
 
     target = directives.Target(
         "127.0.0.1",

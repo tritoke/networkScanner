@@ -4,8 +4,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from functools import reduce
 from string import whitespace, printable
-# TODO fix this namespace clash
-from typing import DefaultDict, Dict, Set, List, Pattern, Match
+from typing import DefaultDict, Dict, Set, List, Pattern, Match as RE_Match
 import ip_utils
 import operator
 import re
@@ -62,16 +61,17 @@ class Match:
             0
         )
         try:
-            self.pattern: re.Regex = re.compile(
+            self.pattern: Pattern = re.compile(
                 pattern,
                 flags=flags
             )
         except Exception as e:
+            print("Regex failed to compile:")
             print(e)
             print(pattern)
             input()
 
-        vinfo_regex = re.compile("([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
+        vinfo_regex = re.compile(r"([pvihod]|cpe:)([/|])(.+?)\2([a]*)")
         cpe_regex = re.compile(
             ":?".join((
                 "(?P<part>[aho])",
@@ -85,7 +85,7 @@ class Match:
         )
 
         for fieldname, _, val, opts in vinfo_regex.findall(version_info):
-            if fieldname == b"cpe:":
+            if fieldname == "cpe:":
                 search = cpe_regex.search(val)
                 if search:
                     part = search.group("part")
@@ -99,19 +99,20 @@ class Match:
             else:
                 self.version_info[
                     Match.letter_to_name[fieldname]
-                ] = val.decode()
+                ] = val
 
     def __repr__(self) -> str:
         return "Match(" + ", ".join((
                 f"service={self.service}",
                 f"pattern={self.pattern}",
-                f"version_info={self.version_info}"
+                f"version_info={self.version_info}",
+                f"cpes={self.cpes}"
             )) + ")"
 
     def matches(self, string: bytes) -> bool:
         def replace_groups(
                 string: str,
-                original_match: re.Match
+                original_match: RE_Match
         ) -> str:
             """
             This function takes in a string and the original
@@ -121,7 +122,7 @@ class Match:
             """
             def remove_unprintable(
                     group: int,
-                    original_match: re.Match
+                    original_match: RE_Match
             ) -> bytes:
                 """
                 Mirrors the P function from nmap which
@@ -144,7 +145,7 @@ class Match:
                 group: int,
                 before: bytes,
                 after: bytes,
-                original_match: re.Match
+                original_match: RE_Match
             ) -> bytes:
                 """
                 Mirrors the SUBST function from nmap which is used to
@@ -156,7 +157,7 @@ class Match:
             def unpack_uint(
                     group: int,
                     endianness: str,
-                    original_match: re.Match
+                    original_match: RE_Match
             ) -> bytes:
                 """
                 Mirrors the I function from nmap which is used to
@@ -181,9 +182,9 @@ class Match:
                 )
             # having replaced all of the groups we can now
             # start doing the SUBST, P and I commands.
-            subst_regex = re.compile(r"\$SUBST\((\d),(.+),(.+)\)")
+            subst_regex = re.compile(rb"\$SUBST\((\d),(.+),(.+)\)")
             # iterate over all of the matches found by the SUBST regex
-            for match in subst_regex.finditer(string):
+            for match in subst_regex.finditer(text):
                 num, before, after = match.groups()
                 # replace the full match (group 0)
                 # with the output of substitute
@@ -193,8 +194,8 @@ class Match:
                     substitute(int(num), before, after, original_match)
                 )
 
-            p_regex = re.compile(r"\$P\((\d)\)")
-            for match in p_regex.finditer(string):
+            p_regex = re.compile(rb"\$P\((\d)\)")
+            for match in p_regex.finditer(text):
                 num = match.group(1)
                 # replace the full match (group 0)
                 # with the output of remove_unprintable
@@ -258,17 +259,20 @@ class Target:
     services: Dict[int, Match] = field(default_factory=dict)
 
     def __repr__(self) -> str:
-        # of ports: [1,2,3,4,5,7,9,10,11,12,13,15] are shown as 1-5,7,9-13,15
         def collapse(port_dict: DefaultDict) -> str:
+            """
+            Collapse a list of port numbers so that
+            only the unique ones and the start and end
+            of a sequence are displayed.
+            1,2,3,4,5,7,9,11,13,14,15,16,17 -> 1-5,7,9,11,13-17
+            """
             store_results = list()
             for key in port_dict:
                 # items is a sorted list of a set of ports.
                 items: List[int] = sorted(port_dict[key])
                 key_result = f'"{key}":' + "{"
                 # if its an empty list return now to avoid errors
-                if len(items) == 0:
-                    return ""
-                else:
+                if len(items) != 0:
                     new_sequence = False
                     # enumerate up until the one before
                     # the last to prevent index errors.
@@ -427,22 +431,18 @@ class Probe:
 
                     # recieve the data and decode it to a string
                     data_recieved = sock.recv(4096)
-                    print("Recieved", data_recieved)
+                    #  print("Recieved", data_recieved)
                     service = ""
                     # try and softmatch the service first
                     for softmatch in self.softmatches:
                         if softmatch.matches(data_recieved):
-                            print(f"Softmatched: {softmatch}")
                             service = softmatch.service
                             target.services[port] = softmatch
                             break
                     # try and get a full match for the service
                     for match in self.matches:
                         if service in match.service.lower():
-                            if "ssh" in match.service.lower():
-                                print(f"Trying to match: {match}")
                             if match.matches(data_recieved):
-                                print(f"Matched: {match}")
                                 target.services[port] = match
                                 break
         return target
