@@ -1,7 +1,7 @@
 #!/usr/bin/env python
+import headers
 import socket
 from typing import List
-from headers import ip_header, icmp_header
 
 # socket object using an IPV4 address, using only raw socket access, set
 # ICMP protocol
@@ -11,8 +11,8 @@ packets: List[bytes] = []
 
 while len(packets) < 1:
     recPacket, addr = ping_sock.recvfrom(1024)
-    ip = ip_header(recPacket[:20])
-    icmp = icmp_header(recPacket[20:28])
+    ip = headers.ip(recPacket[:20])
+    icmp = headers.icmp(recPacket[20:28])
 
     print(ip)
     print()

@@ -11,7 +11,7 @@ from sys import stderr
 from typing import List
 
 
-def eprint(*args, **kwargs):
+def eprint(*args: str, **kwargs: str) -> None:
     """
     Mirrors print exactly but prints to stderr
     instead of stdout.

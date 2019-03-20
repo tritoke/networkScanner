@@ -1,95 +1,12 @@
 #!/usr/bin/env python
 import ip_utils
+import listeners
 import socket
 import time
 from collections import defaultdict
 from contextlib import closing
-from headers import (
-    icmp_header,
-    ip_header,
-    udp_header
-)
 from multiprocessing import Pool
 from typing import Set, DefaultDict
-
-
-# TODO add to module for listeners
-def udp_listener(dest_ip: str, timeout: float) -> Set[int]:
-    """
-    This listener detects UDP packets from dest_ip in the given timespan,
-    all ports that send direct replies are marked as being open.
-    Returns a list of open ports.
-    """
-
-    time_remaining = timeout
-    ports: Set[int] = set()
-    with socket.socket(
-            socket.AF_INET,
-            socket.SOCK_RAW,
-            socket.IPPROTO_UDP
-    ) as s:
-        while True:
-            time_taken = ip_utils.wait_for_socket(s, time_remaining)
-            if time_taken == -1:
-                break
-            else:
-                time_remaining -= time_taken
-            packet = s.recv(1024)
-            ip = ip_header(packet[:20])
-            udp = udp_header(packet[20:28])
-            # unpack the UDP header
-            if dest_ip == ip.source and ip.protocol == 17:
-                ports.add(udp.src)
-
-    return ports
-
-
-# add to module of listeners
-def icmp_listener(src_ip: str, timeout: float = 2) -> int:
-    """
-    This listener detects ICMP destination unreachable
-    packets and returns the icmp code.
-    This is later used to mark them as either close, open|filtered, filtered.
-    3 -> closed
-    0|1|2|9|10|13 -> filtered
-    -1 -> error with arguments
-    open|filtered means that they are either open or
-    filtered but return nothing.
-    """
-
-    ping_sock = socket.socket(
-        socket.AF_INET,
-        socket.SOCK_RAW,
-        socket.IPPROTO_ICMP
-    )
-    # open raw socket to listen for ICMP destination unrechable packets
-    time_remaining = timeout
-    code = -1
-    while True:
-        time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
-        # wait for socket to be readable
-        if time_waiting == -1:
-            break
-        else:
-            time_remaining -= time_waiting
-        recPacket, addr = ping_sock.recvfrom(1024)
-        # recieve the packet
-        ip = ip_header(recPacket[:20])
-        icmp = icmp_header(recPacket[20:28])
-        valid_codes = [0, 1, 2, 3, 9, 10, 13]
-        if (
-                ip.source == src_ip
-                and icmp.type == 3
-                and icmp.code in valid_codes
-        ):
-            code = icmp.code
-            break
-        elif time_remaining <= 0:
-            break
-        else:
-            continue
-    ping_sock.close()
-    return code
 
 
 def udp_scan(
@@ -110,7 +27,7 @@ def udp_scan(
     ports: DefaultDict[str, Set[int]] = defaultdict(set)
     ports["REMAINING"] = ports_to_scan
     p = Pool(1)
-    udp_listen = p.apply_async(udp_listener, (dest_ip, 4))
+    udp_listen = p.apply_async(listeners.udp, (dest_ip, 4))
     # start the UDP listener
     with closing(
             socket.socket(
@@ -166,7 +83,7 @@ def udp_scan(
                 )
                 # make a new UDP packet
                 p = Pool(1)
-                icmp_listen = p.apply_async(icmp_listener, (dest_ip,))
+                icmp_listen = p.apply_async(listeners.icmp, (dest_ip,))
                 # start the ICMP listener
                 time.sleep(1)
                 s.sendto(packet, (dest_ip, dest_port))
@@ -200,8 +117,9 @@ def udp_scan(
     return ports
 
 
-ports = udp_scan("127.0.0.1", {22, 68, 53, 6969})
-print(f"Open ports: {ports['OPEN']}")
-print(f"Open or filtered ports: {ports['OPEN|FILTERED']}")
-print(f"Filtered ports: {ports['FILTERED']}")
-print(f"Closed ports: {ports['CLOSED']}")
+if __name__ == '__main__':
+    ports = udp_scan("127.0.0.1", {22, 68, 53, 6969})
+    print(f"Open ports: {ports['OPEN']}")
+    print(f"Open or filtered ports: {ports['OPEN|FILTERED']}")
+    print(f"Filtered ports: {ports['FILTERED']}")
+    print(f"Closed ports: {ports['CLOSED']}")
