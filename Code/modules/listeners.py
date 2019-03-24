@@ -1,16 +1,20 @@
-import headers
-import ip_utils
+from . import headers
+from . import ip_utils
 import socket
 import struct
 import time
+from collections import defaultdict
 from contextlib import closing
-from typing import List, Tuple, Set
+from typing import Tuple, Set, DefaultDict
+
+
+PORTS = DefaultDict[str, Set[int]]
 
 
 def ping(
         ID: int,
         timeout: float
-) -> List[Tuple[str, float, headers.ip]]:
+) -> Set[Tuple[str, float, headers.ip]]:
     """
     Takes in a process id and a timeout and returns
     a list of addresses which sent ICMP ECHO REPLY
@@ -22,7 +26,7 @@ def ping(
         socket.IPPROTO_ICMP)
     # opens a raw socket for sending ICMP protocol packets
     time_remaining = timeout
-    addresses = []
+    addresses = set()
     while True:
         time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
         # time_waiting stores the time the socket took to become readable
@@ -49,7 +53,7 @@ def ping(
             # if the ping was sent from this machine then add it to the list of
             # responses
             ip_address, port = addr
-            addresses.append((ip_address, time_taken, ip))
+            addresses.add((ip_address, time_taken, ip))
         elif time_remaining <= 0:
             break
         else:
@@ -81,14 +85,13 @@ def udp(dest_ip: str, timeout: float) -> Set[int]:
             packet = s.recv(1024)
             ip = headers.ip(packet[:20])
             udp = headers.udp(packet[20:28])
-            # unpack the UDP header
             if dest_ip == ip.source and ip.protocol == 17:
                 ports.add(udp.src)
 
     return ports
 
 
-def icmp(src_ip: str, timeout: float = 2) -> int:
+def icmp_unreachable(src_ip: str, timeout: float = 2) -> int:
     """
     This listener detects ICMP destination unreachable
     packets and returns the icmp code.
@@ -135,13 +138,12 @@ def icmp(src_ip: str, timeout: float = 2) -> int:
     return code
 
 
-def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
+def tcp(address: Tuple[str, int], timeout: float) -> PORTS:
     """
     This function is run asynchronously and listens for
     TCP ACK responses to the sent TCP SYN msg.
     """
-    print(f"address: [{address}]\ntimeout: [{timeout}]")
-    open_ports: List[int] = []
+    ports: DefaultDict[str, Set[int]] = defaultdict(set)
     with closing(
             socket.socket(
                 socket.AF_INET,
@@ -151,7 +153,6 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
         s.bind(address)
         # bind the raw socket to the listening address
         time_remaining = timeout
-        print("started listening")
         while True:
             time_taken = ip_utils.wait_for_socket(s, time_remaining)
             # wait for the socket to become readable
@@ -162,12 +163,8 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
             packet = s.recv(1024)
             # recieve the packet data
             tcp = headers.tcp(packet[20:40])
-            if tcp.flags == int("00010010", 2):  # syn ack
-                print(tcp)
-                open_ports.append(tcp.source)
-                # check that the header contained the TCP ACK flag and if it
-                # did append it
+            if tcp.flags | 2:  # syn flags set
+                ports["OPEN"].add(tcp.source)
             else:
                 continue
-        print("finished listening")
-    return open_ports
+    return ports

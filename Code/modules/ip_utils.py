@@ -8,7 +8,7 @@ from contextlib import closing
 from functools import singledispatch
 from itertools import islice, cycle
 from sys import stderr
-from typing import List
+from typing import List, Union
 
 
 def eprint(*args: str, **kwargs: str) -> None:
@@ -16,7 +16,7 @@ def eprint(*args: str, **kwargs: str) -> None:
     Mirrors print exactly but prints to stderr
     instead of stdout.
     """
-    print(*args, file=stderr, **kwargs)
+    print(*args, file=stderr, **kwargs)  # type: ignore
 
 
 def long_to_dot(long: int) -> str:
@@ -54,7 +54,7 @@ def dot_to_long(ip: str) -> int:
     parts = [int(i) for i in ip.split(".")]
 
     if not all(
-            0 <= int(i) <= 255
+            0 <= i <= 255
             for i in parts
     ):
         raise ValueError(f"Invalid dot form IP address: [{ip}]")
@@ -72,7 +72,7 @@ def dot_to_long(ip: str) -> int:
 
 
 @singledispatch
-def is_valid_ip(ip) -> bool:
+def is_valid_ip(ip: Union[str, int]) -> bool:
     """
     checks whether a given IP address is valid.
     """

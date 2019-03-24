@@ -1,22 +1,28 @@
 #!/usr/bin/env python
-import headers
+from modules import headers
 import socket
 from typing import List
 
-# socket object using an IPV4 address, using only raw socket access, set
-# ICMP protocol
-ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 
-packets: List[bytes] = []
+def main() -> None:
+    # socket object using an IPV4 address, using only raw socket access, set
+    # ICMP protocol
+    ping_sock = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_RAW,
+        socket.IPPROTO_ICMP
+    )
 
-while len(packets) < 1:
-    recPacket, addr = ping_sock.recvfrom(1024)
-    ip = headers.ip(recPacket[:20])
-    icmp = headers.icmp(recPacket[20:28])
+    packets: List[bytes] = []
 
-    print(ip)
-    print()
-    print(icmp)
-    print("\n")
+    while len(packets) < 1:
+        recPacket, addr = ping_sock.recvfrom(1024)
+        ip = headers.ip(recPacket[:20])
+        icmp = headers.icmp(recPacket[20:28])
 
-    packets.append(recPacket)
+        print(ip)
+        print()
+        print(icmp)
+        print("\n")
+
+        packets.append(recPacket)

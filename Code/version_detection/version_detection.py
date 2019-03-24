@@ -2,7 +2,7 @@
 from typing import Dict, Set, Pattern, Tuple, DefaultDict
 from functools import reduce
 from collections import defaultdict
-import directives
+from modules import directives
 import re
 import operator
 
@@ -213,8 +213,9 @@ def version_detect_scan(
     return target
 
 
-if __name__ == "__main__":
-    probes = parse_probes("./nmap-service-probes")
+def main() -> None:
+    print("reached here")
+    probes = parse_probes("./version_detection/nmap-service-probes")
     open_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports: DefaultDict[str, Set[int]] = defaultdict(set)
     open_filtered_ports["TCP"].add(22)

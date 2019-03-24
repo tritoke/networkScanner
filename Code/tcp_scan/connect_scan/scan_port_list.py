@@ -28,6 +28,6 @@ def connect_scan(address: str, ports: Set[int]) -> List[int]:
     return open_ports
 
 
-if __name__ == "__main__":
+def main() -> None:
     open_ports = connect_scan("127.0.0.1", set(range(65535)))
     print("\n".join(map(lambda x: f"port: [{x}]\tis open", open_ports)))

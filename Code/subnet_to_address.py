@@ -1,8 +1,6 @@
 #!/usr/bin/env python
-from ip_utils import (
-    ip_range
-)
 import re
+from modules.ip_utils import ip_range
 
 
 if __name__ == '__main__':
