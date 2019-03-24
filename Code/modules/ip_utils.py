@@ -8,7 +8,7 @@ from contextlib import closing
 from functools import singledispatch
 from itertools import islice, cycle
 from sys import stderr
-from typing import List, Union
+from typing import Set, Union
 
 
 def eprint(*args: str, **kwargs: str) -> None:
@@ -119,7 +119,7 @@ def is_valid_port_number(port_num: int) -> bool:
         return False
 
 
-def ip_range(ip: str, network_bits: int) -> List[str]:
+def ip_range(ip: str, network_bits: int) -> Set[str]:
     """
     Takes a Classless Inter Domain Routing(CIDR) address subnet
     specification and returns the list of addresses specified
@@ -149,11 +149,11 @@ def ip_range(ip: str, network_bits: int) -> List[str]:
 
     # turn all the long form IP addresses between
     # the lower and upper bound into dot form
-    return [
+    return set(
         long_to_dot(long_ip)
         for long_ip in
         range(lower_bound, upper_bound + 1)
-    ]
+    )
 
 
 def get_local_ip() -> str:

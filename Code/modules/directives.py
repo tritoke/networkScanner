@@ -496,13 +496,16 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
             "T": "TCP"
         }
         if pairs:
-            def pair_to_ports(pair: Tuple[int, int]) -> Set[int]:
+            def pair_to_ports(pair: Tuple[str, str]) -> Set[int]:
                 """
                 a function to go from a port pair i.e. (80-85)
                 to the set of specified ports: {80,81,82,83,84,85}
                 """
                 start, end = pair
-                return set(range(start, end+1))
+                return set(range(
+                    int(start),
+                    int(end)+1
+                ))
             # ports contains the set of all ANY/TCP/UDP specified ports
             ports[proto_map[protocol]] = set(reduce(
                 operator.ior,

@@ -88,13 +88,12 @@ def connect(address: str, ports: Set[int]) -> Set[int]:
     return open_ports
 
 
-# TODO look into the difficulty of implementing other TCP scans.
-def tcp(dest_ip: str, portlist: Set[int], flag: int) -> listeners.PORTS:
+def tcp(dest_ip: str, portlist: Set[int]) -> listeners.PORTS:
     src_port = ip_utils.get_free_port()
     # request a local port to connect from
     local_ip = ip_utils.get_local_ip()
     p = Pool(1)
-    listener = p.apply_async(listeners.tcp, ((local_ip, src_port), 5, flag))
+    listener = p.apply_async(listeners.tcp, ((local_ip, src_port), 5, 2))
     # start the TCP ACK listener in the background
     for port in portlist:
         # flag = 2 for syn scan
@@ -103,7 +102,7 @@ def tcp(dest_ip: str, portlist: Set[int], flag: int) -> listeners.PORTS:
             port,
             local_ip,
             dest_ip,
-            flag
+            2
         )
         with closing(
                 socket.socket(
