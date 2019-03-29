@@ -1,5 +1,5 @@
-from . import headers
-from . import ip_utils
+from modules import headers
+from modules import ip_utils
 import socket
 import struct
 import time
@@ -27,6 +27,7 @@ def ping(
     # opens a raw socket for sending ICMP protocol packets
     time_remaining = timeout
     addresses = set()
+    recieved_from = set()
     while True:
         time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
         # time_waiting stores the time the socket took to become readable
@@ -53,7 +54,10 @@ def ping(
             # if the ping was sent from this machine then add it to the list of
             # responses
             ip_address, port = addr
-            addresses.add((ip_address, time_taken, ip))
+            # this is to prevent a bug where IPs were being added twice
+            if ip_address not in recieved_from:
+                addresses.add((ip_address, time_taken, ip))
+                recieved_from.add(ip_address)
         elif time_remaining <= 0:
             break
         else:
@@ -163,8 +167,10 @@ def tcp(address: Tuple[str, int], timeout: float) -> PORTS:
             packet = s.recv(1024)
             # recieve the packet data
             tcp = headers.tcp(packet[20:40])
-            if tcp.flags | 2:  # syn flags set
+            if tcp.flags & 2:  # syn flags set
                 ports["OPEN"].add(tcp.source)
+            elif tcp.flags & 4:
+                ports["CLOSED"].add(tcp.source)
             else:
                 continue
     return ports

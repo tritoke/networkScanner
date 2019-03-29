@@ -32,7 +32,8 @@ def ping_listener(
     ping_sock = socket.socket(
         socket.AF_INET,
         socket.SOCK_RAW,
-        socket.IPPROTO_ICMP)
+        socket.IPPROTO_ICMP
+    )
     # opens a raw socket for sending ICMP protocol packets
     time_remaining = timeout
     addresses = set()
@@ -79,10 +80,8 @@ def main() -> None:
                 socket.IPPROTO_ICMP
             )
     ) as ping_sock:
-        ip_addresses = ip_utils.ip_range("192.168.1.0", 24)
+        ip_addresses = ["127.0.0.1"]    # ip_utils.ip_range("192.168.43.0", 24)
         # generate the range of IP addresses to scan.
-        local_ip = ip_utils.get_local_ip()
-
         # get the local ip address
         addresses = [
             ip
@@ -90,7 +89,6 @@ def main() -> None:
             if (
                 not ip.endswith(".0")
                 and not ip.endswith(".255")
-                and ip != local_ip
             )
         ]
 
@@ -100,6 +98,7 @@ def main() -> None:
         ID = getpid() & 0xFFFF
         # run the listeners.ping function asynchronously
         replied = p.apply_async(ping_listener, (ID, 5))
+        time.sleep(0.01)
         for address in zip(addresses, repeat(1)):
             try:
                 packet = ip_utils.make_icmp_packet(ID)

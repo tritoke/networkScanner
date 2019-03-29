@@ -29,5 +29,5 @@ def connect_scan(address: str, ports: Set[int]) -> List[int]:
 
 
 def main() -> None:
-    open_ports = connect_scan("127.0.0.1", set(range(65535)))
+    open_ports = connect_scan("192.168.43.225", set(range(65535)))
     print("\n".join(map(lambda x: f"port: [{x}]\tis open", open_ports)))

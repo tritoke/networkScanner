@@ -16,13 +16,21 @@ examples = {
     "version_detection": version_detection.main,
 }
 
+print("\n\t".join(("Programs:", *examples)))
+
 while True:
+    print()
     program = input("Enter the name of the example program to run: ")
-    if program.lower() in examples:
-        print(f"Running: {program}")
-        examples[program]()
+    if program.lower() in {"quit", "q", "end", "exit"}:
         break
-    else:
+    found = False
+    for name in examples:
+        if name.startswith(program.lower()):
+            program = name
+            print(f"Running: {program}")
+            examples[program]()
+            found = True
+    if not found:
         print(
             "The program name must exactly match one of the following examples"
         )
