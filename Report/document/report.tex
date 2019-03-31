@@ -6,7 +6,10 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage[T1]{fontenc}
 \usepackage{listings}
-% look into the algorithms package when it comes to making psuedo code.
+\usepackage{algorithm}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage[noend]{algpseudocode}
 
 \lstset{showstringspaces=false,
   columns=flexible,
@@ -286,6 +289,35 @@ As well as using these checking functions whenever an IP address is converted be
 and ``dot form'' which is used in every type of scanning.
 
 \subsection{Proposed Algorithms for complex structures (flow charts or Pseudo Code)}
+
+\begin{algorithm}\label{collapse}
+
+  \caption{My algorithm for pretty-printing a dictionary of lists of port numbers
+  such that ranges are specified as start-end instead of start,start+1,\ldots,end}
+  \begin{algorithmic}
+    \Procedure{collapse}{}
+    \State{$\textit{port\_dictionary} \gets \text{dictionary of lists of port numbers}$}
+    \State{$\textit{key\_results} \gets \text{empty list}$}\Comment{stores the formatted result for each key}
+    \For{$\textit{key} \in \textit{port\_dictionary}$}
+      \State{$\textit{ports} \gets \text{\textit{port\_dict}[\textit{key}]}$}
+      \State{$\textit{result} \gets \textit{key} + \text{``:\{''}$}
+      \If{$\textit{ports} \not= \varnothing$}
+        \State{$\textit{new\_sequence} \gets FALSE$}
+        \For{$\textit{index} \gets 1,\text{(length of \textit{ports})}-1$}
+          \State{$\textit{port} = \text{\textit{ports}[\textit{index}]}$}
+          \If{$\textit{index} = 0$}
+            \State{$\textit{result} \gets \textit{result} + \textit{ports}[0]$}\Comment{append the first element}
+            \If{$\text{\textit{ports}[\textit{index}+1]} = \textit{port} + 1$}
+            \State{$\textit{result} \gets \textit{result}+\text{``-''}$}
+            \EndIf
+          \EndIf
+        \EndFor
+      \EndIf
+    \EndFor
+    \EndProcedure
+  \end{algorithmic}
+
+\end{algorithm}
 
 \subsection{Design Data Dictionary (Core)}
 

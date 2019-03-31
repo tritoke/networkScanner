@@ -17,7 +17,7 @@
 \contentsline {subsection}{\numberline {2.3}Database Structure (ERD, Normalisation) (Core, if relevant)}{8}{subsection.2.3}% 
 \contentsline {subsection}{\numberline {2.4}System Algorithms (Flowcharts) (Core)}{8}{subsection.2.4}% 
 \contentsline {subsection}{\numberline {2.5}Input data Validation (Core)}{8}{subsection.2.5}% 
-\contentsline {subsection}{\numberline {2.6}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{9}{subsection.2.6}% 
+\contentsline {subsection}{\numberline {2.6}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{8}{subsection.2.6}% 
 \contentsline {subsection}{\numberline {2.7}Design Data Dictionary (Core)}{9}{subsection.2.7}% 
 \contentsline {section}{\numberline {3}Technical Solution}{9}{section.3}% 
 \contentsline {subsection}{\numberline {3.1}Program Listing}{9}{subsection.3.1}% 
