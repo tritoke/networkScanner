@@ -294,7 +294,7 @@ and ``dot form'' which is used in every type of scanning.
 
   \caption{My algorithm for pretty-printing a dictionary of lists of port numbers
   such that ranges are specified as start-end instead of start,start+1,\ldots,end}
-  \begin{algorithmic}
+  \begin{algorithmic}[1]
     \Procedure{collapse}{}
     \State{$\textit{port\_dictionary} \gets \text{dictionary of lists of port numbers}$}
     \State{$\textit{key\_results} \gets \text{empty list}$}\Comment{stores the formatted result for each key}
@@ -308,12 +308,23 @@ and ``dot form'' which is used in every type of scanning.
           \If{$\textit{index} = 0$}
             \State{$\textit{result} \gets \textit{result} + \textit{ports}[0]$}\Comment{append the first element}
             \If{$\text{\textit{ports}[\textit{index}+1]} = \textit{port} + 1$}
-            \State{$\textit{result} \gets \textit{result}+\text{``-''}$}
+              \State{$\textit{result} \gets \textit{result}+\text{``-''}$}\Comment{begin a new sequence}
+            \Else
+              \State{$\textit{result} \gets \textit{result} + \text{``,''}$}\Comment{not a sequence}
             \EndIf
+          \ElsIf{$\textit{port} + 1 \not= \text{\textit{ports}[\textit{index}+1]}$}\Comment{break in sequence}
+            \State{$\textit{result} \gets \textit{result} + \textit{port} + \text{``,''}$}
+            \State{$\textit{new\_sequence} \gets \textit{TRUE}$}
+          \ElsIf{$\textit{port}+1 = \text{\textit{ports}[\textit{index}+1]} \And \textit{new\_sequence}$}
+            \State{$\textit{result} \gets \textit{result} + \text{``-''}$}
+            \State{$\textit{new\_sequence} \gets \textit{FALSE}$}
           \EndIf
         \EndFor
+      \State{$\textit{result} \gets \textit{result} + \text{\textit{ports}[(length of \textit{ports})-1]} + \text{``\}''}$}
+      \State{append \textit{result} to \textit{key\_results}}
       \EndIf
     \EndFor
+    \Return{``\{'' + (\textit{key\_results} separated by ``, '') + ``\}''}
     \EndProcedure
   \end{algorithmic}
 
