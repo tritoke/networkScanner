@@ -294,29 +294,68 @@ and ``dot form'' which is used in every type of scanning.
 
   \caption{My algorithm for pretty-printing a dictionary of lists of port numbers
   such that ranges are specified as start-end instead of start,start+1,\ldots,end}
-  \begin{algorithmic}
+  \begin{algorithmic}[1]
     \Procedure{collapse}{}
     \State{$\textit{port\_dictionary} \gets \text{dictionary of lists of port numbers}$}
-    \State{$\textit{key\_results} \gets \text{empty list}$}\Comment{stores the formatted result for each key}
-    \For{$\textit{key} \in \textit{port\_dictionary}$}
+    \State{$\textit{key\_results} \gets \text{empty list}$}
+    \Comment{stores the formatted result for each key}
+    \For{\textit{key} in \textit{port\_dictionary}}
       \State{$\textit{ports} \gets \text{\textit{port\_dict}[\textit{key}]}$}
       \State{$\textit{result} \gets \textit{key} + \text{``:\{''}$}
-      \If{$\textit{ports} \not= \varnothing$}
+      \If{\textit{ports} is empty}
         \State{$\textit{new\_sequence} \gets FALSE$}
         \For{$\textit{index} \gets 1,\text{(length of \textit{ports})}-1$}
           \State{$\textit{port} = \text{\textit{ports}[\textit{index}]}$}
           \If{$\textit{index} = 0$}
-            \State{$\textit{result} \gets \textit{result} + \textit{ports}[0]$}\Comment{append the first element}
+            \State{$\textit{result} \gets \textit{result} + \textit{ports}[0]$}
+            \Comment{append the first element}
             \If{$\text{\textit{ports}[\textit{index}+1]} = \textit{port} + 1$}
-            \State{$\textit{result} \gets \textit{result}+\text{``-''}$}
+              \State{$\textit{result} \gets \textit{result}+\text{``-''}$}
+              \Comment{begin a new sequence}
+            \Else
+              \State{$\textit{result} \gets \textit{result} + \text{``,''}$}
+              \Comment{not a sequence}
             \EndIf
+          \ElsIf{$\textit{port} + 1 \not= \text{\textit{ports}[\textit{index}+1]}$}
+          \Comment{break in sequence}
+            \State{$\textit{result} \gets \textit{result} + \textit{port} + \text{``,''}$}
+            \State{$\textit{new\_sequence} \gets \textit{TRUE}$}
+          \ElsIf{$\textit{port}+1 = \text{\textit{ports}[\textit{index}+1]} \And \textit{new\_sequence}$}
+            \State{$\textit{result} \gets \textit{result} + \text{``-''}$}
+            \State{$\textit{new\_sequence} \gets \textit{FALSE}$}
           \EndIf
         \EndFor
+      \State{$\textit{result} \gets \textit{result} + \text{\textit{ports}[(length of \textit{ports})-1]} + \text{``\}''}$}
+      \State{append \textit{result} to \textit{key\_results}}
       \EndIf
     \EndFor
+    \Return{``\{'' + (\textit{key\_results} separated by ``, '') + ``\}''}
     \EndProcedure
   \end{algorithmic}
 
+\end{algorithm}
+
+\begin{algorithm}\label{ip_range}
+  \caption{My algorithm for turning a CIDR specified subnet into a list of actual IP addresses}
+  \begin{algorithmic}[1]
+    \Procedure{ip\_range}{}
+    \State{$\textit{network\_bits} \gets \text{number of network bits specified}$}
+    \State{$\textit{ip} \gets \text{base IP address}$}
+    \State{$\textit{mask} \gets 0$}
+    \For{$\textit{maskbit} \gets (32-\textit{network\_bits}),31$}
+      \State{$\textit{mask} \gets \textit{mask} + 2^\textit{maskbit}$}
+    \EndFor
+    \State{$\textit{lower\_bound} \gets \text{\textit{ip} AND \textit{mask}}$}
+    \Comment{zero the last 32-\textit{network\_bits}}
+    \State{$\textit{upper\_bound} \gets \text{\textit{ip} OR (\textit{mask} XOR 0xFFFFFFFF)}$}
+    \Comment{turn the last 32-\textit{network\_bits} to ones}
+    \State{$\textit{addresses} \gets \text{empty list}$}
+    \For{$\textit{address} \gets \textit{lower\_bound},\textit{upper\_bound}$}
+    \State{append \Call{convert\_to\_dot}{\textit{address}} to \textit{addresses}}
+    \EndFor
+    \Return{\textit{addresses}}
+    \EndProcedure
+  \end{algorithmic}
 \end{algorithm}
 
 \subsection{Design Data Dictionary (Core)}
