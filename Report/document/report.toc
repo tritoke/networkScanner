@@ -1,33 +1,33 @@
 \contentsline {section}{\numberline {1}Analysis}{2}{section.1}% 
 \contentsline {subsection}{\numberline {1.1}Identification and Background to the Problem (Core)}{2}{subsection.1.1}% 
-\contentsline {subsection}{\numberline {1.2}Analysis of problem (Core)}{2}{subsection.1.2}% 
-\contentsline {subsection}{\numberline {1.3}Numbered List of Objectives (also called Success Criteria, the end user requirements) (Core)}{2}{subsection.1.3}% 
-\contentsline {subsection}{\numberline {1.4}Description of current system or existing solutions (Core if relevant)}{3}{subsection.1.4}% 
-\contentsline {subsection}{\numberline {1.5}Prospective Users (Desirable)}{4}{subsection.1.5}% 
-\contentsline {subsection}{\numberline {1.6}Data Dictionary (Desirable)}{4}{subsection.1.6}% 
-\contentsline {subsection}{\numberline {1.7}Data Flow Diagram (Desirable)}{4}{subsection.1.7}% 
-\contentsline {subsection}{\numberline {1.8}Data Sources (Desirable)}{4}{subsection.1.8}% 
-\contentsline {subsection}{\numberline {1.9}Description of Solution Details, OOP/Mobile/Networking (Core if relevant)}{4}{subsection.1.9}% 
-\contentsline {subsection}{\numberline {1.10}Acceptable Limitations (Supplementary)}{5}{subsection.1.10}% 
-\contentsline {subsection}{\numberline {1.11}Data Volumes (Supplementary)}{5}{subsection.1.11}% 
-\contentsline {subsection}{\numberline {1.12}Test Strategy (Core)}{6}{subsection.1.12}% 
-\contentsline {section}{\numberline {2}Design}{6}{section.2}% 
-\contentsline {subsection}{\numberline {2.1}Overall System Design (High Level Overview) (Core)}{6}{subsection.2.1}% 
-\contentsline {subsection}{\numberline {2.2}Design of User Interfaces HCI (Core)}{7}{subsection.2.2}% 
-\contentsline {subsection}{\numberline {2.3}Database Structure (ERD, Normalisation) (Core, if relevant)}{8}{subsection.2.3}% 
-\contentsline {subsection}{\numberline {2.4}System Algorithms (Flowcharts) (Core)}{8}{subsection.2.4}% 
-\contentsline {subsection}{\numberline {2.5}Input data Validation (Core)}{8}{subsection.2.5}% 
-\contentsline {subsection}{\numberline {2.6}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{10}{subsection.2.6}% 
-\contentsline {subsection}{\numberline {2.7}Design Data Dictionary (Core)}{10}{subsection.2.7}% 
-\contentsline {section}{\numberline {3}Technical Solution}{10}{section.3}% 
-\contentsline {subsection}{\numberline {3.1}Program Listing}{10}{subsection.3.1}% 
-\contentsline {subsection}{\numberline {3.2}Comments (Core)}{10}{subsection.3.2}% 
-\contentsline {subsection}{\numberline {3.3}Overview to direct the examiner to areas of complexity and explain design evidence}{10}{subsection.3.3}% 
-\contentsline {section}{\numberline {4}Testing}{10}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}Test Plan}{10}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}Test Table / Testing Evidence (Core: lots of screenshots)}{10}{subsection.4.2}% 
-\contentsline {section}{\numberline {5}Evaluation}{10}{section.5}% 
-\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{10}{subsection.5.1}% 
-\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{10}{subsection.5.2}% 
-\contentsline {subsection}{\numberline {5.3}Potential improvements}{10}{subsection.5.3}% 
-\contentsline {section}{\numberline {6}Appendices}{10}{section.6}% 
+\contentsline {subsection}{\numberline {1.2}Analysis of problem (Core)}{7}{subsection.1.2}% 
+\contentsline {subsection}{\numberline {1.3}Numbered List of Objectives (also called Success Criteria, the end user requirements) (Core)}{8}{subsection.1.3}% 
+\contentsline {subsection}{\numberline {1.4}Description of current system or existing solutions (Core if relevant)}{9}{subsection.1.4}% 
+\contentsline {subsection}{\numberline {1.5}Prospective Users (Desirable)}{10}{subsection.1.5}% 
+\contentsline {subsection}{\numberline {1.6}Data Dictionary (Desirable)}{10}{subsection.1.6}% 
+\contentsline {subsection}{\numberline {1.7}Data Flow Diagram (Desirable)}{10}{subsection.1.7}% 
+\contentsline {subsection}{\numberline {1.8}Data Sources (Desirable)}{10}{subsection.1.8}% 
+\contentsline {subsection}{\numberline {1.9}Description of Solution Details, OOP/Mobile/Networking (Core if relevant)}{11}{subsection.1.9}% 
+\contentsline {subsection}{\numberline {1.10}Acceptable Limitations (Supplementary)}{11}{subsection.1.10}% 
+\contentsline {subsection}{\numberline {1.11}Data Volumes (Supplementary)}{12}{subsection.1.11}% 
+\contentsline {subsection}{\numberline {1.12}Test Strategy (Core)}{12}{subsection.1.12}% 
+\contentsline {section}{\numberline {2}Design}{12}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Overall System Design (High Level Overview) (Core)}{12}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Design of User Interfaces HCI (Core)}{13}{subsection.2.2}% 
+\contentsline {subsection}{\numberline {2.3}Database Structure (ERD, Normalisation) (Core, if relevant)}{14}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.4}System Algorithms (Flowcharts) (Core)}{14}{subsection.2.4}% 
+\contentsline {subsection}{\numberline {2.5}Input data Validation (Core)}{14}{subsection.2.5}% 
+\contentsline {subsection}{\numberline {2.6}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{14}{subsection.2.6}% 
+\contentsline {subsection}{\numberline {2.7}Design Data Dictionary (Core)}{16}{subsection.2.7}% 
+\contentsline {section}{\numberline {3}Technical Solution}{16}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Program Listing}{16}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}Comments (Core)}{16}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}Overview to direct the examiner to areas of complexity and explain design evidence}{16}{subsection.3.3}% 
+\contentsline {section}{\numberline {4}Testing}{16}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Test Plan}{16}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Test Table / Testing Evidence (Core: lots of screenshots)}{16}{subsection.4.2}% 
+\contentsline {section}{\numberline {5}Evaluation}{16}{section.5}% 
+\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{16}{subsection.5.1}% 
+\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{16}{subsection.5.2}% 
+\contentsline {subsection}{\numberline {5.3}Potential improvements}{16}{subsection.5.3}% 
+\contentsline {section}{\numberline {6}Appendices}{16}{section.6}% 

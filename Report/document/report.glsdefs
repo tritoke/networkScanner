@@ -1,0 +1,30 @@
+\ifglsentryexists{bbox}{}%
+{%
+\gls@defglossaryentry{bbox}%
+{%
+name={black box},%
+sort={black box},%
+type={main},%
+first={black box},%
+firstplural={black boxs},%
+text={black box},%
+plural={black boxs},%
+description={looking at something from an outsider's perspective knowing nothing about how it works internally.},%
+descriptionplural={looking at something from an outsider's perspective knowing nothing about how it works internally.},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%

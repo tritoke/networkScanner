@@ -1,0 +1,195 @@
+% glossary entries
+  \newglossaryentry{bbox}{%
+    name={black box},
+    description={%
+      Looking at something from an outsider's perspective
+      knowing nothing about how it works internally.
+    }
+  }
+
+  \newglossaryentry{upow}{%
+    name={upowerd},
+    description={%
+      Manages the power supplied to the system: charging, battery usage etc\ldots
+    }
+  }
+
+  \newglossaryentry{sysd}{%
+    name={systemd},
+    description={%
+      A daemon for controlling what is run when the system starts.
+    }
+  }
+
+  \newglossaryentry{dbus}{%
+    name={dbus-daemon},
+    description={%
+      A daemon which enable a common interface for inter-process communication.
+    }
+  }
+
+  \newglossaryentry{proc}{%
+    name={process},
+    description={%
+      When running programs on a computer a new ``process'' is started with each new program
+      programs can also spawn their own ``child'' processes to do tasks for them while they do
+      something else, this enables one program to do more than one thing at once.
+    }
+  }
+
+  \newglossaryentry{ipaddr}{%
+    name={IP address},
+    description={%
+      Every computer on a network has a unique IP address assigned to them,
+      which is used to identify where exactly message sent by computers are
+      meant to go.
+    }
+  }
+
+  \newglossaryentry{daemon}{%
+    name={daemon},
+    plural={daemons},
+    description={%
+      A process that runs forever in the background to facilitate other programs.
+    }
+  }
+
+  \newglossaryentry{port}{%
+    name={port},
+    plural={ports},
+    description={%
+      Computers have ``ports'' for each protocol which can be connected to separately,
+      this makes up part of a ``socket'' connection.
+    }
+  }
+
+  \newglossaryentry{kernel}{%
+    name={kernel},
+    description={%
+      The kernel is the foundation of an operating system and it serves as the main
+      interface between the software running on the system and the underlying hardware
+      it performs task such as processor scheduling and managing input/output operations.
+    }
+  }
+
+  \newglossaryentry{driver}{%
+    name={driver},
+    plural={drivers},
+    description={%
+      A tiny software module which is loaded into the kernel when the computer boots up,
+      They mainly interface with hardware and are often very specific for each piece of hardware.
+    }
+  }
+
+  \newglossaryentry{server}{%
+    name={server},
+    plural={servers},
+    description={%
+      A server is any computer which it's purpose is to provide resources to others,
+      either humans or other computers for purposes from hosting website or just
+      as a resource of large computational power.
+    }
+  }
+
+  \newglossaryentry{banner}{%
+    name={banner},
+    plural={banners},
+    description={%
+      A short piece of text which a service with send to identify itself when it receives a connection
+      request. Often contains information such as version number etc\ldots
+    }
+  }
+
+  \newglossaryentry{port knocking}{%
+    name={port knocking},
+    description={%
+      Port knocking is where packets must be sent to a sequence of ports before
+      access to the desired port is granted.
+    }
+  }
+
+  \newglossaryentry{half open}{%
+    name={half open scanning},
+    description={%
+      Half open scanning is where no full connection to the host is made,
+      only one to solicit a response and then once that response is received
+      no further packets are sent, leaving the connection ``half open''.
+    }
+  }
+
+  \newglossaryentry{csum}{%
+    name={checksum},
+    plural={checksums},
+    description={%
+      A checksum is a value calculated from a mathematical algorithm which
+      is sent with the packet to its destination to allow the recipient
+      to check whether the packet was corrupted on the way.
+    }
+  }
+
+  \newglossaryentry{pkt}{%
+    name={packet},
+    plural={packets},
+    description={%
+      Packets are simply a list of bytes which contains packed values
+      such as to and from address and they are the basis for almost all
+      inter-computer communications.
+    }
+  }
+
+  \newglossaryentry{probe}{%
+    name={probe},
+    plural={probes},
+    description={%
+      A probe is a packet which contains a very specific piece of data
+      which is targeted such that it will elicit a response from a target
+      such as a ``GET'' request to a webserver would hopefully return some
+      information about what is running on the webserver.
+    }
+  }
+
+  \newglossaryentry{subnet}{%
+    name={subnet},
+    plural={subnets},
+    description={%
+      A subnet is simply the sub-network of every possible IP address that
+      will be used for communication on a particular network.
+    }
+  }
+
+% acronyms
+  \newacronym{ids}{IDS}{Intrusion Detection System}
+
+  \newacronym{dhcp}{DHCP}{Dynamic Host Configuration Protocol}
+
+  \newacronym{dhcpcd}{DHCPCD}{Dynamic Host Configuration Protocol Client Daemon}
+
+  \newacronym{nic}{NIC}{Network Interface Card}
+
+  \newacronym{tcp}{TCP}{Transmission Control Protocol}
+
+  \newacronym{udp}{UDP}{User Datagram Protocol}
+
+  \newacronym{cidr}{CIDR}{Classless Inter-Domain Routing}
+
+  \newacronym{sctp}{SCTP}{Stream Control Transmission Protocol}
+
+  \newacronym{ftp}{FTP}{File Transfer Protocol}
+
+  \newacronym{oop}{OOP}{Object Oriented Programming}
+
+  \newacronym{mac}{MAC}{Media Access Control}
+
+  \newacronym{cpe}{CPE}{Common Platform Enumeration}
+
+  \newacronym{osi}{OSI model}{Open Systems Interconnection model}
+
+  \newacronym{api}{API}{Applications Programming Interface}
+
+  \newacronym{http}{HTTP}{Hypertext transfer Protocol}
+
+  \newacronym{https}{HTTPS}{Hypertext transfer Protocol Secure} 
+
+  \newacronym{php}{PHP}{PHP Hypertext Processor}
+
+  \newacronym{html}{HTML}{Hypertext Markup Language}
