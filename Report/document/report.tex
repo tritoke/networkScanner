@@ -66,7 +66,10 @@
 \subsection{Identification and Background to the Problem (Core)}
 
 The problem I am trying to solve with my project is how to look at devices on a network
-from a ``\gls{bbox}'' perspective and gain information about what service are running etc.
+from a ``\gls{bbox}'' perspective and gain information about what \glspl{service} are running etc.
+Services are programs which their entire purpose is to provide a \textit{\gls{service}} to other
+programs, for example a server hosting a website would be running a \gls{service} whose purpose
+is to send the webpage to people who try to connect to the website. \\
 There are many steps in-between a device turning on to interacting with the internet.
 
 \begin{enumerate}
@@ -153,7 +156,6 @@ is shown when the image and webpage are transferred from the server to the brows
 are shown in figure~\ref{deconstructed} where you can see the IP layer information along with
 Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{screenshots/basic_webpage.png}
@@ -187,7 +189,7 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 The problem with looking at a network from the outside is that the purpose of the network is to
 allow communication inside of the network, thus very little is exposed externally. This presents
 a challenge as we want to know what is on the network as well as what each of them is running which
-is not always possible due to the limited information that services will reveal about themselves.
+is not always possible due to the limited information that \glspl{service} will reveal about themselves.
 Firewalls also play large part in making scanning networks difficult as sometimes they simply drop
 \glspl{pkt} instead of sending a \gls{tcp} RST \gls{pkt} (reset connection \gls{pkt}).
 When firewalls drop \glspl{pkt} it becomes exponentially more difficult as you don't know whether
@@ -256,7 +258,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
 \item{Perform a \gls{tcp}SYN scan on the 1000 most common \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sS} flag.}
 \item{Perform a \gls{tcp} \verb|Connect()| scan on the 1000 most common \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sT} flag.}
 \item{Perform a\gls{udp}scan on the 1000 most common\gls{udp} \glspl{port} when on each target specified when given the \texttt{-sU} flag.}
-\item{Perform version detection on the services running on each of the hosts specific when given the \texttt{-sV} flag.}
+\item{Perform version detection on the \glspl{service} running on each of the hosts specific when given the \texttt{-sV} flag.}
 \end{enumerate}
 
 \subsection{Description of current system or existing solutions (Core if relevant)}
@@ -281,7 +283,7 @@ It supports the following scanning types:
 \item{\gls{ftp}:\ bounce scan}
 \end{itemize}
 
-As well as supporting a vast array of scanning types it also can do service version detection
+As well as supporting a vast array of scanning types it also can do \gls{service} version detection
 and operating system detection via custom probes. Nmap also has script scanning which allows
 the user to write a script specifying exactly how they want to scan e.g.\ to circumvent \gls{port knocking}
 (where \glspl{pkt} must be sent to a sequence of \glspl{port} in order before access to the final\gls{port}is allowed).
@@ -295,7 +297,7 @@ have listed above as is illustrated quite clearly by the fact there is an entire
 The prospective users of this system would be system administrators, penetration testers or network engineers.
 In my case my prospective users would be my school's system administrators and it would allow them to see an
 outsiders perspective on for example the \gls{server} running the school's website page or to see if any of the
-programs on the \glspl{server} were leaking information through \glspl{banner} etc. (most services send a \gls{banner} with
+programs on the \glspl{server} were leaking information through \glspl{banner} etc. (most \glspl{service} send a \gls{banner} with
 information like what protocol version they use and other information)
 
 \subsection{Data Dictionary (Desirable)}
@@ -336,7 +338,7 @@ on what hosts responded and in the case of ping scanning also metadata about how
 
 In version detection scanning the relationship between the data sources and modules used is quite
 complex so I have used an \gls{oop} approach to group the methods
-that act on the data along with the data itself. For example each probe defined in the nmap-service-probes
+that act on the data along with the data itself. For example each probe defined in the \verb|nmap-service-probes|
 file can be sent to a host and matched against a list of match directives stored in the probe,
 the probe class has a scan method which sends it's probe to the host and then automatically runs
 match and soft-match directives against the information returned by the probe.
@@ -352,9 +354,9 @@ newline and carriage returns back in where I find \verb|\\r| and \verb|\\r|.
 
 Originally I had planned to include dedicated operating system detection as an option
 however I ran out of time having implemented version detection. However it still does
-Operating system detection partially as some services are linux only and while doing
-service and version detection especially the \gls{cpe} parts
-of the matched service/version will contain operating system information, such as
+Operating system detection partially as some \glspl{service} are linux only and while doing
+\gls{service} and version detection especially the \gls{cpe} parts
+of the matched \gls{service}/version will contain operating system information, such as
 microsoft ActiveSync would indicate that the system being scanned was a windows system
 which is reflected in the match directive and attached CPE information: \texttt{%
 match activesync m|{\textasciicircum}.{\textbackslash}0{\textbackslash}x01{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0.*{\textbackslash}0{\textbackslash}0{\textbackslash}0\$|s p/Microsoft ActiveSync/ o/Windows/ cpe:/a:microsoft:activesync/ cpe:/o:microsoft:windows/a
@@ -403,7 +405,7 @@ marked accordingly as open or closed.
 
 Version scanning is very similar to \verb|Connect()| scanning in that it takes in a list of \glspl{port}
 and connects to them, except it then sends a probe to the target to elicit a response and gain
-some information about the service running behind the \gls{port}.
+some information about the \gls{service} running behind the \gls{port}.
 
 Listener / sender scanning does exactly what it says on the tin: it sets up a ``listener'' in another process
 to listen for responses from the host which the ``sender'' is sending \glspl{pkt} to. It can then differentiate
