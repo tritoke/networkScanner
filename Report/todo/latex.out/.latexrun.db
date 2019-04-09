@@ -1,0 +1,394 @@
+{
+  "version": "latexrun-db-v2",
+  "tasks": {
+    "latex::todo.tex": {
+      "deps": [
+        [
+          "args",
+          [],
+          [
+            "pdflatex",
+            "-interaction",
+            "nonstopmode",
+            "-recorder",
+            "-output-directory",
+            "latex.out",
+            "todo.tex"
+          ]
+        ],
+        [
+          "env",
+          [
+            "TEXMFOUTPUT"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXINPUTS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXFORMATS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXPOOL"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TFMFONTS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "PATH"
+          ],
+          "/usr/bin:/home/tritoke/.pyenv/libexec:/home/tritoke/.pyenv/plugins/python-build/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/bin:/home/tritoke/.zplug/repos/zplug/zplug/bin:/home/tritoke/.zplug/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/shims:/home/tritoke/.pyenv/shims:/home/tritoke/.poetry/bin:/home/tritoke/.pyenv/bin:/home/tritoke/.local/bin:/home/tritoke/riscv/gcc-riscv/install64/bin:/home/tritoke/riscv/gcc-riscv/install/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tritoke/.fzf/bin"
+        ],
+        [
+          "file",
+          [
+            "/etc/texmf/web2c/texmf.cnf"
+          ],
+          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texmf/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/article.cls"
+          ],
+          "6960fffac3642c838fe7b0a975cfa8bb74e96da123b66defa457382df6ed7279"
+        ],
+        [
+          "file",
+          [
+            "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map"
+          ],
+          "5e05ecb9ee12feb05acaf1d1eb45e491e8813152479db7786977a1ac7bee4b2f"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
+          ],
+          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
+        ],
+        [
+          "file",
+          [
+            "todo.tex"
+          ],
+          "0a1c4ef8cdbe088c0d0445d2e9051c0c5d5b7f2070b8f5794465269b3eb5806d"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.aux"
+          ],
+          "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb"
+          ],
+          "fdcede8794018df5f2b58f0905fb20a2b418ed8f67b73ee12445855dfbe5b1be"
+        ],
+        [
+          "file",
+          [
+            "/var/lib/texmf/web2c/pdftex/pdflatex.fmt"
+          ],
+          "db208c8de8f855aa35d95a739dfe7c3b9a26220b9973090fbbfd8f2728aacf73"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.fls"
+          ],
+          "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.log"
+          ],
+          "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+        ]
+      ],
+      "output_files": {
+        "latex.out/todo.aux": "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335",
+        "latex.out/todo.fls": "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e",
+        "latex.out/todo.log": "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706",
+        "latex.out/todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+      },
+      "extra": {
+        "jobname": "latex.out/todo",
+        "outname": "latex.out/todo.pdf",
+        "status": 0
+      }
+    },
+    "latex_commit::todo.tex": {
+      "deps": [
+        [
+          "latex",
+          [],
+          [
+            0,
+            "latex.out/todo.pdf"
+          ]
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+        ],
+        [
+          "file",
+          [
+            "todo.pdf"
+          ],
+          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+        ]
+      ],
+      "output_files": {
+        "todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+      },
+      "extra": null
+    },
+    "latex::../todo.tex": {
+      "deps": [
+        [
+          "args",
+          [],
+          [
+            "pdflatex",
+            "-interaction",
+            "nonstopmode",
+            "-recorder",
+            "-output-directory",
+            "latex.out",
+            "../todo.tex"
+          ]
+        ],
+        [
+          "env",
+          [
+            "TEXMFOUTPUT"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXINPUTS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXFORMATS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TEXPOOL"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "TFMFONTS"
+          ],
+          null
+        ],
+        [
+          "env",
+          [
+            "PATH"
+          ],
+          "/usr/bin:/home/tritoke/.pyenv/libexec:/home/tritoke/.pyenv/plugins/python-build/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/bin:/home/tritoke/.zplug/repos/zplug/zplug/bin:/home/tritoke/.zplug/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/shims:/home/tritoke/.pyenv/shims:/home/tritoke/.poetry/bin:/home/tritoke/.pyenv/bin:/home/tritoke/.local/bin:/home/tritoke/riscv/gcc-riscv/install64/bin:/home/tritoke/riscv/gcc-riscv/install/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/tritoke/.fzf/bin"
+        ],
+        [
+          "file",
+          [
+            "/etc/texmf/web2c/texmf.cnf"
+          ],
+          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
+          ],
+          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
+        ],
+        [
+          "file",
+          [
+            "../todo.tex"
+          ],
+          "74772db39a94e497ecae6e6c62e34bc2b900f17cd9a824d236e68c9426dddb06"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "/var/lib/texmf/web2c/pdftex/pdflatex.fmt"
+          ],
+          "db208c8de8f855aa35d95a739dfe7c3b9a26220b9973090fbbfd8f2728aacf73"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texmf/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb"
+          ],
+          "fdcede8794018df5f2b58f0905fb20a2b418ed8f67b73ee12445855dfbe5b1be"
+        ],
+        [
+          "file",
+          [
+            "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map"
+          ],
+          "5e05ecb9ee12feb05acaf1d1eb45e491e8813152479db7786977a1ac7bee4b2f"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.aux"
+          ],
+          "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/article.cls"
+          ],
+          "6960fffac3642c838fe7b0a975cfa8bb74e96da123b66defa457382df6ed7279"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.log"
+          ],
+          "03038049d2ffbed3aed9d772b65660f1cf75d0884a501c19855754745001c2be"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "d4a8e27e6131e5615cfd3b0b0c0487cc06c421a5ae69a0d698013b35f8563f86"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.fls"
+          ],
+          "ef980cf76559966577328319c67f2d8c4bd6b69c4efc51d90085df4e03d26c65"
+        ]
+      ],
+      "output_files": {
+        "latex.out/todo.log": "03038049d2ffbed3aed9d772b65660f1cf75d0884a501c19855754745001c2be",
+        "latex.out/todo.pdf": "d4a8e27e6131e5615cfd3b0b0c0487cc06c421a5ae69a0d698013b35f8563f86",
+        "latex.out/todo.aux": "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335",
+        "latex.out/todo.fls": "ef980cf76559966577328319c67f2d8c4bd6b69c4efc51d90085df4e03d26c65"
+      },
+      "extra": {
+        "jobname": "latex.out/todo",
+        "outname": "latex.out/todo.pdf",
+        "status": 0
+      }
+    },
+    "latex_commit::../todo.tex": {
+      "deps": [
+        [
+          "latex",
+          [],
+          [
+            0,
+            "latex.out/todo.pdf"
+          ]
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "d4a8e27e6131e5615cfd3b0b0c0487cc06c421a5ae69a0d698013b35f8563f86"
+        ],
+        [
+          "file",
+          [
+            "todo.pdf"
+          ],
+          "d4a8e27e6131e5615cfd3b0b0c0487cc06c421a5ae69a0d698013b35f8563f86"
+        ]
+      ],
+      "output_files": {
+        "todo.pdf": "d4a8e27e6131e5615cfd3b0b0c0487cc06c421a5ae69a0d698013b35f8563f86"
+      },
+      "extra": null
+    }
+  },
+  "clean": {
+    "latex.out/todo.aux": "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335",
+    "latex.out/todo.fls": "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e",
+    "latex.out/todo.log": "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706",
+    "latex.out/todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000",
+    "todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+  }
+}

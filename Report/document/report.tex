@@ -63,7 +63,7 @@
 
 \section{Analysis}
 
-\subsection{Identification and Background to the Problem (Core)}
+\subsection{Identification and Background to the Problem}
 
 The problem I am trying to solve with my project is how to look at devices on a network
 from a ``\gls{bbox}'' perspective and gain information about what \glspl{service} are running etc.
@@ -96,14 +96,14 @@ interactions with the network around \gls{dhcp}.
 
 Once the \glspl{daemon} are all started the \gls{dhcp} client sends a discover message with the address
 255.255.255.255 which is the IP limited broadcast address which means that whatever is listening at the
-other end will forward this packet on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} on the subnet
+other end will forward this \gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} on the subnet
 receives this message it reserves a free \gls{ipaddr} for that client and then responds with a \gls{dhcp} offer
 which contains the address the \gls{server} is offering, the length of time the address is valid for and the
 \gls{subnet} mask of the network. The client must then respond with a \gls{dhcp} request message to request the
 offered address, this is in case of multiple DHCP servers offering addresses. Finally the \gls{dhcp} server responds
 with a \gls{dhcp} acknowledge message showing that it has received the request. Figure~\ref{dhcp_negotiate} shows
-a packet capture from my laptop where I turned WiFi off, started wireshark listening and plugged in an Ethernet
-cable, I have it showing only the \gls{dhcp} packets so that it is clear to see the entire \gls{dhcp} negotiation
+a \gls{pkt} capture from my laptop where I turned WiFi off, started wireshark listening and plugged in an Ethernet
+cable, I have it showing only the \gls{dhcp} \glspl{pkt} so that it is clear to see the entire \gls{dhcp} negotiation
 including the 255.255.255.255 limited broadcast destination address and the 0.0.0.0 unassigned address in the source
 column.
 
@@ -114,6 +114,7 @@ column.
 \end{figure}
 
 All computer networking is encapsulated in the \gls{osi} which has 7 layers:
+
 \begin{etaremune}
   \item{Application: \gls{api}s, \gls{http}, \gls{ftp} among others.}
   \item{Presentation: encryption/decryption, encoding/decoding, decompression etc\ldots}
@@ -123,30 +124,46 @@ All computer networking is encapsulated in the \gls{osi} which has 7 layers:
   \item{Data Link: MAC addressing, Ethernet protocol etc\ldots}
   \item{Physical: The physical Ethernet cabling/\gls{nic}.}
 \end{etaremune}
+
 Each of these layers is essential to the running of the internet but a single communication
-might not include all of the layers. I'm going to use the example of getting a very
+might not include all of the layers.
+
+These communications are all based on the most fundamental part of the internet: the \gls{pkt}.
+Packets are sequences of ones and zeros sent between computers which are used to transfer
+data as well as to control how networks function. They consist of different layers of 
+information each specifying where the \gls{pkt} where should go next at a different level
+along with fundamentally the data/instructions contained in the innermost layer. When \glspl{pkt}
+are sent between computers a certain number of layers are stripped off by each computer so
+that it knows where to send the \gls{pkt} next at which point it will add all the layers back
+again, this time with the instructions needed to go from the current computer to the next
+one on its route. Each of these layers actually consists of a number of fields at the start
+called a \gls{header} some layers also append a footer to the end of the packet. The actual
+data being transferred in the packet can be quite literally anything, \gls{http} transfers
+websites so \gls{html} files and images etc\ldots
+
+I'm going to use the example of getting a very
 simple static HTML page with an image inside. The code for the page is shown in
 listing~\ref{examplepage}. In figure~\ref{basicwebpage} you can see how the page renders.
 However far more interestingly is how the browser retrieved the page, in figure~\ref{getrequest}
-you can see the full sequence of packets that were exchanged for the browser to get the resources
+you can see the full sequence of \glspl{pkt} that were exchanged for the browser to get the resources
 it needed to render the page. I am hosting the page using python3's http.server module
-which is super convenient and just makes the current directory open on 127.0.0.1 port 8000
+which is super convenient and just makes the current directory open on port 8000
 from there I can just navigate to /example.html and it will render the page. Breaking
-figure~\ref{getrequest} down packet one shows the browser receiving the request from
-the user to display \verb|http://127.0.0.1:8000/example.html| and attempting to connect
-to 127.0.0.1 on port 8000. Packets two and three show the negotiation of this request
+figure~\ref{getrequest} down \gls{pkt} one shows the browser receiving the request from
+the user to display \verb|http://192.168.1.47:8000/example.html| and attempting to connect
+to 192.168.1.47 on port 8000. Packets two and three show the negotiation of this request
 through to the full connection being made. The browser now makes an \gls{http} GET
-request for the page example.html over the established TCP connection as shown in packet 4.
-The server then acknowledges the request and sends a packet with the PSH flag set
-as shown in packets 6 and 7. The PSH flag is a request to the browser to say that it is
+request for the page example.html over the established TCP connection as shown in \gls{pkt} 4.
+The server then acknowledges the request and sends a \gls{pkt} with the PSH flag set
+as shown in \glspl{pkt} 6 and 7. The PSH flag is a request to the browser to say that it is
 OK to received the buffered data, i.e.\ example.html. The browser then sends back an
-acknowledgement and the server sends the page as shown in packets 7 and 8. Finally
+acknowledgement and the server sends the page as shown in \glspl{pkt} 7 and 8. Finally
 the browser sends a final acknowledgement of having received the page before initiating
-a graceful session teardown by sending a FIN ACK packet which indicates the end of a session.
+a graceful session teardown by sending a FIN ACK \gls{pkt} which indicates the end of a session.
 Once the server responds to the FIN ACK with it's own the browser sends a final acknowledgement.
 This then repeats itself when the browser parses the HTML and realises theres an image which
 it needs to get from the server as well, except the image is a larger file and so takes a few
-more PSH packets.
+more PSH \glspl{pkt}.
 
 This shows clearly the interaction between each of the different layers in the OSI model,
 the browser at level 7: Application rendering the webpage. Level 6: Presentation is skipped as
@@ -168,23 +185,31 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
   \centering
   \includegraphics[width=\textwidth]{screenshots/website_get.png}
   \caption{%
-    A full chain of packets that shows retrieving a basic webpage
+    A full chain of \glspl{pkt} that shows retrieving a basic webpage
     from the server.
   }\label{getrequest}
 \end{figure}
 
 \begin{figure}[H]
   \centering
+  \includegraphics[width=\textwidth]{screenshots/website_get_ladder.png}
+  \caption{%
+    Ladder diagram of figure~\ref{getrequest}.
+  }\label{getrequestladder}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \includegraphics[width=\textwidth]{screenshots/deconstructed_packet.png}
   \caption{%
-    A look inside a TCP packet.
+    A look inside a TCP \gls{pkt}.
   }\label{deconstructed}
 \end{figure}
 
 \lstset{language=HTML}
 \lstinputlisting[caption={example.html}, label={examplepage}]{../example.html}
 
-\subsection{Analysis of problem (Core)}
+\subsection{Analysis of problem}
 
 The problem with looking at a network from the outside is that the purpose of the network is to
 allow communication inside of the network, thus very little is exposed externally. This presents
@@ -193,26 +218,103 @@ is not always possible due to the limited information that \glspl{service} will 
 Firewalls also play large part in making scanning networks difficult as sometimes they simply drop
 \glspl{pkt} instead of sending a \gls{tcp} RST \gls{pkt} (reset connection \gls{pkt}).
 When firewalls drop \glspl{pkt} it becomes exponentially more difficult as you don't know whether
-your \gls{pkt} was corrupted or lost in transit or if it was just dropped.
+your \gls{pkt} was corrupted or lost in transit or if it was just dropped. \\\\
+To demonstrate this I will show three things:
 
-In figure~\ref{firewall} you can see the difference between trying to connect to a closed port
-when there is no rule saying to drop packets and when I introduce a rule to drop packets.
-The first packet at time zero shows the connection request on line \verb%In [3]% of
-figure~\ref{firewall_code} then nine microseconds later a RST, ACK packet is sent back
-showing the port is closed as shown in figure~\ref{firewall_code} by the
-\verb$ConnectionRefusedError$ that the socket module throws when we try to connect to a closed
-port. Packet number three in figure~\ref{firewall} shows the connection request from \verb|In [4]|
-except that I have enabled a firewall rule to drop all packets from the address 127.0.0.1, using
+\begin{enumerate}
+  \item{A successful connection over \gls{tcp}.}
+  \item{An attempted connection to a closed port.}
+  \item{An attempted connection with a firewall rule to drop packets.}
+\end{enumerate}
+Firstly A successful \gls{tcp} connection. For a \gls{tcp} connection to be established there
+is a three way handshake between the communicating machines. Firstly the machine trying to
+establish the connection sends a \gls{tcp} SYN packet to the other machine, this packet
+holds a dual purpose, to ask for a connection and if it is accepted to SYNchronise the sequence
+numbers being used to detect whether packets have been lost in transport. The receiving machine
+then replies with a \gls{tcp} SYN ACK which confirms the starting sequence number with the SYN part
+and ACKnowledges the connection request. The sending machine then acknowledges this by sending a
+final \gls{tcp} ACK packet back. This connection initialisation is shown in figure~\ref{data_transfer}
+by packets one, two and three. Data transfer can then commence by sending a \gls{tcp} packet with
+the PSH and ACK flags set along with the data in the data portion of the packet, this is shown
+in figure~\ref{data} where wireshark allows us to take a look inside the packet to see the data being
+sent in the packet along with the PSH and ACK flags being set. The code I used to generate these
+is shown in figures~\ref{sender} and~\ref{receiver}. Breaking the code down in figure~\ref{receiver}
+you can see me initialising a socket object then I bind it to localhost (127.0.0.1) port 12345
+localhost is just an address which allows connections between programs running on the same computer
+as connections are looped back onto the current machine, hence its alternative name: the loopback
+address. I then tell it to listen for incoming connections, the one just means how many connections
+to keep as a backlog. I then accept the connection from the program in figure~\ref{sender}, line 3.
+I then tell the program to listen for up to 1024 bytes in the data part of any TCP packets sent.
+The program in figure~\ref{sender} then sends some data which we then see printed to the screen
+in figure~\ref{receiver}, both programs then close the connection.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/data_transfer.png}
+  \caption{%
+    Packets starting a TCP session, transferring some data then ending it.
+  }\label{data_transfer}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/sender.png}
+  \caption{%
+    Transferring some basic text data over a TCP connection.
+  }\label{sender}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/receiver.png}
+  \caption{%
+    Receiving some basic text data over a TCP connection.
+  }\label{receiver}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/data.png}
+  \caption{%
+    Highlighted packet carrying the data being transferred in figure~\ref{sender}.
+  }\label{data}
+\end{figure}
+
+Next an attempted connection to a closed port. In figure~\ref{firewall} packet one you can see
+the same \gls{tcp} SYN packet as we saw in the attempted connection to an open port, as you
+would expect. The difference comes in the next packet with the \gls{tcp} RST flag being sent
+back. This flag means to reset the connection, or if the connection is not yet established
+as in this case it means that the port is closed, hence why the packet is highlighted red
+in figure~\ref{firewall}. The code used to generate this is shown in figure~\ref{firewall_code}
+line two shows the initialisation of a socket object. In line 3 the program tries to connect
+to port 12345 on localhost again, except this time we get a connection refused error back
+this shows us that the remote host sent a \gls{tcp} RST packet back, which is reflected in
+figure~\ref{firewall}.
+
+Finally I will show a connection where the firewall is configured to drop the packet. However first
+I will explain a bit about firewalls and how they work. Firewalls are essentially the gatekeepers
+of the internet they decide whether a packet gets to pass or whether they shall not pass. Firewalls
+work by a set of rules which decide what happens to it. A rule might be that it is coming from a certain
+\gls{ipaddr} or has a certain destination port. The actions taken after the packet has had it's fate
+decided by the rules can be one of the following three (on iptables on linux): ACCEPT, DROP and RETURN,
+accept does exactly what you think it would an lets the packet through, drop quite literally just drops
+the packet and sends no reply whatsoever, return is more complicated and has no effect on how port
+scanning is done and as such we will ignore it. A common set of rules for something like a webserver
+would be to DROP all incoming packets and then allow exceptions for certain ports i.e.\ port 80 for
+\gls{http} or 443 for \gls{https}. I will be using a linux utility called iptables for implementing
+all firewall rules on my system for demonstration purposes. Packet number three in
+figure~\ref{firewall} shows the connection request from line 4 of~\ref{firewall_code} except
+that I have enabled a firewall rule to drop all \glspl{pkt} from the address 127.0.0.1, using
 the iptables command as so: \verb$iptables -I INPUT -s 127.0.0.1 -j DROP$. This command reads
-as for all packets arriving (\verb|-I INPUT|) with source address 127.0.0.1 (\verb|-s 127.0.0.1|)
+as for all \glspl{pkt} arriving (\verb|-I INPUT|) with source address 127.0.0.1 (\verb|-s 127.0.0.1|)
 drop them sending no response (\verb|-j DROP|). With this firewall rule in place you can see in
-figure~\ref{firewall} packet 3 receives no response and as such python assumes that the packet
-just got lost and as such tries to send the packet again repeatedly, this continued for more than
+figure~\ref{firewall} \gls{pkt} 3 receives no response and as such python assumes that the \gls{pkt}
+just got lost and as such tries to send the \gls{pkt} again repeatedly, this continued for more than
 30 seconds before a stopped it as shown by the time column in figure~\ref{firewall} and the final
 \verb|KeyboardInterrupt| in figure~\ref{firewall_code}. The amount of time that a system will wait
 still trying to reconnect depends on the OS and a other factors but the minimum time is 100 seconds
 as specified by RFC 1122, on most systems it will be between 13 and 30 minutes according the
-linux manual page on tcp.
+linux manual page on \gls{tcp}.
 \begin{verbatim}
 man 7 tcp:
 tcp_retries2 (integer; default: 15; since Linux 2.2)
@@ -227,7 +329,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
   \centering
   \includegraphics[width=\textwidth]{screenshots/packet_drop.png}
   \caption{%
-    Attempted connection to a closed port with and without firewall rule to drop packets.
+    Attempted connection to a closed port with and without firewall rule to drop \glspl{pkt}.
   }\label{firewall}
 \end{figure}
 
@@ -235,11 +337,11 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
   \centering
   \includegraphics[width=\textwidth]{screenshots/packet_drop_code.png}
   \caption{%
-    The code used to produce firewall packet dropping example in figure~\ref{firewall}
+    The code used to produce firewall \gls{pkt} dropping example in figure~\ref{firewall}
   }\label{firewall_code}
 \end{figure}
 
-\subsection{Numbered List of Objectives (also called Success Criteria, the end user requirements) (Core)}
+\subsection{Numbered List of Objectives (also called Success Criteria, the end user requirements)}
 
 \begin{enumerate}
 \item{Show a basic usage message when called with no arguments.}
@@ -261,7 +363,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
 \item{Perform version detection on the \glspl{service} running on each of the hosts specific when given the \texttt{-sV} flag.}
 \end{enumerate}
 
-\subsection{Description of current system or existing solutions (Core if relevant)}
+\subsection{Description of current system or existing solutions}
 
 Nmap is currently the most popular tool for doing\gls{port}scanning and host enumeration.
 It supports the following scanning types:
@@ -292,7 +394,7 @@ It also supports a plethora of options to avoid firewalls or \gls{ids} such as s
 have listed above as is illustrated quite clearly by the fact there is an entire working on using nmap
 (\href{https://nmap.org/book/}{https://nmap.org/book/})
 
-\subsection{Prospective Users (Desirable)}
+\subsection{Prospective Users}
 
 The prospective users of this system would be system administrators, penetration testers or network engineers.
 In my case my prospective users would be my school's system administrators and it would allow them to see an
@@ -300,13 +402,13 @@ outsiders perspective on for example the \gls{server} running the school's websi
 programs on the \glspl{server} were leaking information through \glspl{banner} etc. (most \glspl{service} send a \gls{banner} with
 information like what protocol version they use and other information)
 
-\subsection{Data Dictionary (Desirable)}
+\subsection{Data Dictionary}
 
 \textbf{\color{red}{I looked this up and it seemed to be related to database management systems.}}
 
 \href{https://en.wikipedia.org/wiki/Data_dictionary}{https://en.wikipedia.org/wiki/Data\_dictionary}
 
-\subsection{Data Flow Diagram (Desirable)}
+\subsection{Data Flow Diagram}
 
 \textbf{\color{red}{This seems to be fairly relevant and to do with how data goes through my program
     i.e.\ going from the network to my port scanner into a target object and other scanners
@@ -314,11 +416,11 @@ before version detection and finally displaying to the user. Make a flowchart fo
 
 \href{https://en.wikipedia.org/wiki/Data-flow_diagram<Paste>}{https://en.wikipedia.org/wiki/Data-flow\_diagram}
 
-\subsection{Data Sources (Desirable)}
+\subsection{Data Sources}
 
 \textbf{\color{red}{Not really sure about this.}}
 
-\subsection{Description of Solution Details, OOP/Mobile/Networking (Core if relevant)}
+\subsection{Description of Solution Details, OOP/Mobile/Networking}
 
 To do all forms of scanning other than \verb|Connect()| scanning and version detection, custom
 \glspl{pkt} are made to allow the \gls{half open} (no full connection is made to the host) scanning
@@ -330,7 +432,7 @@ being in little endian form comes out as 58.1.168.192 which is a completely diff
 will mean the \gls{pkt} is not routed to the correct host. As well as the issues with byte order
 and the interpretation of information at different points the \gls{csum} which is embedded into
 the \gls{pkt} is calculated from a psuedo-header calculated from information in the underlying
-IP header and all of this has to be calculated in the right byte order (endianness).
+IP \gls{header} and all of this has to be calculated in the right byte order (endianness).
 
 I have used Python's multiprocessing module to allow me to spawn another process which listens
 for responses from hosts and waits for a certain amount of time before returning information
@@ -368,7 +470,7 @@ match activesync m|{\textasciicircum}.{\textbackslash}0{\textbackslash}x01{\text
 \textbf{\color{red}{This seems to be about the volume of data stored in a database.}}
 \href{https://stackoverflow.com/questions/5566841/what-are-data-volumes#5567390}{https://stackoverflow.com/questions/5566841/what-are-data-volumes\#5567390}
 
-\subsection{Test Strategy (Core)}
+\subsection{Test Strategy}
 
 I am going to use two different methods to test my program:
 \begin{enumerate}
@@ -391,7 +493,7 @@ in each of the various protocols is valid as wireshark does \gls{csum} verificat
 
 \section{Design}
 
-\subsection{Overall System Design (High Level Overview) (Core)}
+\subsection{Overall System Design (High Level Overview)}
 
 There are two types of scanning implemented for different scan types in my program.
 \begin{itemize}
@@ -413,7 +515,7 @@ between open, open|filtered, filtered and closed \glspl{port} based on whether i
 and what flags (part of\gls{tcp} \glspl{pkt} are a one byte long section which store ``flags'' where each bit in the
 byte represents a different flag) are set in the received \gls{pkt}.
 
-\subsection{Design of User Interfaces HCI (Core)}
+\subsection{Design of User Interfaces HCI}
 
 I have designed my system to have a similar interface to the most common tool currently used: nmap
 this is because I believe that having a familiar interface will not only make it easier for someone who
@@ -454,15 +556,11 @@ a short format e.g.\ \verb|-p| and with a most verbose format \verb|--ports| thi
 the user to be clearer if they are using the tool as part of an automated script to perform
 scanning as it is more immediately obvious what the more verbose flags do.
 
-\subsection{Database Structure (ERD, Normalisation) (Core, if relevant)}
-
-\textbf{\color{red}{I am fairly sure this is irrelevant to mine?}}
-
-\subsection{System Algorithms (Flowcharts) (Core)}
+\subsection{System Algorithms (Flowcharts)}
 
 \textbf{\color{Emerald}{When I have finished the first draft of the text bits I will add pictures / flowcharts}}
 
-\subsection{Input data Validation (Core)}
+\subsection{Input data Validation}
 
 My program takes very little input from the user which means that there is a very low chance of the program
 crashing due to user input error as the errors are detected
@@ -543,7 +641,7 @@ and ``dot form'' which is used in every type of scanning.
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Design Data Dictionary (Core)}
+\subsection{Design Data Dictionary}
 
 \textbf{\color{red}{I have no idea what this means.
 All I can find is that it relates to database structure???}}
