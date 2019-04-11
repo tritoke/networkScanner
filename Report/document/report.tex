@@ -2,6 +2,8 @@
 
 \usepackage{graphicx} % for embedding pictures
 \usepackage{wrapfig} % for use with figures
+\usepackage{tikz} % for doing flow charts and stuff directly inside of latex
+\usepackage{shapes.geometric, arrows} % stuff for tikz
 \usepackage[hidelinks]{hyperref} % allows embedding links
 \usepackage[dvipsnames]{xcolor} % gives me some colours by name
 \usepackage[T1]{fontenc} % fixes weird font size/encoding issues
@@ -77,15 +79,14 @@ There are many steps in-between a device turning on to interacting with the inte
   \item{Starting \gls{dhcp} \gls{daemon}}
   \item{Broadcasting \gls{dhcp} request for an \gls{ipaddr}}
   \item{Get assigned an \gls{ipaddr}}
-  \item{???}
-  \item{Profit!!!}
 \end{enumerate}
 
-There are many more steps than I have listed above. Starting from a linux computer being switched on
-the first step is that the \gls{kernel} needs to load the networking \glspl{driver}. The \gls{kernel} is the basis for the
-operating system, it is what interacts with the hardware in the most fundamental way. \glspl{driver} are small
-bits of code which the \gls{kernel} can load in order to interact with certain hardware modules such as the
-\gls{nic} which is essential for interfacing with the network, hence the name.
+There are many more steps than I have listed above but these are the most important ones.
+Starting from a linux computer being switched on the first step is that the \gls{kernel} needs to
+load the networking \glspl{driver}. The \gls{kernel} is the basis for the operating system, it
+is what interacts with the hardware in the most fundamental way. \glspl{driver} are small
+bits of code which the \gls{kernel} can load in order to interact with certain hardware modules such
+as the \gls{nic} which is essential for interfacing with the network, hence the name.
 
 Next once the \gls{kernel} has loaded the required \glspl{driver} and the system has booted the networking
 `\glspl{daemon}' must be started. In linux a \gls{daemon} is a program that runs all the time in the background
@@ -94,18 +95,24 @@ to serve a specific purpose or utility. For example when I start my laptop the f
 inter-process communication), iwd (manages my WiFi connections) and finally \gls{dhcpcd} which manages all
 interactions with the network around \gls{dhcp}.
 
-Once the \glspl{daemon} are all started the \gls{dhcp} client sends a discover message with the address
-255.255.255.255 which is the IP limited broadcast address which means that whatever is listening at the
-other end will forward this \gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} on the subnet
-receives this message it reserves a free \gls{ipaddr} for that client and then responds with a \gls{dhcp} offer
-which contains the address the \gls{server} is offering, the length of time the address is valid for and the
-\gls{subnet} mask of the network. The client must then respond with a \gls{dhcp} request message to request the
-offered address, this is in case of multiple DHCP servers offering addresses. Finally the \gls{dhcp} server responds
-with a \gls{dhcp} acknowledge message showing that it has received the request. Figure~\ref{dhcp_negotiate} shows
-a \gls{pkt} capture from my laptop where I turned WiFi off, started wireshark listening and plugged in an Ethernet
-cable, I have it showing only the \gls{dhcp} \glspl{pkt} so that it is clear to see the entire \gls{dhcp} negotiation
-including the 255.255.255.255 limited broadcast destination address and the 0.0.0.0 unassigned address in the source
-column.
+Once the \glspl{daemon} are all started the \gls{dhcp} client can now take issue commands to the daemon
+for it to carry out. The \gls{dhcp} client is simply a daemon that runs in the background to carry out any
+interactions between the current machine and the \gls{dhcp} server. The \gls{dhcp} server is normally the
+WiFi router or network switch for the local network and it manages a list of which computer has which
+\gls{ipaddr} and negotiates with new computers trying to join a network to get them a free \gls{ipaddr}.
+The \gls{dhcp} client starts by sending a discover message with the address 255.255.255.255 which
+is the IP limited broadcast address which means that whatever is listening at the other end will forward
+this \gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} (normally the router,
+sometimes a separate machine) on the subnet receives this message it reserves a free \gls{ipaddr} for that
+client and then responds with a \gls{dhcp} offer which contains the address the \gls{server} is offering,
+the length of time the address is valid for and the \gls{subnet} mask of the network. The client must then
+respond with a \gls{dhcp} request message to request the offered address, this is in case of multiple DHCP
+servers offering addresses. Finally the \gls{dhcp} server responds with a \gls{dhcp} acknowledge message
+showing that it has received the request. Figure~\ref{dhcp_negotiate} shows a \gls{pkt} capture from my
+laptop where I turned WiFi off, started wireshark listening and plugged in an Ethernet cable, I have it
+showing only the \gls{dhcp} \glspl{pkt} so that it is clear to see the entire \gls{dhcp} negotiation
+including the 255.255.255.255 limited broadcast destination address and the 0.0.0.0 unassigned address
+in the source column.
 
 \begin{figure}[H]
   \centering
@@ -125,6 +132,14 @@ All computer networking is encapsulated in the \gls{osi} which has 7 layers:
   \item{Physical: The physical Ethernet cabling/\gls{nic}.}
 \end{etaremune}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/osi_model.png}
+  \caption{%
+    OSI model diagram, source: https://www.electronicdesign.com
+  }\label{osi_model}
+\end{figure}
+
 Each of these layers is essential to the running of the internet but a single communication
 might not include all of the layers.
 
@@ -139,7 +154,18 @@ again, this time with the instructions needed to go from the current computer to
 one on its route. Each of these layers actually consists of a number of fields at the start
 called a \gls{header} some layers also append a footer to the end of the packet. The actual
 data being transferred in the packet can be quite literally anything, \gls{http} transfers
-websites so \gls{html} files and images etc\ldots
+websites so \gls{html} files and images etc\ldots. In particular there are two pieces of
+information stored in headers which together define the final destination of the packet:
+the \gls{ipaddr} and the \gls{port} number. The \gls{ipaddr} defines the destination machine
+and the \gls{port} number defines which ``port'' on the remote machine the packet should
+be sent to. Ports are essential entrances to a computer, for example if a computer
+was a hotel the \gls{ipaddr} would be the address and location of the hotel and the
+\gls{port} number would be the room inside the hotel. There are 65535 \glspl{port} and 0 is a
+special reserved port. Both \gls{tcp} and \gls{udp} use \glspl{port}, \gls{tcp} \glspl{port}
+are mainly used for transferring data where reliability is a concern, as \gls{tcp} has built in
+checks for packet loss whereas \gls{udp} does not and as such is used for purposes where speed
+is more important and missing some data is inconsequential, such as video streaming and playing
+games.
 
 I'm going to use the example of getting a very
 simple static HTML page with an image inside. The code for the page is shown in
@@ -341,27 +367,99 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
   }\label{firewall_code}
 \end{figure}
 
+Having explained firewalls, how they affect port scanning and other things above I will now
+explain what I am actually trying to achieve with my project and how I am going to do it.
+I am trying to make a tool similar to nmap which will be able to detect the state (as in whether
+the port is open/closed or filtered etc) of ports on remote machines, detect which hosts are up on
+a subnet and finally I want to be able to try to detect what services are listening behind any of
+the ports. I am going to be writing in python version 3.7.2 as it is the latest stable release
+of python 3 and has many features which are not in even fairly recent versions such as 3.5, 
+the biggest one of these being fstrings which are where I can put a single a `f' before a string
+and then any formatting options I put inside using curly braces are expanded and formatted
+accordingly. This allows for a clear and consistent string formatting syntax which I will use
+extensively. I will be using python in particular as a language because it is very readable and
+has extensive low level bindings to C networking functions with the socket module
+allowing me to write code quickly which is easily understandable and has a clear purpose and at
+the same time be able to use low level networking functions and even changing the behaviour at
+this low level with \verb|socket.setsockopt|. As well as this the socket module allows me to
+open sockets that communicate using many different protocols such as \gls{tcp}, \gls{udp} and
+\gls{icmp} just to name a few. These features combine to make python a great language for writing
+networking software with a high level of abstraction. In regards to the OSI model my code will
+sit with the user interface at level 7 specifying what to do at a high level then the actual
+scanning takes place at levels 3, 4 and 5 with host detection being at level 3. Port scanning will
+be taking place At level 4 for \gls{tcp} SYN scanning and \gls{udp} scanning. Whereas \verb|connect()|
+scanning and version detection will sit at level 5. Finally I will look at what is actually
+handling all of the networking on my machine. My machine runs linux and as such all networking
+is handled by system calls to the linux kernel. For example the \verb|socket.connect| method
+is just a call to the underlying linux kernel's connect syscall but presenting a kinder call
+signature to the user as the python socket library does some processing before the syscall is made.
+
 \subsection{Numbered List of Objectives (also called Success Criteria, the end user requirements)}
 
 \begin{enumerate}
-\item{Show a basic usage message when called with no arguments.}
-\item{Show a help message when called with \texttt{--help} or \texttt{-h}.}
-\item{Scan the 1000 most commonly used \gls{tcp} \glspl{port} when called with just an \gls{ipaddr}.}
-\item{Scan the \glspl{port} specified by \texttt{-p <ports>} or \texttt{--ports <ports>}.}
-\item{Parse either a comma separated list of \glspl{port} e.g.\ \texttt{1,2,3,4} or a range specified set of \glspl{port} e.g.
-  \texttt{1{\textendash}4}}.
-\item{Scan all \glspl{port} in each scan type when called with \texttt{-p-}.}
-\item{Don't scan the \glspl{port} specified by \texttt{--exclude-ports <ports>} in any scan.}
-\item{Expand a \gls{cidr} specified \gls{subnet} when used in the target specification.}
-\item{List all of the \gls{ipaddr}es that would be scanned when given the \texttt{-sL} flag.}
-\item{Only ping each specified address when supplied the \texttt{-sn} flag.}
-\item{When doing a ping scan (\texttt{-sn}) display the Time To Live (TTL) and latency of each host.}
-\item{Don't ping each of the hosts before scanning to check if they are up when supplied with the \texttt{-Pn} flag.}
-\item{Perform a \gls{tcp}SYN scan on the 1000 most common \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sS} flag.}
-\item{Perform a \gls{tcp} \verb|Connect()| scan on the 1000 most common \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sT} flag.}
-\item{Perform a\gls{udp}scan on the 1000 most common\gls{udp} \glspl{port} when on each target specified when given the \texttt{-sU} flag.}
-\item{Perform version detection on the \glspl{service} running on each of the hosts specific when given the \texttt{-sV} flag.}
-\end{enumerate}
+  \item{%
+    Show a basic usage message when called with no arguments.
+  }
+  \item{%
+    Show a help message when called with \texttt{--help} or \texttt{-h}.
+  
+  }
+  \item{%
+    Scan the 1000 most commonly used \gls{tcp} \glspl{port} when called with just an \gls{ipaddr}.
+  
+  }
+  \item{%
+    Scan the \glspl{port} specified by \texttt{-p <ports>} or \texttt{--ports <ports>}.
+  
+  }
+  \item{%
+    Parse either a comma separated list of \glspl{port} e.g.\ \texttt{1,2,3,4}
+    or a range specified set of \glspl{port} e.g. \texttt{1{-}4}
+  }
+  \item{%
+    Scan all \glspl{port} in each scan type when called with \texttt{-p-}.
+  
+  }
+  \item{%
+    Don't scan the \glspl{port} specified by \texttt{--exclude-ports <ports>} in any scan.
+  
+  }
+  \item{%
+    Expand a \gls{cidr} specified \gls{subnet} when used in the target specification.
+  
+  }
+  \item{%
+    List all of the \gls{ipaddr}es that would be scanned when given the \texttt{-sL} flag.
+  
+  }
+  \item{%
+    Only ping each specified address when supplied the \texttt{-sn} flag.
+  }
+  \item{%
+    When doing a ping scan (\texttt{-sn}) display the Time To Live (TTL)
+    and latency of each host.
+  }
+  \item{%
+    Don't ping each of the hosts before scanning to check if they are
+    up when supplied with the \texttt{-Pn} flag.
+  }
+  \item{%
+    Perform a \gls{tcp}SYN scan on the 1000 most common
+    \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sS} flag.
+  }
+  \item{%
+    Perform a \gls{tcp} \verb|Connect()| scan on the 1000 most common
+    \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sT} flag.
+  }
+  \item{%
+    Perform a\gls{udp}scan on the 1000 most common\gls{udp}
+    \glspl{port} when on each target specified when given the \texttt{-sU} flag.
+  }
+  \item{%
+    Perform version detection on the \glspl{service} running on
+    each of the hosts specific when given the \texttt{-sV} flag.
+  }
+  \end{enumerate}
 
 \subsection{Description of current system or existing solutions}
 

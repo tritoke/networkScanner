@@ -189,32 +189,35 @@ def get_free_port() -> int:
     return port
 
 
-# TODO rewrite this yourself...
-def ip_checksum(pkt: bytes) -> int:
+def ip_checksum(packet: bytes) -> int:
     """
-    ip_checksum takes a packet and calculates the IP checksum
-    for the given packet.
-    This checksum function is taken from the scapy python library
-    which is released under the open source GPLV2.
-    comments are mine.
+    ip_checksum function takes in a packet
+    and returns the checksum.
     """
-    # if the length of the packet is not
-    # divisible by 2 then append a null byte
-    if len(pkt) % 2 == 1:
-        pkt += b"\0"
-    # find the sum of the byte of the packet
-    # treating them as unsigned shorts - 2 bytes long
-    s = sum(array.array("H", pkt))
-    # this line takes the bits after the 16th
-    # bit from the right and adds it to the first 16 bits.
-    # [<-16][16-8][8-0] -> [16-0] + [<-16]
-    s = (s >> 16) + (s & 0xffff)
-    # add on all the bits past 16 again
-    s += s >> 16
-    # bitwise negate each bit
-    s = ~s
-    # ([<-8] OR [<-0][0*8]) AND [1*16]
-    return (((s >> 8) & 0xff) | s << 8) & 0xffff
+    if len(packet) % 2 == 1:
+        # if the length of the packet is even, add a NULL byte
+        # to the end as padding
+        packet += b"\0"
+
+    total = 0
+    for first, second in (
+            packet[i:i+2]
+            for i in range(0, len(packet), 2)
+    ):
+        total += (first << 8) + second
+
+    # calculate the number of times a
+    # carry bit was added and add it back on
+    carried = (total - (total & 0xFFFF)) >> 16
+    total &= 0xFFFF
+    total += carried
+
+    if total > 0xFFFF:
+        # adding the carries generated a carry
+        total &= 0xFFFF
+
+    # invert the checksum and take the last 16 bits.
+    return (~total & 0xFFFF)
 
 
 def make_icmp_packet(ID: int) -> bytes:

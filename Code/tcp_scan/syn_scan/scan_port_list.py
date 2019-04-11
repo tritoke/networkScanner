@@ -34,7 +34,7 @@ def syn_listener(address: Tuple[str, int], timeout: float) -> List[int]:
             packet = s.recv(1024)
             # recieve the packet data
             tcp = headers.tcp(packet[20:40])
-            if tcp.flags == int("00010010", 2):  # syn ack
+            if tcp.flags == 0b00010010:  # syn ack
                 print(tcp)
                 open_ports.append(tcp.source)
                 # check that the header contained the TCP ACK flag and if it

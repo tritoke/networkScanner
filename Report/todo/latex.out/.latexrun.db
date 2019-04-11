@@ -61,62 +61,6 @@
         [
           "file",
           [
-            "/etc/texmf/web2c/texmf.cnf"
-          ],
-          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf/web2c/texmf.cnf"
-          ],
-          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/web2c/texmf.cnf"
-          ],
-          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/tex/latex/base/article.cls"
-          ],
-          "6960fffac3642c838fe7b0a975cfa8bb74e96da123b66defa457382df6ed7279"
-        ],
-        [
-          "file",
-          [
-            "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map"
-          ],
-          "5e05ecb9ee12feb05acaf1d1eb45e491e8813152479db7786977a1ac7bee4b2f"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
-          ],
-          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
-        ],
-        [
-          "file",
-          [
-            "todo.tex"
-          ],
-          "0a1c4ef8cdbe088c0d0445d2e9051c0c5d5b7f2070b8f5794465269b3eb5806d"
-        ],
-        [
-          "file",
-          [
-            "latex.out/todo.aux"
-          ],
-          "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335"
-        ],
-        [
-          "file",
-          [
             "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb"
           ],
           "fdcede8794018df5f2b58f0905fb20a2b418ed8f67b73ee12445855dfbe5b1be"
@@ -131,6 +75,69 @@
         [
           "file",
           [
+            "todo.tex"
+          ],
+          "03713d097e800a7b01e65bbd01b026414fc46d35ddf15d5a45881cb9a088baf3"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
+          ],
+          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
+        ],
+        [
+          "file",
+          [
+            "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map"
+          ],
+          "5e05ecb9ee12feb05acaf1d1eb45e491e8813152479db7786977a1ac7bee4b2f"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texmf/web2c/texmf.cnf"
+          ],
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.aux"
+          ],
+          "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335"
+        ],
+        [
+          "file",
+          [
+            "/etc/texmf/web2c/texmf.cnf"
+          ],
+          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/article.cls"
+          ],
+          "6960fffac3642c838fe7b0a975cfa8bb74e96da123b66defa457382df6ed7279"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90"
+        ],
+        [
+          "file",
+          [
             "latex.out/todo.fls"
           ],
           "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e"
@@ -140,21 +147,14 @@
           [
             "latex.out/todo.log"
           ],
-          "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706"
-        ],
-        [
-          "file",
-          [
-            "latex.out/todo.pdf"
-          ],
-          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+          "64fcfc987b5a8205793001a7123c63be4fa37f8044278968dc0333a065a7c60a"
         ]
       ],
       "output_files": {
         "latex.out/todo.aux": "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335",
+        "latex.out/todo.pdf": "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90",
         "latex.out/todo.fls": "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e",
-        "latex.out/todo.log": "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706",
-        "latex.out/todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+        "latex.out/todo.log": "64fcfc987b5a8205793001a7123c63be4fa37f8044278968dc0333a065a7c60a"
       },
       "extra": {
         "jobname": "latex.out/todo",
@@ -177,18 +177,18 @@
           [
             "latex.out/todo.pdf"
           ],
-          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+          "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90"
         ],
         [
           "file",
           [
             "todo.pdf"
           ],
-          "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+          "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90"
         ]
       ],
       "output_files": {
-        "todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+        "todo.pdf": "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90"
       },
       "extra": null
     },
@@ -387,8 +387,8 @@
   "clean": {
     "latex.out/todo.aux": "3345a075a22fb3bbc04567a1e5660ed0240d53f5881f458a2234dcd42a78d335",
     "latex.out/todo.fls": "c6180c94f4c07b8f00cd842da581a151b1fb547feb67d408458384b548ddf50e",
-    "latex.out/todo.log": "b2a5cb4f5a599704f94cd666d85daa2384ef88a9d3df2d43da3d83d118fa0706",
-    "latex.out/todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000",
-    "todo.pdf": "a22679355145b69dcb6e21ad9a1605be9b404cbcac155544cb8f57781c12e000"
+    "latex.out/todo.log": "64fcfc987b5a8205793001a7123c63be4fa37f8044278968dc0333a065a7c60a",
+    "latex.out/todo.pdf": "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90",
+    "todo.pdf": "f75c9245cf45bfb62d4a5efd09c5c3c552c4eaee6578252e6072af313f7cac90"
   }
 }
