@@ -614,13 +614,13 @@ Next \verb|networkscan.gnmap|:
 \begin{verbatim}
 # Nmap 7.70 scan initiated Wed Apr 10 19:36:18 2019 as:
     nmap -sC -sV -oA /home/tritoke/networkscan 192.168.1.0/24
-Host: 192.168.1.1 (router.asus.com)	Status: Up
-Host: 192.168.1.1 (router.asus.com)	Ports: 53/open/tcp//domain//
+Host: 192.168.1.1 (router.asus.com) Status: Up
+Host: 192.168.1.1 (router.asus.com) Ports: 53/open/tcp//domain//
       (generic dns response: NOTIMP)/, 80/open/tcp//http//ASUS WRT http admin/,
       515/open/tcp//printer///, 8443/open/tcp//ssl|http//ASUS WRT http admin/,
-      9100/open/tcp//jetdirect?///	Ignored State: closed (995)
-Host: 192.168.1.8 (android-25a97e36c2e74456)	Status: Up
-Host: 192.168.1.8 (android-25a97e36c2e74456)	Ports: 5060/filtered/tcp//sip///
+      9100/open/tcp//jetdirect?///  Ignored State: closed (995)
+Host: 192.168.1.8 (android-25a97e36c2e74456)  Status: Up
+Host: 192.168.1.8 (android-25a97e36c2e74456)  Ports: 5060/filtered/tcp//sip///
       Ignored State: closed (999)
 \end{verbatim}
 Again this is not all of the file as it is very large. As you can see above all of the information 
@@ -629,15 +629,15 @@ hosts and just want to know which hosts are up you can do \verb|grep 'Status: Up
 which outputs this:
 \begin{verbatim}
 $ grep 'Status: Up' networkscan.gnmap
-Host: 192.168.1.1 (router.asus.com)	Status: Up
-Host: 192.168.1.8 (android-25a97e36c2e74456)	Status: Up
-Host: 192.168.1.10 (diskstation)	Status: Up
-Host: 192.168.1.88 ()	Status: Up
-Host: 192.168.1.88 ()	Status: Up
-Host: 192.168.1.117 ()	Status: Up
-Host: 192.168.1.159 (groot)	Status: Up
-Host: 192.168.1.159 (groot)	Status: Up
-Host: 192.168.1.176 (ET0021B7C01F2E)	Status: Up
+Host: 192.168.1.1 (router.asus.com) Status: Up
+Host: 192.168.1.8 (android-25a97e36c2e74456) Status: Up
+Host: 192.168.1.10 (diskstation) Status: Up
+Host: 192.168.1.88 () Status: Up
+Host: 192.168.1.88 () Status: Up
+Host: 192.168.1.117 () Status: Up
+Host: 192.168.1.159 (groot) Status: Up
+Host: 192.168.1.159 (groot) Status: Up
+Host: 192.168.1.176 (ET0021B7C01F2E) Status: Up
 \end{verbatim}
 Showing you clearly the hosts which are online and then their host names. Other ways to use this
 output format would be to find out which ports are open on only one machine, or which hosts have a
@@ -843,7 +843,275 @@ like mine as it allows me to easily prototype and explore many ideas about how I
 my solution without wasting vast amounts of time.
 
 The first point of the success criteria that I wanted to get a feel for was receiving and sending
-\gls{icmp} ECHO requests aka pings. \gls{icmp} as a protocol sits at layer 3 of the 
+\gls{icmp} ECHO requests aka pings. \gls{icmp} as a protocol sits at layer 3 of the \gls{osi}
+this means it is a layer below what you are normally give access to in the socket module. This
+means instead of getting a bytes object with just the data from the header you instead get a bytes
+object which contains the entire packet and you have to dissect it yourself to get the information
+out of it, this can be quite difficult if it weren't for the struct module. The struct module 
+provides a convenient API for converting between packed values i.e.\ packets in network endianness
+to unpacked values i.e.\ a double representing the current time in local endianness. Interactions
+with the socket module are mainly through the pack and unpack functions. For each of these
+functions you provide a format specifier defining how to unpack/pack the bytes/values. 
+In Listing~\ref{echosend} you can see an example of me using the struct.pack function to pack
+the values which comprise an \gls{icmp} ECHO REQUEST into a packet and sending it the localhost
+address (127.0.0.1). This program is effectively the complement to the program listed in
+listing~\ref{echorecv} which uses struct.unpack to unpack value from the received \gls{icmp}
+packet before printing the fields out to the terminal. Listing~\ref{echosend} makes use of the
+IP checksum function which I wrote. In figure~\ref{echodissect} you can see the output when
+I run the command \verb|ping 127.0.0.1| which the code in figure\ref{echorecv} is listening for
+packets.
+
+\begin{lstlisting}[label=echosend,caption=A prototype for sending \gls{icmp} ECHO REQUEST packets.]
+#!/usr/bin/python3.7
+import socket
+import struct
+import os
+import time
+import array
+
+from os import getcwd, getpid
+import sys
+sys.path.append("../modules/")
+
+import ip_utils
+
+
+ICMP_ECHO_REQUEST = 8
+
+# opens a raw socket for the ICMP protocol
+ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+# allows manual IP header creation
+# ping_sock.setsockopt(socket.SOL_IP, socket.IP_HDRINCL, 1)
+
+ID = os.getpid() & 0xFFFF
+
+# the two zeros are the code and the dummy checksum, the one is the sequence number
+dummy_header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, 0, ID, 1)
+
+data = struct.pack("d", time.time()) + bytes((192 - struct.calcsize("d")) * "A", "ascii")
+
+checksum = ip_utils.ip_checksum(dummy_header+data)
+
+header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, checksum, ID, 1)
+
+packet = header + data
+
+ping_sock.sendto(packet, ("127.0.0.1", 1))
+\end{lstlisting}
+
+\begin{lstlisting}[label=echorecv,caption=A prototype for receiving \gls{icmp} ECHO REQUEST packets.]
+#!/usr/bin/python3.7
+
+import socket
+import struct
+import time
+from typing import List
+
+# socket object using an IPV4 address, using only raw socket access, set ICMP protocol        
+ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+
+packets: List[bytes] = []
+
+while len(packets) < 1:
+    recPacket, addr = ping_sock.recvfrom(1024)
+    ip_header = recPacket[:20]
+    icmp_header = recPacket[20:28]
+
+    ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl, ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII', ip_header)
+
+    hl_v = f"{ip_hp_ip_v:08b}"
+    ip_v = int(hl_v[:4], 2)
+    ip_hl = int(hl_v[4:], 2)
+    dscp_ecn = f"{ip_dscp_ip_ecn:08b}"
+    ip_dscp = int(dscp_ecn[:6], 2)
+    ip_ecn = int(dscp_ecn[6:], 2)
+    flgs_off = f"{ip_flgs_ip_off:016b}"
+    ip_flgs = int(flgs_off[:3],2)
+    ip_off = int(flgs_off[3:], 2)
+    src_addr = socket.inet_ntoa(struct.pack('!I', ip_src))
+    dst_addr = socket.inet_ntoa(struct.pack('!I', ip_dst))
+
+    print("IP header:")
+    print(f"Version: [{ip_v}]\nInternet Header Length: [{ip_hl}]\nDifferentiated Services Point Code: [{ip_dscp}]\nExplicit Congestion Notification: [{ip_ecn}]\nTotal Length: [{ip_len}]\nIdentification: [{ip_id:04x}]\nFlags: [{ip_flgs:03b}]\nFragment Offset: [{ip_off}]\nTime To Live: [{ip_ttl}]\nProtocol: [{ip_p}]\nHeader Checksum: [{ip_sum:04x}]\nSource Address: [{src_addr}]\nDestination Address: [{dst_addr}]\n")
+
+    msg_type, code, checksum, p_id, sequence = struct.unpack('!bbHHh', icmp_header)
+    print("ICMP header:")
+    print(f"Type: [{msg_type}]\nCode: [{code}]\nChecksum: [{checksum:04x}]\nProcess ID: [{p_id:04x}]\nSequence: [{sequence}]"
+    packets.append(recPacket)
+open("current_packet", "w").write("\n".join(" ".join(map(lambda x: "{x:02x}", map(int, i))) for i in packets))
+\end{lstlisting}
+\begin{lstlisting}[label=checksum,caption=A function for calculating the IP checksum for a set of btyes.]
+def ip_checksum(packet: bytes) -> int:
+    """
+    ip_checksum function takes in a packet
+    and returns the checksum.
+    """
+    if len(packet) % 2 == 1:
+        # if the length of the packet is even, add a NULL byte
+        # to the end as padding
+        packet += b"\0"
+
+    total = 0
+    for first, second in (
+            packet[i:i+2]
+            for i in range(0, len(packet), 2)
+    ):
+        total += (first << 8) + second
+
+    # calculate the number of times a
+    # carry bit was added and add it back on
+    carried = (total - (total & 0xFFFF)) >> 16
+    total &= 0xFFFF
+    total += carried
+
+    if total > 0xFFFF:
+        # adding the carries generated a carry
+        total &= 0xFFFF
+
+    # invert the checksum and take the last 16 bits
+    return (~total & 0xFFFF)
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/deconstructed_headers.png}
+  \caption{%
+    Dissecting an \gls{icmp} ECHO REQUEST packet.
+  }\label{echodissect}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/ping_send_success.png}
+  \caption{%
+    Screenshot of wireshark showing a successful send of an \gls{icmp} ECHO REQUEST packet.
+  }\label{pingsuccess}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/local_self_ping.png}
+  \caption{%
+    Screenshot showing me first successfully dissecting an \gls{icmp} ECHO REQUEST packet.
+  }\label{dissectsuccess}
+\end{figure}
+
+Having done these prototypes I have identified that it would probably be best to abstract the
+code for dissecting all the headers i.e.\ \gls{icmp}, \gls{tcp} and \gls{ip} into classes
+where I can just pass the received packet into the class and have it dissect it for me and then
+I will also get access to some of the benefits of classes such as the \verb|__repr__| method
+which is called when you print classes out and allows me to control what is printed out.
+Before I started to write the final piece I wanted to make a prototype ping scanner, as this
+would allow me to get a feel for making a scanner as well as further exploring low level protocol
+interactions.
+
+\begin{lstlisting}[label=pingscan,caption=An attempt at making a ping scanner.]
+#!/usr/bin/python3.7
+from os import getcwd, getpid
+import sys
+sys.path.append("../modules/")
+
+import ip_utils
+
+import socket
+from functools import partial
+from itertools import repeat
+from multiprocessing import Pool
+from contextlib import closing
+from math import log10, floor
+from typing import List, Tuple
+import struct
+import time
+
+
+def round_significant_figures(x: float, n: int) -> float:
+    """
+    rounds x to n significant figures.
+    round_significant_figures(1234, 2) = 1200.0
+    """
+    return round(x, n-(1+int(floor(log10(abs(x))))))
+
+
+def recieved_ping_from_addresses(ID: int, timeout: float) -> List[Tuple[str, float, int]]:
+    """
+    Takes in a process id and a timeout and returns the list of addresses which sent
+    ICMP ECHO REPLY packets with the packed id matching ID in the time given by timeout.
+    """
+    ping_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+    time_remaining = timeout
+    addresses = []
+    while True:
+        time_waiting = ip_utils.wait_for_socket(ping_sock, time_remaining)
+        if time_waiting == -1:
+            break
+        time_recieved = time.time()
+        recPacket, addr = ping_sock.recvfrom(1024)
+        ip_header = recPacket[:20]
+        ip_hp_ip_v, ip_dscp_ip_ecn, ip_len, ip_id, ip_flgs_ip_off, ip_ttl, ip_p, ip_sum, ip_src, ip_dst = struct.unpack('!BBHHHBBHII', ip_header)
+        icmp_header = recPacket[20:28]
+        msg_type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmp_header)
+        time_remaining -= time_waiting
+        time_sent = struct.unpack("d", recPacket[28:28+struct.calcsize("d")])[0]
+        time_taken = time_recieved - time_sent
+        if p_id == ID:
+            addresses.append((str(addr[0]), float(time_taken), int(ip_ttl)))
+        elif time_remaining <= 0:
+            break
+        else:
+            continue
+    return addresses
+
+
+with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)) as ping_sock:
+    addresses = ip_utils.ip_range("192.168.1.0/24")
+    local_ip = ip_utils.get_local_ip()
+    if addresses is not None:
+        addresses_to_scan = filter(lambda x: x!=local_ip, addresses)
+    else:
+        print("error with ip range specification")
+        exit()
+    p = Pool(1)
+    ID = getpid()&0xFFFF
+    replied = p.apply_async(recieved_ping_from_addresses, (ID, 2))
+    for address in zip(addresses_to_scan, repeat(1)):
+        try:
+            packet = ip_utils.make_icmp_packet(ID)
+            ping_sock.sendto(packet, address)
+        except PermissionError:
+            pass
+    p.close()
+    p.join()
+    hosts_up = replied.get()
+    print("\n".join(map(lambda x: f"host: [{x[0]}]\tresponded to an ICMP ECHO REQUEST in {round_significant_figures(x[1], 2):<10} seconds, ttl: [{x[2]}]", hosts_up)))
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/pingscan.png}
+  \caption{%
+    Screenshot of wireshark showing a successful ping scan.
+  }\label{pingscansuccess}
+\end{figure}
+
+\lstset{language=C}
+\begin{lstlisting}[label=pingscanout,caption=The output of from the ping scanner on the run which generated the \gls{pcap} file in figure~\ref{pingscansuccess}]
+$ sudo ./ping_scan.py
+host: [192.168.1.1]	responded to an ICMP ECHO REQUEST in 0.00037    seconds, ttl: [64]
+host: [192.168.1.35] responded to an ICMP ECHO REQUEST in 0.00042    seconds, ttl: [128]
+host: [192.168.1.37] responded to an ICMP ECHO REQUEST in 0.002      seconds, ttl: [64]
+host: [192.168.1.117] responded to an ICMP ECHO REQUEST in 0.0017     seconds, ttl: [64]
+host: [192.168.1.176] responded to an ICMP ECHO REQUEST in 0.0014     seconds, ttl: [254]
+host: [192.168.1.14] responded to an ICMP ECHO REQUEST in 0.0072     seconds, ttl: [64]
+host: [192.168.1.246] responded to an ICMP ECHO REQUEST in 0.049      seconds, ttl: [64]
+host: [192.168.1.8] responded to an ICMP ECHO REQUEST in 0.099      seconds, ttl: [64]
+\end{lstlisting}
+
+Now that I have done these prototypes I am fairly certain about how I will structure the rest of
+my scanners, how to interact with Python's socket programming interface and how I can use the
+struct module to make and dissect packets. My general plan for the scanners will be to start
+a process that listens for responses for a set amount of time and then start sending the packets
+in a different process before waiting for the listening process to get all the responses back and
+collecting the results from that process.
 
 \subsection{Acceptable Limitations}
 

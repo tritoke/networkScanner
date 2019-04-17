@@ -61,44 +61,9 @@
         [
           "file",
           [
-            "latex.out/todo.aux"
+            "/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty"
           ],
-          "4fa3f28794cfbb303daec1dd5f1afc9926df51519992dffcfec6802c9641bcee"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf/web2c/texmf.cnf"
-          ],
-          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
-          ],
-          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm"
-          ],
-          "0eb2f13840155007c2d3c59b074322a3aa7358b9643aa314f3146468ae7f0806"
-        ],
-        [
-          "file",
-          [
-            "/etc/texmf/web2c/texmf.cnf"
-          ],
-          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map"
-          ],
-          "289d05d37bb81a00180a31050a46dcbbc5108b703e85ebf5427d9841dbcd87f9"
+          "68b247fee0df443faf8c370f3a230174c6d41d9f30ef4804bd48b2903989751b"
         ],
         [
           "file",
@@ -110,16 +75,30 @@
         [
           "file",
           [
-            "/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty"
+            "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm"
           ],
-          "68b247fee0df443faf8c370f3a230174c6d41d9f30ef4804bd48b2903989751b"
+          "1ce8af37ed38e93940829d3540e494eaaddc5201758d036b9074467e70a738dc"
         ],
         [
           "file",
           [
-            "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm"
+            "/usr/share/texmf/web2c/texmf.cnf"
           ],
-          "1ce8af37ed38e93940829d3540e494eaaddc5201758d036b9074467e70a738dc"
+          "6c6440b7415ad059c6af5609c406cbab86cfc622b5ea21f318af87e8e9f82b29"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.aux"
+          ],
+          "4fa3f28794cfbb303daec1dd5f1afc9926df51519992dffcfec6802c9641bcee"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo"
+          ],
+          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
         ],
         [
           "file",
@@ -131,16 +110,9 @@
         [
           "file",
           [
-            "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb"
+            "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map"
           ],
-          "c838238f31d86a9f198873dfaf501601a4fc966845b9c59e7dc251c4e85d1f1f"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texlive/texmf-dist/fonts/tfm/public/latex-fonts/lasy6.tfm"
-          ],
-          "0dfa9a3835991fd38d5b57b556f76605dde4332feba71870dd708ab4b0c554c1"
+          "289d05d37bb81a00180a31050a46dcbbc5108b703e85ebf5427d9841dbcd87f9"
         ],
         [
           "file",
@@ -152,9 +124,23 @@
         [
           "file",
           [
+            "/etc/texmf/web2c/texmf.cnf"
+          ],
+          "3443c7e22fbb4585732473f7e95d3cbf3e8657100f9117e711e2af5b0db85a40"
+        ],
+        [
+          "file",
+          [
             "/var/lib/texmf/web2c/pdftex/pdflatex.fmt"
           ],
           "db208c8de8f855aa35d95a739dfe7c3b9a26220b9973090fbbfd8f2728aacf73"
+        ],
+        [
+          "file",
+          [
+            "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm"
+          ],
+          "0eb2f13840155007c2d3c59b074322a3aa7358b9643aa314f3146468ae7f0806"
         ],
         [
           "file",
@@ -173,9 +159,9 @@
         [
           "file",
           [
-            "todo.tex"
+            "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb"
           ],
-          "0e1e7ea913dd5dd0ec2824929b068dba3b1111f72d4dd33208906b630c63fae1"
+          "c838238f31d86a9f198873dfaf501601a4fc966845b9c59e7dc251c4e85d1f1f"
         ],
         [
           "file",
@@ -187,16 +173,23 @@
         [
           "file",
           [
-            "latex.out/todo.log"
+            "todo.tex"
           ],
-          "2f9c44bbb382655bcf3bc86af0a85c54fd156534680d8deb016fe77e14108fb0"
+          "48c54c676ccf4410969f34e9f261805bdd08c94edebcdb19dbc97c3cfc9d6e30"
         ],
         [
           "file",
           [
-            "latex.out/todo.pdf"
+            "/usr/share/texlive/texmf-dist/fonts/tfm/public/latex-fonts/lasy6.tfm"
           ],
-          "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12"
+          "0dfa9a3835991fd38d5b57b556f76605dde4332feba71870dd708ab4b0c554c1"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.log"
+          ],
+          "0d28f80f848c12eead2d14382d154df566a87ce22032fd5d09a036ba717ab188"
         ],
         [
           "file",
@@ -204,13 +197,20 @@
             "latex.out/todo.fls"
           ],
           "843e6812a0248ffd4c87438d019caa8f2c6aa11f7b87c735d5f5bf96db26769a"
+        ],
+        [
+          "file",
+          [
+            "latex.out/todo.pdf"
+          ],
+          "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
         ]
       ],
       "output_files": {
+        "latex.out/todo.log": "0d28f80f848c12eead2d14382d154df566a87ce22032fd5d09a036ba717ab188",
+        "latex.out/todo.fls": "843e6812a0248ffd4c87438d019caa8f2c6aa11f7b87c735d5f5bf96db26769a",
         "latex.out/todo.aux": "4fa3f28794cfbb303daec1dd5f1afc9926df51519992dffcfec6802c9641bcee",
-        "latex.out/todo.log": "2f9c44bbb382655bcf3bc86af0a85c54fd156534680d8deb016fe77e14108fb0",
-        "latex.out/todo.pdf": "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12",
-        "latex.out/todo.fls": "843e6812a0248ffd4c87438d019caa8f2c6aa11f7b87c735d5f5bf96db26769a"
+        "latex.out/todo.pdf": "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
       },
       "extra": {
         "jobname": "latex.out/todo",
@@ -233,18 +233,18 @@
           [
             "latex.out/todo.pdf"
           ],
-          "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12"
+          "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
         ],
         [
           "file",
           [
             "todo.pdf"
           ],
-          "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12"
+          "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
         ]
       ],
       "output_files": {
-        "todo.pdf": "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12"
+        "todo.pdf": "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
       },
       "extra": null
     },
@@ -443,8 +443,8 @@
   "clean": {
     "latex.out/todo.aux": "4fa3f28794cfbb303daec1dd5f1afc9926df51519992dffcfec6802c9641bcee",
     "latex.out/todo.fls": "843e6812a0248ffd4c87438d019caa8f2c6aa11f7b87c735d5f5bf96db26769a",
-    "latex.out/todo.log": "2f9c44bbb382655bcf3bc86af0a85c54fd156534680d8deb016fe77e14108fb0",
-    "latex.out/todo.pdf": "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12",
-    "todo.pdf": "367c1494e186bfb243f4efdcf3da0f98606bfe939443848f00ace54762ba3c12"
+    "latex.out/todo.log": "0d28f80f848c12eead2d14382d154df566a87ce22032fd5d09a036ba717ab188",
+    "latex.out/todo.pdf": "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496",
+    "todo.pdf": "17d5e638c93b7e0bfb4a1c0b869b4d843a3b7d1052a17a0c336529ab1ab9b496"
   }
 }
