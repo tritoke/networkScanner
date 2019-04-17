@@ -1,27 +1,56 @@
 \documentclass{article}
-
+\usepackage[normalem]{ulem}
 \begin{document}
-Hi Sam \\
-
-More comments;
+\section{notes}
 \begin{enumerate}
   \item{In general. You need to make references to books or resources on the web to show where you have learnt and researched the information you are giving. Provide lots more referencing please Sam. }
-  \item{I think anything you mention in the success criteria should be discussed and explained in the analysis and background beforehand. For example, }
-  \item{- ports, make a really clear section where you explain them }
-  \item{- arguments, show in your background what these are and how they relate. }
-  \item{- TCP ports, what are they used for, how do we connect to them}
-  \item{- parse either a coma ......explain parsing and why this is required}
-  \item{- CIDR, explain in more detail above. }
-  \item{In fact, success criteria 12 to 16 need explaining within the background to the problem, the list in 1.3 is just a numbered summary of everything you’ve researched and explained in the background. All the points in the success criteria need identifying and explaining more thoroughly, and then the list in 1.3 makes sense of what it is your programs are going to do. --- 9-15: fair enough CIDR is a weird concept at any level so I'll go into more detail on what it is as well as parsing arguments, more detail on all the success criteria especially why they are desirable features etc.}
-  \item{In 1.4 you need to clarify where nmap sits in a PC software stack. And explain what you mean by scanning types. Is there a diagram and more publicly available details on how nmap works that you could copy and refer to? --- I'm not sure what you mean by sits in the software stack and there is a book on nmap that is freely and publicly available on the internet as a collection of webpages. --- Is nmap an application at level 7, taking user commands, but translating and running code at layer 4??? Whatever you can add to describe nmap in more detail will be great.}
-  \item{Data dictionary. You now start to think about how your code will work. A data dictionary is the first stab at what data you will store temporarily in Ram or what your application may commit to secondary storage. In the real world this is important to know so that the useable Ram would not be  compromised.  In this section it normally uses a table where you identify the main data types and the amount of data for each scenario. If you were on a rocket going to mars the Ram is limited!! Every app we write has been carefully vetted to ensure we don’t run out of space!! Joke!! --- I believe my scanner uses very little memory but I could go into some of the specific data structures I have used and how expensive they are? --- Exactly. You must be using some registers and data storage for all the data you receive etc.}
+  \item{\sout{I think anything you mention in the success criteria should be discussed and explained in the analysis and background beforehand. For example, }}
+  \item{\sout{- ports, make a really clear section where you explain them }}
+  \item{\sout{- arguments, show in your background what these are and how they relate. }}
+  \item{\sout{- TCP ports, what are they used for, how do we connect to them}}
+  \item{\sout{- parse either a coma ......explain parsing and why this is required}}
+  \item{\sout{- CIDR, explain in more detail above. }}
+  \item{\sout{In fact, success criteria 12 to 16 need explaining within the background to the problem, the list in 1.3 is just a numbered summary of everything you’ve researched and explained in the background. All the points in the success criteria need identifying and explaining more thoroughly, and then the list in 1.3 makes sense of what it is your programs are going to do. --- 9-15: fair enough CIDR is a weird concept at any level so I'll go into more detail on what it is as well as parsing arguments, more detail on all the success criteria especially why they are desirable features etc.}}
+  \item{\sout{In 1.4 you need to clarify where nmap sits in a PC software stack. And explain what you mean by scanning types. Is there a diagram and more publicly available details on how nmap works that you could copy and refer to? --- I'm not sure what you mean by sits in the software stack and there is a book on nmap that is freely and publicly available on the internet as a collection of webpages. --- Is nmap an application at level 7, taking user commands, but translating and running code at layer 4??? Whatever you can add to describe nmap in more detail will be great.}}
+  \item{\sout{Data dictionary. You now start to think about how your code will work. A data dictionary is the first stab at what data you will store temporarily in Ram or what your application may commit to secondary storage. In the real world this is important to know so that the useable Ram would not be  compromised.  In this section it normally uses a table where you identify the main data types and the amount of data for each scenario. If you were on a rocket going to mars the Ram is limited!! Every app we write has been carefully vetted to ensure we don’t run out of space!! Joke!! --- I believe my scanner uses very little memory but I could go into some of the specific data structures I have used and how expensive they are? --- Exactly. You must be using some registers and data storage for all the data you receive etc.}}
   \item{1.9 - you’ve made too many references to why you have done, this section is supposed to be how you are going to do it. Firstly, make mention to the prototyping you did. This is where I asked you guys to take lots of screenshots of when you were trialling things. You need to re-write this to imagine you are writing down how you propose to approach the design before actually going ahead with it. --- ok so I actually still have a lot of the screen shots so I think rewriting this should be ok, I can show each of my prototyping steps for each one etc.}
   \item{Then in the data flow diagrams you can identify what data packets are created in which modules of your code and how they are sent to the lower layers of the OSI model via the python interfaces.}
+
+
+  \item{Please change “super convenient” to “efficient” and explain in a bit more detail why by explaining what you would have to do if you couldn’t use it.}
+
+  \item{I love the ladder diagram on page 7 but can you show a very simple version with just the main packets within the explanation on page 5 within the paragraphs at the top of the page. It will really help the wonderful explanation.}
+
 \end{enumerate}
 
+\section{section notes}
 
-I hope this helps Sam. I know there is a lot above. Read through my ideas a few times before you start so that you know where to add things and I hope you agree. \\
-                    
+\begin{itemize}
+  \item{1.2 What does it mean for a firewall to drop a packet. Explain what tcp rst packet and what this doesn’t help.  Some very simple ladder diagrams will be huge benefit for your explanation of the sequence of messages on pages 9, 10 and 11 These are great explanations, are there any documents you can refer to such as the protocols!!!! V important to get these references to back up your wonderful research. If you only have them on paper we can get them scanned or just use screen grabs.  I love your description on page 14!!! Make the title of 1.3 just ‘Success Criteria’}
 
-Keep going!! It’s excellent. I just want the examiner to be really clear on the amount of excellent knowledge and research you have gathered
+  \item{1.4 Could you get some screen grabs of what nmap looks like. Are there any others? Doesn’t wireshark also do this Sam?? Get some reviews of nmap, show some blurb from ‘its’ website?? What will yours do differently?? If not anything that’s fine, but it would be good for you to explain what you are doing differently by you actually writing the code to generate the platform on which to perform the testing. }
+
+  \item{1.5 Did you get chance to speak to mr Blake or mccarroll?? They could be mentioned here. But it’s fine except I wondered if you could explain a bit more here what you mean by a banner. }
+
+  \item{1.6 Add what data your program will need to create and store during a straightforward running of one or more of the signalling sequences you are intending to run.   This is a very straightforward section that students often get confused about. It’s to highlight what data and the amounts of data we need to manage. The recent Boeing disasters are the result of  software malfunctions and may well be due to storage requirements of something quite simple. You don’t need to go into massive detail in the analysis. But it’s important to show you have though through the data storage requirements. }
+
+  \item{1.7 The data you show in 1.6 needs to be created somehow and some programs may pass it around several clients or databases or software modules.  What will you programs do with the data, are you going to store it? If part of your success criteria was to hold all of the data from a signal in a file, so it could be compared against success or unsuccessful packets in the future you would explain here where it is being saved and draw a simple filing structure. Are you storing any long term data??}
+
+  \item{1.8 Where does the data originate such as IP addresses. Or ports. Are they entered by the user, or generated by the program or retrieved from a file? How about arguments? These are all entered by the user I believe. But explain here. It can all go in a simple table. }
+
+  \item{1.9 You need a diagram to show how you your code will link with the other modules.  You could also show a simple example of your python here. This section is a general overview of your solution and what you will write and how you will test it. Go bonkers here on the level of detail. I would like to see a lot more, think about how you would explain what you’ve got to do to someone like Mr Tuson. It’s supposed to have enough detail so a new person picking her analysis section up could go ahead with the design section (but they would know how to program - not Mr Tuson)}
+
+  \item{2.1 More diagrams of how your modules will connect. With ladder diagrams.  Lots of ladder diagrams And explanations of the processing of the data when you receive the responses/acknowledgment or don’t receive correct signals??!?}
+
+  \item{2.2 Screen grabs of examples from your prototypes  Show screengrabs of simulations or nmap to show how they do it??}
+
+  \item{2.3 Flowcharts of your code v important.  As many as possible!!!!}
+
+  \item{2.4 Yo must have to validate the arguments and the commands????? Explain in detail how this will work. }
+
+  \item{2.5 Excellent! Are there more to add????}
+
+  \item{2.6 Details about the data storage in run time and persistent, as for analysis stage but here you will know ‘exactly’ what you will need }
+
+\end{itemize}
 \end{document}

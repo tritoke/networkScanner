@@ -3,23 +3,26 @@
 \usepackage{graphicx} % for embedding pictures
 \usepackage{wrapfig} % for use with figures
 \usepackage{tikz} % for doing flow charts and stuff directly inside of latex
-\usepackage{shapes.geometric, arrows} % stuff for tikz
+\usepackage{framed} % if you want a frame around a figure
 \usepackage[hidelinks]{hyperref} % allows embedding links
-\usepackage[dvipsnames]{xcolor} % gives me some colours by name
 \usepackage[T1]{fontenc} % fixes weird font size/encoding issues
+\usepackage[utf8]{inputenc} % ensures input is UTF-8
 \usepackage{listings} % used to format code
 \usepackage{algorithm} % used with the below package to format psuedo code
 \usepackage[noend]{algpseudocode}
 \usepackage{mathtools} % used for all the mathematical notation
 \usepackage{etaremune} % enumerate backwards for OSI model
+\usepackage{booktabs} % used for tables and making them look slick as
 \usepackage{placeins} % used to ensure everything stays inside where it is 
 % defined, i.e. subsections jumping above figures etc.
 \usepackage[nopostdot]{glossaries} % guess what. It manages glossaries
 \setacronymstyle{long-short}
 \makenoidxglossaries{}
 
+% load the glossary
 \loadglsentries{glossary}
 
+% define some colours for code
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -40,6 +43,54 @@
 }
 
 
+% diagramming options
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [
+  rectangle,
+  rounded corners,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=black,
+  fill=red!30
+]
+\tikzstyle{io} = [
+  trapezium,
+  trapezium left angle=60,
+  trapezium right angle=120,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=black,
+  trapezium stretches=true,
+  fill=blue!30
+]
+\tikzstyle{process} = [
+  rectangle,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  text width=3cm,
+  draw=black,
+  fill=orange!30
+]
+\tikzstyle{decision} = [
+  diamond,
+  minimum width=3cm,
+  minimum height=1cm,
+  text centered,
+  draw=black,
+  aspect=2,
+  fill=green!30
+]
+\tikzstyle{arrow} = [
+  thick,
+  ->,
+  =stealth
+]
+
+
 % forces [sub]sections to contain everything that is defined before the next one
 \let\Oldsection\section{}
 \renewcommand{\section}{\FloatBarrier\Oldsection}
@@ -56,7 +107,6 @@
 \title{A Level Computer Science Non-Examined Assessment (NEA)}
 \date{} % this forces no date to be shown
 
-
 \begin{document}
 
 \maketitle
@@ -67,11 +117,11 @@
 
 \subsection{Identification and Background to the Problem}
 
-The problem I am trying to solve with my project is how to look at devices on a network
-from a ``\gls{bbox}'' perspective and gain information about what \glspl{service} are running etc.
-Services are programs which their entire purpose is to provide a \textit{\gls{service}} to other
-programs, for example a server hosting a website would be running a \gls{service} whose purpose
-is to send the webpage to people who try to connect to the website. \\
+The problem I am trying to solve with my project is how to look at devices on a network from a 
+``\gls{bbox}'' perspective and gain information about what \glspl{service} are running etc. Services 
+are programs which their entire purpose is to provide a \textit{\gls{service}} to other programs, 
+for example a server hosting a website would be running a \gls{service} whose purpose is to send the 
+webpage to people who try to connect to the website. \\ 
 There are many steps in-between a device turning on to interacting with the internet.
 
 \begin{enumerate}
@@ -81,38 +131,78 @@ There are many steps in-between a device turning on to interacting with the inte
   \item{Get assigned an \gls{ipaddr}}
 \end{enumerate}
 
-There are many more steps than I have listed above but these are the most important ones.
-Starting from a linux computer being switched on the first step is that the \gls{kernel} needs to
-load the networking \glspl{driver}. The \gls{kernel} is the basis for the operating system, it
-is what interacts with the hardware in the most fundamental way. \glspl{driver} are small
-bits of code which the \gls{kernel} can load in order to interact with certain hardware modules such
-as the \gls{nic} which is essential for interfacing with the network, hence the name.
+There are many more steps than I have listed above but these are the most important ones. Starting 
+from a linux computer being switched on the first step is that the \gls{kernel} needs to load the 
+networking \glspl{driver}. The \gls{kernel} is the basis for the operating system, it is what 
+interacts with the hardware in the most fundamental way. \glspl{driver} are small bits of code which 
+the \gls{kernel} can load in order to interact with certain hardware modules such as the \gls{nic} 
+which is essential for interfacing with the network, hence the name.
 
-Next once the \gls{kernel} has loaded the required \glspl{driver} and the system has booted the networking
-`\glspl{daemon}' must be started. In linux a \gls{daemon} is a program that runs all the time in the background
-to serve a specific purpose or utility. For example when I start my laptop the following \glspl{daemon} start
-\gls{upow} (power management), \gls{sysd} (manages the creation of all processes), \gls{dbus} (manages
-inter-process communication), iwd (manages my WiFi connections) and finally \gls{dhcpcd} which manages all
-interactions with the network around \gls{dhcp}.
+Next once the \gls{kernel} has loaded the required \glspl{driver} and the system has booted the 
+networking `\glspl{daemon}' must be started. In linux a \gls{daemon} is a program that runs all the 
+time in the background to serve a specific purpose or utility. For example when I start my laptop 
+the following \glspl{daemon} start \gls{upow} (power management), \gls{sysd} (manages the creation 
+of all processes), \gls{dbus} (manages inter-process communication), iwd (manages my WiFi 
+connections) and finally \gls{dhcpcd} which manages all interactions with the network around 
+\gls{dhcp}.
 
-Once the \glspl{daemon} are all started the \gls{dhcp} client can now take issue commands to the daemon
-for it to carry out. The \gls{dhcp} client is simply a daemon that runs in the background to carry out any
-interactions between the current machine and the \gls{dhcp} server. The \gls{dhcp} server is normally the
-WiFi router or network switch for the local network and it manages a list of which computer has which
-\gls{ipaddr} and negotiates with new computers trying to join a network to get them a free \gls{ipaddr}.
-The \gls{dhcp} client starts by sending a discover message with the address 255.255.255.255 which
-is the IP limited broadcast address which means that whatever is listening at the other end will forward
-this \gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} (normally the router,
-sometimes a separate machine) on the subnet receives this message it reserves a free \gls{ipaddr} for that
-client and then responds with a \gls{dhcp} offer which contains the address the \gls{server} is offering,
-the length of time the address is valid for and the \gls{subnet} mask of the network. The client must then
-respond with a \gls{dhcp} request message to request the offered address, this is in case of multiple DHCP
-servers offering addresses. Finally the \gls{dhcp} server responds with a \gls{dhcp} acknowledge message
-showing that it has received the request. Figure~\ref{dhcp_negotiate} shows a \gls{pkt} capture from my
-laptop where I turned WiFi off, started wireshark listening and plugged in an Ethernet cable, I have it
-showing only the \gls{dhcp} \glspl{pkt} so that it is clear to see the entire \gls{dhcp} negotiation
-including the 255.255.255.255 limited broadcast destination address and the 0.0.0.0 unassigned address
-in the source column.
+Once the \glspl{daemon} are all started the \gls{dhcp} client can now take issue commands to the 
+daemon for it to carry out. The \gls{dhcp} client is simply a daemon that runs in the background to 
+carry out any interactions between the current machine and the \gls{dhcp} server. The \gls{dhcp} 
+server is normally the WiFi router or network switch for the local network and it manages a list of 
+which computer has which \gls{ipaddr} and negotiates with new computers trying to join a network to 
+get them a free \gls{ipaddr}. The \gls{dhcp} client starts the \gls{dhcp} address negotiation with 
+the server by sending a discover message with the address 255.255.255.255 which is the IP limited 
+broadcast address which means that whatever is listening at the other end will forward this 
+\gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} (normally the router, 
+sometimes a separate machine) on the subnet receives this message it reserves a free \gls{ipaddr} 
+for that client and then responds with a \gls{dhcp} offer which contains the address the 
+\gls{server} is offering, the length of time the address is valid for and the \gls{subnet} mask of 
+the network. The client must then respond with a \gls{dhcp} request message to request the offered 
+address, this is in case of multiple DHCP servers offering addresses. Finally the \gls{dhcp} server 
+responds with a \gls{dhcp} acknowledge message showing that it has received the request. 
+Figure~\ref{dhcp_negotiate} shows a \gls{pkt} capture from my laptop where I turned WiFi off, 
+started wireshark listening and plugged in an Ethernet cable, I have it showing only the \gls{dhcp} 
+\glspl{pkt} so that it is clear to see the entire \gls{dhcp} negotiation including the 
+255.255.255.255 limited broadcast destination address and the 0.0.0.0 unassigned address in the 
+source column. I mention using wireshark to do packet capturing above without explaining what either 
+packet capturing or wireshark are so I will do that here. Packets I define below and wireshark is 
+simply a tool which intercepts all the network communications on a single computer and records them 
+to a file as well as displaying them to the user as well as performing some analysis and dissecting 
+each of the protocols used. This means that I can record the \gls{dhcp} negotiation shown below and 
+show it to you using wireshark to get all the information out of the packets being sent over the 
+wire.
+\begin{figure}[H]
+
+  \begin{framed}
+
+  \centering
+  \begin{tikzpicture}[node distance=2cm]
+
+    \node (nic) [process] {Network Interface Card};
+    \node (router) [process, below of=nic] {router / network switch};
+    \node (daemon) [process, right of=nic, xshift=2cm] {\gls{dhcp} daemon};
+    \node (client) [process, right of=daemon, xshift=2cm] {\gls{dhcp} client};
+    \node (server) [process, right of=router, xshift=2cm] {\gls{dhcp} server};
+
+    \draw [arrow] (nic) -- (router);
+    \draw [arrow] (router) -- (nic);
+    \draw [arrow] (server) -- (router);
+    \draw [arrow] (router) -- (server);
+    \draw [arrow] (nic) -- (daemon);
+    \draw [arrow] (daemon) -- (nic);
+    \draw [arrow] (client) -- (daemon);
+    \draw [arrow] (daemon) -- (client);
+
+  \end{tikzpicture}
+
+  \end{framed}
+
+  \caption{%
+    A block diagram showing the relationship between
+    different elements of a \gls{dhcp} negotiation.
+  }\label{dhcpdiagram}
+\end{figure}
 
 \begin{figure}[H]
   \centering
@@ -132,64 +222,57 @@ All computer networking is encapsulated in the \gls{osi} which has 7 layers:
   \item{Physical: The physical Ethernet cabling/\gls{nic}.}
 \end{etaremune}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{screenshots/osi_model.png}
   \caption{%
     OSI model diagram, source: https://www.electronicdesign.com
   }\label{osi_model}
 \end{figure}
+Each of these layers is essential to the running of the internet but a single communication might 
+not include all of the layers. These communications are all based on the most fundamental part of 
+the internet: the \gls{pkt}. Packets are sequences of ones and zeros sent between computers which 
+are used to transfer data as well as to control how networks function. They consist of different 
+layers of information each specifying where the \gls{pkt} where should go next at a different level 
+along with fundamentally the data/instructions contained in the innermost layer. When \glspl{pkt} 
+are sent between computers a certain number of layers are stripped off by each computer so that it 
+knows where to send the \gls{pkt} next at which point it will add all the layers back again, this 
+time with the instructions needed to go from the current computer to the next one on its route. Each 
+of these layers actually consists of a number of fields at the start called a \gls{header} some 
+layers also append a footer to the end of the packet. The actual data being transferred in the 
+packet can be quite literally anything, \gls{http} transfers websites so \gls{html} files and images 
+etc\ldots. In particular there are two pieces of information stored in headers which together define 
+the final destination of the packet: the \gls{ipaddr} and the \gls{port} number. The \gls{ipaddr} 
+defines the destination machine and the \gls{port} number defines which ``port'' on the remote 
+machine the packet should be sent to. Ports are essential entrances to a computer, for example if a 
+computer was a hotel the \gls{ipaddr} would be the address and location of the hotel and the 
+\gls{port} number would be the room inside the hotel. There are 65535 \glspl{port} and 0 is a 
+special reserved port. Both \gls{tcp} and \gls{udp} use \glspl{port}, \gls{tcp} \glspl{port} are 
+mainly used for transferring data where reliability is a concern, as \gls{tcp} has built in checks 
+for packet loss whereas \gls{udp} does not and as such is used for purposes where speed is more 
+important and missing some data is inconsequential, such as video streaming and playing games. 
 
-Each of these layers is essential to the running of the internet but a single communication
-might not include all of the layers.
-
-These communications are all based on the most fundamental part of the internet: the \gls{pkt}.
-Packets are sequences of ones and zeros sent between computers which are used to transfer
-data as well as to control how networks function. They consist of different layers of 
-information each specifying where the \gls{pkt} where should go next at a different level
-along with fundamentally the data/instructions contained in the innermost layer. When \glspl{pkt}
-are sent between computers a certain number of layers are stripped off by each computer so
-that it knows where to send the \gls{pkt} next at which point it will add all the layers back
-again, this time with the instructions needed to go from the current computer to the next
-one on its route. Each of these layers actually consists of a number of fields at the start
-called a \gls{header} some layers also append a footer to the end of the packet. The actual
-data being transferred in the packet can be quite literally anything, \gls{http} transfers
-websites so \gls{html} files and images etc\ldots. In particular there are two pieces of
-information stored in headers which together define the final destination of the packet:
-the \gls{ipaddr} and the \gls{port} number. The \gls{ipaddr} defines the destination machine
-and the \gls{port} number defines which ``port'' on the remote machine the packet should
-be sent to. Ports are essential entrances to a computer, for example if a computer
-was a hotel the \gls{ipaddr} would be the address and location of the hotel and the
-\gls{port} number would be the room inside the hotel. There are 65535 \glspl{port} and 0 is a
-special reserved port. Both \gls{tcp} and \gls{udp} use \glspl{port}, \gls{tcp} \glspl{port}
-are mainly used for transferring data where reliability is a concern, as \gls{tcp} has built in
-checks for packet loss whereas \gls{udp} does not and as such is used for purposes where speed
-is more important and missing some data is inconsequential, such as video streaming and playing
-games.
-
-I'm going to use the example of getting a very
-simple static HTML page with an image inside. The code for the page is shown in
-listing~\ref{examplepage}. In figure~\ref{basicwebpage} you can see how the page renders.
-However far more interestingly is how the browser retrieved the page, in figure~\ref{getrequest}
-you can see the full sequence of \glspl{pkt} that were exchanged for the browser to get the resources
-it needed to render the page. I am hosting the page using python3's http.server module
-which is super convenient and just makes the current directory open on port 8000
-from there I can just navigate to /example.html and it will render the page. Breaking
-figure~\ref{getrequest} down \gls{pkt} one shows the browser receiving the request from
-the user to display \verb|http://192.168.1.47:8000/example.html| and attempting to connect
-to 192.168.1.47 on port 8000. Packets two and three show the negotiation of this request
-through to the full connection being made. The browser now makes an \gls{http} GET
-request for the page example.html over the established TCP connection as shown in \gls{pkt} 4.
-The server then acknowledges the request and sends a \gls{pkt} with the PSH flag set
-as shown in \glspl{pkt} 6 and 7. The PSH flag is a request to the browser to say that it is
-OK to received the buffered data, i.e.\ example.html. The browser then sends back an
-acknowledgement and the server sends the page as shown in \glspl{pkt} 7 and 8. Finally
-the browser sends a final acknowledgement of having received the page before initiating
-a graceful session teardown by sending a FIN ACK \gls{pkt} which indicates the end of a session.
-Once the server responds to the FIN ACK with it's own the browser sends a final acknowledgement.
-This then repeats itself when the browser parses the HTML and realises theres an image which
-it needs to get from the server as well, except the image is a larger file and so takes a few
-more PSH \glspl{pkt}.
+I'm going to use the example of getting a very simple static HTML page with an image inside. The 
+code for the page is shown in listing~\ref{examplepage}. In figure~\ref{basicwebpage} you can see 
+how the page renders. However far more interestingly is how the browser retrieved the page, in 
+figure~\ref{getrequest} you can see the full sequence of \glspl{pkt} that were exchanged for the 
+browser to get the resources it needed to render the page. I am hosting the page using Python3's 
+http.server module which is super convenient and just makes the current directory open on port 8000 
+from there I can just navigate to /example.html and it will render the page. Breaking 
+figure~\ref{getrequest} down \gls{pkt} one shows the browser receiving the request from the user to 
+display \verb|http://192.168.1.47:8000/example.html| and attempting to connect to 192.168.1.47 on 
+port 8000. Packets two and three show the negotiation of this request through to the full connection 
+being made. The browser now makes an \gls{http} GET request for the page example.html over the 
+established TCP connection as shown in \gls{pkt} 4. The server then acknowledges the request and 
+sends a \gls{pkt} with the PSH flag set as shown in \glspl{pkt} 6 and 7. The PSH flag is a request 
+to the browser to say that it is OK to received the buffered data, i.e.\ example.html. The browser 
+then sends back an acknowledgement and the server sends the page as shown in \glspl{pkt} 7 and 8. 
+Finally the browser sends a final acknowledgement of having received the page before initiating a 
+graceful session teardown by sending a FIN ACK \gls{pkt} which indicates the end of a session. Once 
+the server responds to the FIN ACK with it's own the browser sends a final acknowledgement. This 
+then repeats itself when the browser parses the HTML and realises theres an image which it needs to 
+get from the server as well, except the image is a larger file and so takes a few more PSH 
+\glspl{pkt}.
 
 This shows clearly the interaction between each of the different layers in the OSI model,
 the browser at level 7: Application rendering the webpage. Level 6: Presentation is skipped as
@@ -237,42 +320,43 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
 \subsection{Analysis of problem}
 
-The problem with looking at a network from the outside is that the purpose of the network is to
-allow communication inside of the network, thus very little is exposed externally. This presents
-a challenge as we want to know what is on the network as well as what each of them is running which
-is not always possible due to the limited information that \glspl{service} will reveal about themselves.
-Firewalls also play large part in making scanning networks difficult as sometimes they simply drop
-\glspl{pkt} instead of sending a \gls{tcp} RST \gls{pkt} (reset connection \gls{pkt}).
-When firewalls drop \glspl{pkt} it becomes exponentially more difficult as you don't know whether
-your \gls{pkt} was corrupted or lost in transit or if it was just dropped. \\\\
-To demonstrate this I will show three things:
+The problem with looking at a network from the outside is that the purpose of the network is to 
+allow communication inside of the network, thus very little is exposed externally. This presents a 
+challenge as we want to know what is on the network as well as what each of them is running which is 
+not always possible due to the limited information that \glspl{service} will reveal about 
+themselves. Firewalls also play large part in making scanning networks difficult as sometimes they 
+simply drop \glspl{pkt} instead of sending a \gls{tcp} RST \gls{pkt} (reset connection \gls{pkt}). 
+When firewalls drop \glspl{pkt} it becomes exponentially more difficult as you don't know whether 
+your \gls{pkt} was corrupted or lost in transit or if it was just dropped. \\\\ To demonstrate this 
+I will show three things:
 
 \begin{enumerate}
   \item{A successful connection over \gls{tcp}.}
   \item{An attempted connection to a closed port.}
   \item{An attempted connection with a firewall rule to drop packets.}
 \end{enumerate}
-Firstly A successful \gls{tcp} connection. For a \gls{tcp} connection to be established there
-is a three way handshake between the communicating machines. Firstly the machine trying to
-establish the connection sends a \gls{tcp} SYN packet to the other machine, this packet
-holds a dual purpose, to ask for a connection and if it is accepted to SYNchronise the sequence
-numbers being used to detect whether packets have been lost in transport. The receiving machine
-then replies with a \gls{tcp} SYN ACK which confirms the starting sequence number with the SYN part
-and ACKnowledges the connection request. The sending machine then acknowledges this by sending a
-final \gls{tcp} ACK packet back. This connection initialisation is shown in figure~\ref{data_transfer}
-by packets one, two and three. Data transfer can then commence by sending a \gls{tcp} packet with
-the PSH and ACK flags set along with the data in the data portion of the packet, this is shown
-in figure~\ref{data} where wireshark allows us to take a look inside the packet to see the data being
-sent in the packet along with the PSH and ACK flags being set. The code I used to generate these
-is shown in figures~\ref{sender} and~\ref{receiver}. Breaking the code down in figure~\ref{receiver}
-you can see me initialising a socket object then I bind it to localhost (127.0.0.1) port 12345
-localhost is just an address which allows connections between programs running on the same computer
-as connections are looped back onto the current machine, hence its alternative name: the loopback
-address. I then tell it to listen for incoming connections, the one just means how many connections
-to keep as a backlog. I then accept the connection from the program in figure~\ref{sender}, line 3.
-I then tell the program to listen for up to 1024 bytes in the data part of any TCP packets sent.
-The program in figure~\ref{sender} then sends some data which we then see printed to the screen
-in figure~\ref{receiver}, both programs then close the connection.
+
+Firstly A successful \gls{tcp} connection. For a \gls{tcp} connection to be established there is a 
+three way handshake between the communicating machines. Firstly the machine trying to establish the 
+connection sends a \gls{tcp} SYN packet to the other machine, this packet holds a dual purpose, to 
+ask for a connection and if it is accepted to SYNchronise the sequence numbers being used to detect 
+whether packets have been lost in transport. The receiving machine then replies with a \gls{tcp} SYN 
+ACK which confirms the starting sequence number with the SYN part and ACKnowledges the connection 
+request. The sending machine then acknowledges this by sending a final \gls{tcp} ACK packet back. 
+This connection initialisation is shown in figure~\ref{data_transfer} by packets one, two and three. 
+Data transfer can then commence by sending a \gls{tcp} packet with the PSH and ACK flags set along 
+with the data in the data portion of the packet, this is shown in figure~\ref{data} where wireshark 
+allows us to take a look inside the packet to see the data being sent in the packet along with the 
+PSH and ACK flags being set. The code I used to generate these is shown in figures~\ref{sender} 
+and~\ref{receiver}. Breaking the code down in figure~\ref{receiver} you can see me initialising a 
+socket object then I bind it to localhost (127.0.0.1) port 12345 localhost is just an address which 
+allows connections between programs running on the same computer as connections are looped back onto 
+the current machine, hence its alternative name: the loopback address. I then tell it to listen for 
+incoming connections, the one just means how many connections to keep as a backlog. I then accept 
+the connection from the program in figure~\ref{sender}, line 3. I then tell the program to listen 
+for up to 1024 bytes in the data part of any TCP packets sent. The program in figure~\ref{sender} 
+then sends some data which we then see printed to the screen in figure~\ref{receiver}, both programs 
+then close the connection.
 
 \begin{figure}[H]
   \centering
@@ -317,30 +401,31 @@ to port 12345 on localhost again, except this time we get a connection refused e
 this shows us that the remote host sent a \gls{tcp} RST packet back, which is reflected in
 figure~\ref{firewall}.
 
-Finally I will show a connection where the firewall is configured to drop the packet. However first
-I will explain a bit about firewalls and how they work. Firewalls are essentially the gatekeepers
-of the internet they decide whether a packet gets to pass or whether they shall not pass. Firewalls
-work by a set of rules which decide what happens to it. A rule might be that it is coming from a certain
-\gls{ipaddr} or has a certain destination port. The actions taken after the packet has had it's fate
-decided by the rules can be one of the following three (on iptables on linux): ACCEPT, DROP and RETURN,
-accept does exactly what you think it would an lets the packet through, drop quite literally just drops
-the packet and sends no reply whatsoever, return is more complicated and has no effect on how port
-scanning is done and as such we will ignore it. A common set of rules for something like a webserver
-would be to DROP all incoming packets and then allow exceptions for certain ports i.e.\ port 80 for
-\gls{http} or 443 for \gls{https}. I will be using a linux utility called iptables for implementing
-all firewall rules on my system for demonstration purposes. Packet number three in
-figure~\ref{firewall} shows the connection request from line 4 of~\ref{firewall_code} except
-that I have enabled a firewall rule to drop all \glspl{pkt} from the address 127.0.0.1, using
-the iptables command as so: \verb$iptables -I INPUT -s 127.0.0.1 -j DROP$. This command reads
-as for all \glspl{pkt} arriving (\verb|-I INPUT|) with source address 127.0.0.1 (\verb|-s 127.0.0.1|)
-drop them sending no response (\verb|-j DROP|). With this firewall rule in place you can see in
-figure~\ref{firewall} \gls{pkt} 3 receives no response and as such python assumes that the \gls{pkt}
-just got lost and as such tries to send the \gls{pkt} again repeatedly, this continued for more than
-30 seconds before a stopped it as shown by the time column in figure~\ref{firewall} and the final
-\verb|KeyboardInterrupt| in figure~\ref{firewall_code}. The amount of time that a system will wait
-still trying to reconnect depends on the OS and a other factors but the minimum time is 100 seconds
-as specified by RFC 1122, on most systems it will be between 13 and 30 minutes according the
-linux manual page on \gls{tcp}.
+Finally I will show a connection where the firewall is configured to drop the packet. However first 
+I will explain a bit about firewalls and how they work. Firewalls are essentially the gatekeepers of 
+the internet they decide whether a packet gets to pass or whether they shall not pass. Firewalls 
+work by a set of rules which decide what happens to it. A rule might be that it is coming from a 
+certain \gls{ipaddr} or has a certain destination port. The actions taken after the packet has had 
+it's fate decided by the rules can be one of the following three (on iptables on linux): ACCEPT, 
+DROP and RETURN, accept does exactly what you think it would an lets the packet through, drop quite 
+literally just drops the packet and sends no reply whatsoever, return is more complicated and has no 
+effect on how port scanning is done and as such we will ignore it. A common set of rules for 
+something like a webserver would be to DROP all incoming packets and then allow exceptions for 
+certain ports i.e.\ port 80 for \gls{http} or 443 for \gls{https}. I will be using a linux utility 
+called iptables for implementing all firewall rules on my system for demonstration purposes. Packet 
+number three in figure~\ref{firewall} shows the connection request from line 4 
+of~\ref{firewall_code} except that I have enabled a firewall rule to drop all \glspl{pkt} from the 
+address 127.0.0.1, using the iptables command as so: \verb$iptables -I INPUT -s 127.0.0.1 -j DROP$. 
+This command reads as for all \glspl{pkt} arriving (\verb|-I INPUT|) with source address 127.0.0.1 
+(\verb|-s 127.0.0.1|) drop them sending no response (\verb|-j DROP|). With this firewall rule in 
+place you can see in figure~\ref{firewall} \gls{pkt} 3 receives no response and as such Python 
+assumes that the \gls{pkt} just got lost and as such tries to send the \gls{pkt} again repeatedly, 
+this continued for more than 30 seconds before a stopped it as shown by the time column in 
+figure~\ref{firewall} and the final \verb|KeyboardInterrupt| in figure~\ref{firewall_code}. The 
+amount of time that a system will wait still trying to reconnect depends on the OS and a other 
+factors but the minimum time is 100 seconds as specified by RFC 1122, on most systems it will be 
+between 13 and 30 minutes according the linux manual page on \gls{tcp}.
+
 \begin{verbatim}
 man 7 tcp:
 tcp_retries2 (integer; default: 15; since Linux 2.2)
@@ -367,144 +452,379 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
   }\label{firewall_code}
 \end{figure}
 
-Having explained firewalls, how they affect port scanning and other things above I will now
-explain what I am actually trying to achieve with my project and how I am going to do it.
-I am trying to make a tool similar to nmap which will be able to detect the state (as in whether
-the port is open/closed or filtered etc) of ports on remote machines, detect which hosts are up on
-a subnet and finally I want to be able to try to detect what services are listening behind any of
-the ports. I am going to be writing in python version 3.7.2 as it is the latest stable release
-of python 3 and has many features which are not in even fairly recent versions such as 3.5, 
-the biggest one of these being fstrings which are where I can put a single a `f' before a string
-and then any formatting options I put inside using curly braces are expanded and formatted
-accordingly. This allows for a clear and consistent string formatting syntax which I will use
-extensively. I will be using python in particular as a language because it is very readable and
-has extensive low level bindings to C networking functions with the socket module
-allowing me to write code quickly which is easily understandable and has a clear purpose and at
-the same time be able to use low level networking functions and even changing the behaviour at
-this low level with \verb|socket.setsockopt|. As well as this the socket module allows me to
-open sockets that communicate using many different protocols such as \gls{tcp}, \gls{udp} and
-\gls{icmp} just to name a few. These features combine to make python a great language for writing
-networking software with a high level of abstraction. In regards to the OSI model my code will
-sit with the user interface at level 7 specifying what to do at a high level then the actual
-scanning takes place at levels 3, 4 and 5 with host detection being at level 3. Port scanning will
-be taking place At level 4 for \gls{tcp} SYN scanning and \gls{udp} scanning. Whereas \verb|connect()|
-scanning and version detection will sit at level 5. Finally I will look at what is actually
-handling all of the networking on my machine. My machine runs linux and as such all networking
-is handled by system calls to the linux kernel. For example the \verb|socket.connect| method
-is just a call to the underlying linux kernel's connect syscall but presenting a kinder call
-signature to the user as the python socket library does some processing before the syscall is made.
+Having explained firewalls, how they affect port scanning and other things above I will now explain 
+what I am actually trying to achieve with my project and how I am going to do it. I am trying to 
+make a tool similar to nmap which will be able to detect the state (as in whether the port is 
+open/closed or filtered etc) of ports on remote machines, detect which hosts are up on a subnet and 
+finally I want to be able to try to detect what services are listening behind any of the ports. I am 
+going to be writing in Python version 3.7.2 as it is the latest stable release of Python 3 and has 
+many features which are not in even fairly recent versions such as 3.5, the biggest one of these 
+being fstrings which are where I can put a single a `f' before a string and then any formatting 
+options I put inside using curly braces are expanded and formatted accordingly. This allows for a 
+clear and consistent string formatting syntax which I will use extensively. I will be using Python 
+in particular as a language because it is very readable and has extensive low level bindings to C 
+networking functions with the socket module allowing me to write code quickly which is easily 
+understandable and has a clear purpose and at the same time be able to use low level networking 
+functions and even changing the behaviour at this low level with \verb|socket.setsockopt|. As well 
+as this the socket module allows me to open sockets that communicate using many different protocols 
+such as \gls{tcp}, \gls{udp} and \gls{icmp} just to name a few. These features combine to make 
+Python a great language for writing networking software with a high level of abstraction. In regards 
+to the OSI model my code will sit with the user interface at level 7 specifying what to do at a high 
+level then the actual scanning takes place at levels 3, 4 and 5 with host detection being at level 
+3. Port scanning will be taking place At level 4 for \gls{tcp} SYN scanning and \gls{udp} scanning. 
+Whereas \verb|connect()| scanning and version detection will sit at level 5. Finally I will look at 
+what is actually handling all of the networking on my machine. My machine runs linux and as such all 
+networking is handled by system calls to the linux kernel. For example the \verb|socket.connect| 
+method is just a call to the underlying linux kernel's connect syscall but presenting a kinder call 
+signature to the user as the Python socket library does some processing before the syscall is made. 
 
-\subsection{Numbered List of Objectives (also called Success Criteria, the end user requirements)}
+\subsection{Success Criteria}
 
 \begin{enumerate}
+
   \item{%
-    Show a basic usage message when called with no arguments.
+    Probe another computer's networking from a \gls{bbox} perspective.
   }
   \item{%
-    Show a help message when called with \texttt{--help} or \texttt{-h}.
-  
+    Send \gls{icmp} ECHO requests to determine whether a machine is active
+    or not.
   }
   \item{%
-    Scan the 1000 most commonly used \gls{tcp} \glspl{port} when called with just an \gls{ipaddr}.
-  
+    Translate \gls{cidr} specified subnets into a list of domains.
   }
   \item{%
-    Scan the \glspl{port} specified by \texttt{-p <ports>} or \texttt{--ports <ports>}.
-  
+    Detect whether a TCP port is open (can be connected to).
   }
   \item{%
-    Parse either a comma separated list of \glspl{port} e.g.\ \texttt{1,2,3,4}
-    or a range specified set of \glspl{port} e.g. \texttt{1{-}4}
+    Detect whether a TCP port is closed (will refuse connections).
   }
   \item{%
-    Scan all \glspl{port} in each scan type when called with \texttt{-p-}.
-  
+    Detect whether a TCP port is filtered (a firewall is
+    preventing or monitoring access).
   }
   \item{%
-    Don't scan the \glspl{port} specified by \texttt{--exclude-ports <ports>} in any scan.
-  
+    Detect whether a UDP port is open (can be connected to).
   }
   \item{%
-    Expand a \gls{cidr} specified \gls{subnet} when used in the target specification.
-  
+    Detect whether a UDP port is closed (will refuse connections).
   }
   \item{%
-    List all of the \gls{ipaddr}es that would be scanned when given the \texttt{-sL} flag.
-  
+    Detect whether a UDP port is filtered (a firewall is
+    preventing or monitoring access).
   }
   \item{%
-    Only ping each specified address when supplied the \texttt{-sn} flag.
+    Detect the operating system of another machine on the network
+    solely from sending packets to the machine and interpreting the responses.
   }
   \item{%
-    When doing a ping scan (\texttt{-sn}) display the Time To Live (TTL)
-    and latency of each host.
+    Detect what service is listening behind a port.
   }
   \item{%
-    Don't ping each of the hosts before scanning to check if they are
-    up when supplied with the \texttt{-Pn} flag.
+    Detect the version of the service running behind a port.
   }
-  \item{%
-    Perform a \gls{tcp}SYN scan on the 1000 most common
-    \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sS} flag.
-  }
-  \item{%
-    Perform a \gls{tcp} \verb|Connect()| scan on the 1000 most common
-    \gls{tcp} \glspl{port} on each target specified when given the \texttt{-sT} flag.
-  }
-  \item{%
-    Perform a\gls{udp}scan on the 1000 most common\gls{udp}
-    \glspl{port} when on each target specified when given the \texttt{-sU} flag.
-  }
-  \item{%
-    Perform version detection on the \glspl{service} running on
-    each of the hosts specific when given the \texttt{-sV} flag.
-  }
-  \end{enumerate}
+
+\end{enumerate}
 
 \subsection{Description of current system or existing solutions}
 
 Nmap is currently the most popular tool for doing\gls{port}scanning and host enumeration.
-It supports the following scanning types:
+It supports the scanning types for determining information about remote hosts.
 
 \begin{itemize}
-\item{\gls{tcp}:\ SYN}
-\item{\gls{tcp}:\ \verb|Connect()|}
-\item{\gls{tcp}:\ ACK}
-\item{\gls{tcp}:\ Window}
-\item{\gls{tcp}:\ Maimon}
-\item{\gls{tcp}:\ Null}
-\item{\gls{tcp}:\ FIN}
-\item{\gls{tcp}:\ Xmas}
-\item{\gls{udp}}
-\item{Zombie host/idle}
-\item{\gls{sctp}:\ INIT}
-\item{\gls{sctp}:\ COOKIE-ECHO}
-\item{IP protocol scan}
-\item{\gls{ftp}:\ bounce scan}
+  \item{\gls{tcp}:\ SYN}
+  \item{\gls{tcp}:\ \verb|Connect()|}
+  \item{\gls{tcp}:\ ACK}
+  \item{\gls{tcp}:\ Window}
+  \item{\gls{tcp}:\ Maimon}
+  \item{\gls{tcp}:\ Null}
+  \item{\gls{tcp}:\ FIN}
+  \item{\gls{tcp}:\ Xmas}
+  \item{\gls{udp}}
+  \item{Zombie host/idle}
+  \item{\gls{sctp}:\ INIT}
+  \item{\gls{sctp}:\ COOKIE-ECHO}
+  \item{IP protocol scan}
+  \item{\gls{ftp}:\ bounce scan}
 \end{itemize}
 
-As well as supporting a vast array of scanning types it also can do \gls{service} version detection
-and operating system detection via custom probes. Nmap also has script scanning which allows
-the user to write a script specifying exactly how they want to scan e.g.\ to circumvent \gls{port knocking}
-(where \glspl{pkt} must be sent to a sequence of \glspl{port} in order before access to the final\gls{port}is allowed).
-It also supports a plethora of options to avoid firewalls or \gls{ids} such as sending
-\glspl{pkt} with spoofed \glspl{csum}/source addresses and sending decoy probes. Nmap can do many more things than I
-have listed above as is illustrated quite clearly by the fact there is an entire working on using nmap
-(\href{https://nmap.org/book/}{https://nmap.org/book/})
+As well as supporting a vast array of scanning types it also can do \gls{service} version detection 
+and operating system detection via custom probes. Nmap also has script scanning which allows the 
+user to write a script specifying exactly how they want to scan e.g.\ to circumvent \gls{port 
+knocking} (where \glspl{pkt} must be sent to a sequence of \glspl{port} in order before access to 
+the final\gls{port}is allowed). It also supports a plethora of options to avoid firewalls or 
+\gls{ids} such as sending \glspl{pkt} with spoofed \glspl{csum}/source addresses and sending decoy 
+probes. Nmap can do many more things than I have listed above as is illustrated quite clearly by the
+fact there is an entire working on using nmap 
+(\href{https://nmap.org/book/}{https://nmap.org/book/}). The following is an example nmap scan
+which I did on my home network: \verb|nmap -sC -sV -oA networkscan 192.168.1.0/24|. Breaking
+it down this means to enable script scanning \verb|-sc|, enable version detection \verb|-sV|
+and then output all results in all the common formats: XML, nmap and greppable, using the
+base name \verb|networkscan| which produces three files: \verb|networkscan.(nmap,gnmap,xml)|.
+Before I go into what each file contains I will explain some terminology, greppable is anything
+which can be easily searched with the linux \verb|grep| which stands for Globally search a Regular
+Expression and Print, which basically means look in files for lines that contain a certain word
+or pattern, for example finding all lines with the word ``hi'' in them in the file ``document''
+\verb|grep hi document|. Onto the files: \verb|networkscan.nmap| contains what would usually
+be printed by nmap while the scan is being run, it looks like this:
+\begin{verbatim}
+# Nmap 7.70 scan initiated Wed Apr 10 19:36:18 2019 as:
+    nmap -sC -sV -oA /home/tritoke/thing 192.168.1.0/24
+Nmap scan report for router.asus.com (192.168.1.1)
+Host is up (1.0s latency).
+Not shown: 995 closed ports
+PORT     STATE SERVICE    VERSION
+53/tcp   open  domain     (generic dns response: NOTIMP)
+| fingerprint-strings: 
+|   DNSVersionBindReqTCP: 
+|     version
+|_    bind
+80/tcp   open  http       ASUS WRT http admin
+|_http-server-header: httpd/2.0
+|_http-title: Site doesn't have a title (text/html).
+515/tcp  open  printer
+8443/tcp open  ssl/http   ASUS WRT http admin
+|_http-server-header: httpd/2.0
+|_http-title: Site doesn't have a title (text/html).
+| ssl-cert: Subject: commonName=192.168.1.1/countryName=US
+| Not valid before: 2018-05-05T05:05:17
+|_Not valid after:  2028-05-05T05:05:17
+9100/tcp open  jetdirect?
+1 service unrecognized despite returning data. If you know the service/version,
+please submit the following fingerprint at
+https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port53-TCP:V=7.70%I=7%D=4/10%Time=5CAE3DC5%P=x86_64-pc-linux-gnu%r(DNSV
+SF:ersionBindReqTCP,20,"\0\x1e\0\x06\x85\x85\0\x01\0\0\0\0\0\0\x07version\
+SF:x04bind\0\0\x10\0\x03")%r(DNSStatusRequestTCP,E,"\0\x0c\0\0\x90\x04\0\0
+SF:\0\0\0\0\0\0");
+Service Info: CPE: cpe:/o:asus:wrt_firmware
+\end{verbatim}
+Above is just the report for one such device in the report as the full thing is over 200 lines lone.
+In it you can see information such as which ports are open and what services are running behind them
+as this is my router you can see port 8443 which nmap has recognised to be hosting the ASUS web
+admin from which you can configure the route. Then after than some other associated information
+extracted from the server. Most of this extra information is from the \verb|-sC| flag which is
+script scanning and allows advanced interaction with running services specifically to gain more
+information by providing specialised probing per protocol. We can also see at the end an
+unrecognised service which nmap shows us the data it returned and asks us to submit a new service
+report at a given URL if we recognise the service. This system of submitting fingerprints of
+services is how nmap is so good at recognising services: it has a lot of data to look at and learn
+from in regards to service fingerprinting.
+
+Next \verb|networkscan.gnmap|:
+\begin{verbatim}
+# Nmap 7.70 scan initiated Wed Apr 10 19:36:18 2019 as:
+    nmap -sC -sV -oA /home/tritoke/networkscan 192.168.1.0/24
+Host: 192.168.1.1 (router.asus.com)	Status: Up
+Host: 192.168.1.1 (router.asus.com)	Ports: 53/open/tcp//domain//
+      (generic dns response: NOTIMP)/, 80/open/tcp//http//ASUS WRT http admin/,
+      515/open/tcp//printer///, 8443/open/tcp//ssl|http//ASUS WRT http admin/,
+      9100/open/tcp//jetdirect?///	Ignored State: closed (995)
+Host: 192.168.1.8 (android-25a97e36c2e74456)	Status: Up
+Host: 192.168.1.8 (android-25a97e36c2e74456)	Ports: 5060/filtered/tcp//sip///
+      Ignored State: closed (999)
+\end{verbatim}
+Again this is not all of the file as it is very large. As you can see above all of the information 
+is on a single line for each type of scan, this is useful if you want to scan a large number of 
+hosts and just want to know which hosts are up you can do \verb|grep 'Status: Up' networkscan.gnmap|
+which outputs this:
+\begin{verbatim}
+$ grep 'Status: Up' networkscan.gnmap
+Host: 192.168.1.1 (router.asus.com)	Status: Up
+Host: 192.168.1.8 (android-25a97e36c2e74456)	Status: Up
+Host: 192.168.1.10 (diskstation)	Status: Up
+Host: 192.168.1.88 ()	Status: Up
+Host: 192.168.1.88 ()	Status: Up
+Host: 192.168.1.117 ()	Status: Up
+Host: 192.168.1.159 (groot)	Status: Up
+Host: 192.168.1.159 (groot)	Status: Up
+Host: 192.168.1.176 (ET0021B7C01F2E)	Status: Up
+\end{verbatim}
+Showing you clearly the hosts which are online and then their host names. Other ways to use this
+output format would be to find out which ports are open on only one machine, or which hosts have a
+webserver running on them or a vulnerable version of a mail server etc. In general it is useful for
+when you want to filter results.
+
+Finally we have \gls{xml} format:
+\lstset{language=xml}
+\begin{lstlisting}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.70 scan initiated Wed Apr 10 19:36:18 2019 as: nmap -sC -sV -oA /home/tritoke/thing 192.168.1.0/24 -->
+<nmaprun scanner="nmap" args="nmap -sC -sV -oA /home/tritoke/thing 192.168.1.0/24" start="1554921378" startstr="Wed Apr 10 19:36:18 2019" version="7.70" xmloutputversion="1.04">
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1554921379" endtime="1554923187"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="192.168.1.1" addrtype="ipv4"/>
+<hostnames>
+<hostname name="router.asus.com" type="PTR"/>
+</hostnames>
+<ports><extraports state="closed" count="995">
+<extrareasons reason="conn-refused" count="995"/>
+</extraports>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="domain" extrainfo="generic dns response: NOTIMP" servicefp="SF-Port53-TCP:V=7.70%I=7%D=4/10%Time=5CAE3DC5%P=x86_64
+-pc-linux-gnu%r(DNSVersionBindReqTCP,20,&quot;\0\x1e\0\x06\x85\x85\0
+\x01\0\0\0\0\0\0\x07version\x04bind\0\0\x10\0\x03&quot;)%r
+(DNSStatusRequestTCP,E,&quot;\0\x0c\0\0\x90\x04\0\0\0\0\0\0\0\0&quot;);" method="probed" conf="10"/><script id="fingerprint-strings" output="&#xa;  DNSVersionBindReqTCP: &#xa;    version&#xa;    bind"><elem key="DNSVersionBindReqTCP">&#xa;    version&#xa;    bind</elem>
+</script></port>
+\end{lstlisting}
+It is verbose in the extreme contains the reason why each port has the state it does as well as a
+vast amount of other data that the other scans didn't include as well as this it is not very human
+readable meaning that this format is more likely available because it is easier for other programs
+to parse than the other formats. As well as this the verbosity can be good if you really need to
+dive into why a port was marked as closed etc or the exact bytes that a service replied with.
+
+In terms of where nmap lives in the software stack is that it is an application at level 7 when the
+user interacts with it but it uses several libraries which interact at level 2 which it uses to get
+the raw headers of the packets being sent and thus gain information from them.
+
+\begin{figure}[H]
+
+  \begin{framed}
+
+  \centering
+  \begin{tikzpicture}[node distance=2cm]
+
+    \node (user) [process] {User};
+    \node (nmap) [process, right of=user, xshift=2cm] {nmap};
+    \node (nic) [process, right of=nmap, xshift=2cm] {Network Interface Card};
+    \node (router) [process, below of=nic] {router / network switch};
+    \node (target) [process, below of=router] {target server};
+    \node (dnsserver) [process, left of=target, xshift=-2cm] {\gls{dns} client};
+
+    \draw [arrow] (nic) -- (router);
+    \draw [arrow] (router) -- (nic);
+    \draw [arrow] (target) -- (router);
+    \draw [arrow] (router) -- (target);
+    \draw [arrow] (dnsserver) |- (router);
+    \draw [arrow] (router) -| (dnsserver);
+    \draw [arrow] (nic) -- (nmap);
+    \draw [arrow] (nmap) -- (nic);
+    \draw [arrow] (user) -- (nmap);
+    \draw [arrow] (nmap) -- (user);
+
+  \end{tikzpicture}
+
+  \end{framed}
+
+  \caption{%
+    A block diagram showing how nmap sits in the software stack.
+  }\label{nmapblock}
+
+\end{figure}
+
+\begin{figure}[H]
+  \hspace{2cm}
+  \begin{framed}
+
+  \centering
+  \begin{tikzpicture}[node distance=2cm]
+
+    \node (start) [startstop] {start nmap};
+    \node (get) [io, below of=start] {get user input};
+    \node (arguments) [process, below of=get] {parse the arguments};
+    \node (host) [process, below of=arguments] {begin scanning host};
+    \node (probe) [process, right of=host, xshift=2cm] {send probe};
+    \node (response) [process, below of=probe] {receive and interpret probe};
+    \node (probes) [decision, below of=response, yshift=-0.5cm] {more probes to send?};
+    \node (hosts) [decision, left of=probes, below of=probes, xshift=-2cm, yshift=-0.5cm] {more hosts to scan?};
+    \node (report) [io, below of=hosts, yshift=-0.5cm] {report results};
+    \node (end) [startstop, below of=report] {end scan};
+
+    \draw [arrow] (start) -- (get);
+    \draw [arrow] (get) -- (arguments);
+    \draw [arrow] (arguments) -- (host);
+    \draw [arrow] (host) -- (probe);
+    \draw [arrow] (probe) -- (response);
+    \draw [arrow] (response) -- (probes);
+    \draw [arrow] (probes) -- ([xshift=1cm]probes.east) node[anchor=east,yshift=2.25cm] {yes} |- (probe.east);
+    \draw [arrow] (probes) -| node[anchor=south,xshift=0.8cm] {no} (hosts);
+    \draw [arrow] (hosts) -- ([xshift=-1cm]hosts.west) node[anchor=east,yshift=3.5cm] {no} |- (host);
+    \draw [arrow] (hosts) node[anchor=east,yshift=-1.5cm] {yes} -- (report);
+    \draw [arrow] (report) -- (end);
+
+  \end{tikzpicture}
+
+  \end{framed}
+
+  \caption{%
+    A flow chart showing how nmap does scanning.
+  }\label{nmapflow}
+
+\end{figure}
 
 \subsection{Prospective Users}
 
-The prospective users of this system would be system administrators, penetration testers or network engineers.
-In my case my prospective users would be my school's system administrators and it would allow them to see an
-outsiders perspective on for example the \gls{server} running the school's website page or to see if any of the
-programs on the \glspl{server} were leaking information through \glspl{banner} etc. (most \glspl{service} send a \gls{banner} with
-information like what protocol version they use and other information)
+The prospective users of this system would be system administrators, penetration testers or network
+engineers. In my case my prospective users would be my school's system administrators and it would 
+allow them to see an outsiders perspective on for example the \gls{server} running the school's 
+website page or to see if any of the programs on the \glspl{server} were leaking information
+through \glspl{banner} etc. (most \glspl{service} send a \gls{banner} with information like what
+protocol version they use and other information) 
 
 \subsection{Data Dictionary}
 
-\textbf{\color{red}{I looked this up and it seemed to be related to database management systems.}}
+So while my program is running it will need to store many different things in memory:
+\begin{itemize}
+  \item{the list of hosts to scan}
+  \item{the list of ports to scan on each host}
+  \item{the state of each port we are scanning on each host}
+  \item{the packet received by the listening socket (temporarily before processing)}
+  \item{various counters and positional indicators are almost inevitable}
+  \item{the probes to be used for version detection}
+\end{itemize}
+So I am going to try to estimate the amount of RAM my program will use based on scanning a 
+\gls{cidr} specified subnet of 192.168.1.0/24, and the most common ports 1000 ports of each machine
+I will not consider version detection as I am unsure of how I will implement it currently.
+To measure the size of object in python we can use the \verb|getsizeof| function provided by the
+\verb|sys| module, I also have a file called `hosts' which contains the addresses specified by
+192.168.1.0/24 and a file `ping\_bytes' which contains 4 captured packets from the ping command
+which I captured during an early exploratory testing phase.
+\lstset{language=python}
+\begin{lstlisting}[label=testingsize,caption=some testing I did on the size of python objects]
+>>> with open("hosts", "r") as f:
+...     hosts = f.read().splitlines()
+... 
+>>> import sys
+>>> sys.getsizeof(hosts)
+2216
+>>> ports = list(range(1000))
+>>> sys.getsizeof(ports)
+9112
+>>> len(hosts)*sys.getsizeof(ports) / 2**10  # 2*10 is one kibibyte
+2278.0
+>>> sys.getsizeof(True)
+28
+>>> len(hosts)*(sys.getsizeof(True)) / 2**10
+7.0
+>>> pings[0]
+'45 00 00 54 0f 82 40 00 40 01 2d 25 7f 00 00 01 7f 00 00 01 08 00 41 c5 02 4f 00 01 cd ef 0f 5c de 9b 0d 00 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37'
+>>> from binascii import unhexlify
+>>> ping = unhexlify(pings[0].replace(" ", ""))  # turn the string of numbers into a bytes object
+>>> sys.getsizeof(ping)
+117
+>>> len(hosts)*sys.getsizeof(ping) / 2**10
+29.25
+>>> 2278.0 + 7.0 + 29.25 + 2.22
+2316.47
+\end{lstlisting}
+As shown in Listing~\ref{testingsize} we can see that by far the most space intensive item stored
+by our program will be the port numbers for each host, making up just less that ninety six percent
+of the total space used by the mock data I created. However overall 2.3 mebibytes is not a huge
+amount of data by any means.
 
-\href{https://en.wikipedia.org/wiki/Data_dictionary}{https://en.wikipedia.org/wiki/Data\_dictionary}
+\begin{center}
+  \begin{tabular}{p{3cm} l r r}
+    \toprule
+    Holding    & Data type   & Space used /Kib & Percentage of total \\
+    \midrule
+    ports      & List[int]   & 2278            & 98.34 \\
+    hosts      & List[str]   & 2.22            & 0.1   \\
+    port state & List[bool]  & 7               & 0.3   \\
+    packets    & List[bytes] & 29.25           & 1.26  \\
+    \bottomrule
+  \end{tabular}
+\end{center}
 
 \subsection{Data Flow Diagram}
 
@@ -514,43 +834,18 @@ before version detection and finally displaying to the user. Make a flowchart fo
 
 \href{https://en.wikipedia.org/wiki/Data-flow_diagram<Paste>}{https://en.wikipedia.org/wiki/Data-flow\_diagram}
 
-\subsection{Data Sources}
+\subsection{Description of Solution Details}
 
-\textbf{\color{red}{Not really sure about this.}}
+I will be using Python version 3.7.2 for my project because I am already familiar with Python's
+syntax and it's socket library has a very nice high level \gls{api} for making system calls to
+the kernel's low level networking functions. This makes it very nice for a networking project
+like mine as it allows me to easily prototype and explore many ideas about how I could implement
+my solution without wasting vast amounts of time.
 
-\subsection{Description of Solution Details, OOP/Mobile/Networking}
+The first point of the success criteria that I wanted to get a feel for was receiving and sending
+\gls{icmp} ECHO requests aka pings. \gls{icmp} as a protocol sits at layer 3 of the 
 
-To do all forms of scanning other than \verb|Connect()| scanning and version detection, custom
-\glspl{pkt} are made to allow the \gls{half open} (no full connection is made to the host) scanning
-used in\gls{tcp}SYN scanning. Making custom \glspl{pkt} is quite difficult because the endianness
-(the order the bytes are interpreted in: big endian, most significant byte first, little endian,
-least significant byte first) affects how all the information packed into the \gls{pkt} is interpreted
-by the network switch, for example the\gls{ipaddr}192.168.1.58 packed in big endian form but interpreted
-being in little endian form comes out as 58.1.168.192 which is a completely different address and
-will mean the \gls{pkt} is not routed to the correct host. As well as the issues with byte order
-and the interpretation of information at different points the \gls{csum} which is embedded into
-the \gls{pkt} is calculated from a psuedo-header calculated from information in the underlying
-IP \gls{header} and all of this has to be calculated in the right byte order (endianness).
-
-I have used Python's multiprocessing module to allow me to spawn another process which listens
-for responses from hosts and waits for a certain amount of time before returning information
-on what hosts responded and in the case of ping scanning also metadata about how they responded.
-
-In version detection scanning the relationship between the data sources and modules used is quite
-complex so I have used an \gls{oop} approach to group the methods
-that act on the data along with the data itself. For example each probe defined in the \verb|nmap-service-probes|
-file can be sent to a host and matched against a list of match directives stored in the probe,
-the probe class has a scan method which sends it's probe to the host and then automatically runs
-match and soft-match directives against the information returned by the probe.
-
-Parsing the match and softmatch directives was quite difficult because they include regular
-expressions with special characters such as newlines and carriage returns in the form of
-\verb|\n| and \verb|\r| characters which python escapes to \verb|\\n|
-and \verb|\\r|. Which instead of matching a newline character and a carriage return
-will match a literal backslash and then an n or an r which is not what we want. To fix this I have to substitute
-newline and carriage returns back in where I find \verb|\\r| and \verb|\\r|.
-
-\subsection{Acceptable Limitations (Supplementary)}
+\subsection{Acceptable Limitations}
 
 Originally I had planned to include dedicated operating system detection as an option
 however I ran out of time having implemented version detection. However it still does
@@ -558,15 +853,12 @@ Operating system detection partially as some \glspl{service} are linux only and 
 \gls{service} and version detection especially the \gls{cpe} parts
 of the matched \gls{service}/version will contain operating system information, such as
 microsoft ActiveSync would indicate that the system being scanned was a windows system
-which is reflected in the match directive and attached CPE information: \texttt{%
-match activesync m|{\textasciicircum}.{\textbackslash}0{\textbackslash}x01{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0[{\textasciicircum}{\textbackslash}0]{\textbackslash}0.*{\textbackslash}0{\textbackslash}0{\textbackslash}0\$|s p/Microsoft ActiveSync/ o/Windows/ cpe:/a:microsoft:activesync/ cpe:/o:microsoft:windows/a
-}
-
-
-\subsection{Data Volumes (Supplementary)}
-
-\textbf{\color{red}{This seems to be about the volume of data stored in a database.}}
-\href{https://stackoverflow.com/questions/5566841/what-are-data-volumes#5567390}{https://stackoverflow.com/questions/5566841/what-are-data-volumes\#5567390}
+which is reflected in the match directive and attached CPE information:
+\begin{verbatim}
+match activesync m|^.\0\x01\0[^\0]\0[^\0]\0[^\0]\0[^\0]\0[^\0]\0.*
+\0\0\0$|s p/Microsoft ActiveSync/ o/Windows/ cpe:/a:microsoft:acti
+vesync/ cpe:/o:microsoft:windows/a
+\end{verbatim}
 
 \subsection{Test Strategy}
 
@@ -578,16 +870,17 @@ I am going to use two different methods to test my program:
 I am using two separate testing strategies because they are both good at different things,
 both of which I need to show that my project works. Firstly I am using unit testing to test
 some general purpose functions which are pure functions (are independent of the current state
-of the machine) such as \verb|ip_range()| and other functions which I can
-just check the returned value against what it should be.
+of the machine) such as \verb|ip_range()| and other functions which I can just check the returned
+value against what it should be.
 
-Wireshark is useful for the other half of the program which uses impure functions and the
-low level networking e.g.\ \verb|make_tcp_packet()|. Wireshark makes this easy by allowing capture of all
-the \glspl{pkt} going over the wire, as well as this it has a vast array of \gls{pkt} decoders (2231 in my install)
-which it can use to dissect almost any \gls{pkt} that would be on the network. The main
-benefit of wireshark is that I can see my scanners sending \glspl{pkt} and then check whether the parsers
-that I have written for the different protocols are working. I can also check that the \glspl{csum}
-in each of the various protocols is valid as wireshark does \gls{csum} verification for various protocols.
+Wireshark is useful for the other half of the program which uses impure functions and the low level 
+networking e.g.\ \verb|make_tcp_packet()|. Wireshark makes this easy by allowing capture of all the 
+\glspl{pkt} going over the wire, as well as this it has a vast array of \gls{pkt} decoders (2231 in 
+my install) which it can use to dissect almost any \gls{pkt} that would be on the network. The main 
+benefit of wireshark is that I can see my scanners sending \glspl{pkt} and then check whether the 
+parsers that I have written for the different protocols are working. I can also check that the 
+\glspl{csum} in each of the various protocols is valid as wireshark does \gls{csum} verification for 
+various protocols. 
 
 \section{Design}
 
@@ -599,32 +892,34 @@ There are two types of scanning implemented for different scan types in my progr
   \item{version}
   \item{listener / sender}
 \end{itemize}
-\verb|Connect()| scanning is the simplest in that it takes in a list of \glspl{port} and simply calls the
-\verb|socket.connect()| method on it and sees whether it can connect or not and the \glspl{port} are
-marked accordingly as open or closed.
+\verb|Connect()| scanning is the simplest in that it takes in a list of \glspl{port} and simply 
+calls the \verb|socket.connect()| method on it and sees whether it can connect or not and the 
+\glspl{port} are marked accordingly as open or closed. 
 
-Version scanning is very similar to \verb|Connect()| scanning in that it takes in a list of \glspl{port}
-and connects to them, except it then sends a probe to the target to elicit a response and gain
-some information about the \gls{service} running behind the \gls{port}.
+Version scanning is very similar to \verb|Connect()| scanning in that it takes in a list of 
+\glspl{port} and connects to them, except it then sends a probe to the target to elicit a response 
+and gain some information about the \gls{service} running behind the \gls{port}.
 
-Listener / sender scanning does exactly what it says on the tin: it sets up a ``listener'' in another process
-to listen for responses from the host which the ``sender'' is sending \glspl{pkt} to. It can then differentiate
-between open, open|filtered, filtered and closed \glspl{port} based on whether it receives a \gls{pkt} back
-and what flags (part of\gls{tcp} \glspl{pkt} are a one byte long section which store ``flags'' where each bit in the
-byte represents a different flag) are set in the received \gls{pkt}.
+Listener / sender scanning does exactly what it says on the tin: it sets up a ``listener'' in 
+another process to listen for responses from the host which the ``sender'' is sending \glspl{pkt} 
+to. It can then differentiate between open, open|filtered, filtered and closed \glspl{port} based on 
+whether it receives a \gls{pkt} back and what flags (part of\gls{tcp} \glspl{pkt} are a one byte 
+long section which store ``flags'' where each bit in the byte represents a different flag) are set 
+in the received \gls{pkt}. 
 
 \subsection{Design of User Interfaces HCI}
 
-I have designed my system to have a similar interface to the most common tool currently used: nmap
-this is because I believe that having a familiar interface will not only make it easier for someone who
-is familiar with nmap to use my tool it also makes it so that anything learnt using either tool is applicable
-to both which benefits everyone.
+I have designed my system to have a similar interface to the most common tool currently used: nmap 
+this is because I believe that having a familiar interface will not only make it easier for someone 
+who is familiar with nmap to use my tool it also makes it so that anything learnt using either tool 
+is applicable to both which benefits everyone.
 
-Based on this perception I have used the same option flags as nmap as well as similar help messages
+Based on this perception I have used the same option flags as nmap as well as similar help messages 
 and an identical call signature (how the program is used on the command line). Running 
-\verb|./netscan.py <options> <target_spec>| is identical to \verb|nmap <options> <target_spec>| in terms
-of which scan types will be run, which hosts will be scanned and which \glspl{port} are scanned. Below you can see
-the help message generated by \verb|./netscan.py --help|.
+\verb|./netscan.py <options> <target_spec>| is identical to \verb|nmap <options> <target_spec>| in 
+terms of which scan types will be run, which hosts will be scanned and which \glspl{port} are 
+scanned. Below you can see the help message generated by \verb|./netscan.py --help|.
+
 \begin{verbatim}
 usage: netscan.py [-h] [-Pn] [-sL] [-sn] [-sS] [-sT] [-sU] [-sV] [-p PORTS]
                   [--exclude_ports EXCLUDE_PORTS]
@@ -656,16 +951,16 @@ scanning as it is more immediately obvious what the more verbose flags do.
 
 \subsection{System Algorithms (Flowcharts)}
 
-\textbf{\color{Emerald}{When I have finished the first draft of the text bits I will add pictures / flowcharts}}
+\textbf{\color{red}{When I have finished the first draft of the text bits I will add pictures / flowcharts}}
 
 \subsection{Input data Validation}
 
-My program takes very little input from the user which means that there is a very low chance of the program
-crashing due to user input error as the errors are detected
-All data which is entered is either parsed using a regular expression with the case of the
-\glspl{port} directive (\verb|-p|) or is run through checking functions like \verb|ip_utils.is_valid_ip|.
-As well as using these checking functions whenever an\gls{ipaddr}is converted between ``long form''
-and ``dot form'' which is used in every type of scanning.
+My program takes very little input from the user which means that there is a very low chance of the 
+program crashing due to user input error as the errors are detected All data which is entered is 
+either parsed using a regular expression with the case of the \glspl{port} directive (\verb|-p|) or 
+is run through checking functions like \verb|ip_utils.is_valid_ip|. As well as using these checking 
+functions whenever an\gls{ipaddr}is converted between ``long form'' and ``dot form'' which is used 
+in every type of scanning.
 
 \subsection{Proposed Algorithms for complex structures (flow charts or Pseudo Code)}
 

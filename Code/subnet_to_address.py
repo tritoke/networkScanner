@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import re
-from modules.ip_utils import ip_range
+from modules.ip_utils import ip_range, dot_to_long
 
 
 if __name__ == '__main__':
@@ -16,4 +16,9 @@ if __name__ == '__main__':
     search = CIDR_regex.search(args.ip_subnet)
     if search:
         ip, network_bits = search.group(1).split("/")
-        print("\n".join(ip_range(ip, int(network_bits))))
+        print("\n".join(
+            sorted(
+                ip_range(ip, int(network_bits)),
+                key=dot_to_long
+            )
+        ))
