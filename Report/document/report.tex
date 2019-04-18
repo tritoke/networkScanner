@@ -44,8 +44,9 @@
 
 
 % diagramming options
-\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta, positioning}
 
+% flow chart styles
 \tikzstyle{startstop} = [
   rectangle,
   rounded corners,
@@ -89,6 +90,50 @@
   ->,
   =stealth
 ]
+
+% data flow diagram styles
+\tikzstyle{function} = [
+  circle,
+  inner sep=0pt,
+  draw=black,
+  minimum width=1cm,
+  minimum height=1cm,
+  text width=2cm,
+  text centered,
+  fill=red!20
+]
+\tikzstyle{inputoutput} = [
+  rectangle,
+  draw=black,
+  minimum width=3cm,
+  minimum height=1cm,
+  text width=3cm,
+  text centered,
+  fill=blue!20
+]
+\tikzstyle{datastore} = [
+  rectangle,
+  inner sep=0pt,
+  minimum height=1cm,
+  minimum width=3cm,
+  text width=3cm,
+  text centered,
+  fill=green!20
+]
+\tikzstyle{method} = [
+  rectangle,
+  draw=black,
+  fill=gray!30,
+  minimum width=2cm,
+  minimum height=0.5cm,
+  text centered
+]
+
+% ladder diagram lines
+\tikzstyle{connecting arrow} = [-{Latex[length=2mm, width=3mm, green]}]
+\tikzstyle{closing arrow} = [-{Latex[length=2mm, width=3mm, red]}]
+\tikzstyle{normal arrow} = [-{Latex[length=2mm, width=3mm, blue]}]
+\tikzstyle{with slope} = [above, midway, sloped]
 
 
 % forces [sub]sections to contain everything that is defined before the next one
@@ -272,7 +317,10 @@ graceful session teardown by sending a FIN ACK \gls{pkt} which indicates the end
 the server responds to the FIN ACK with it's own the browser sends a final acknowledgement. This 
 then repeats itself when the browser parses the HTML and realises theres an image which it needs to 
 get from the server as well, except the image is a larger file and so takes a few more PSH 
-\glspl{pkt}.
+\glspl{pkt}. In figures~\ref{getrequestladder} and~\ref{ladder} you can see a set of ladder diagrams
+which show the entire transaction symbolically. I have also colour coded figure~\ref{ladder} with
+green arrow heads to the initial handshakes, blue for the HTTP protocol transactions and red for
+the TCP connection teardown packets.
 
 This shows clearly the interaction between each of the different layers in the OSI model,
 the browser at level 7: Application rendering the webpage. Level 6: Presentation is skipped as
@@ -305,6 +353,42 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
   \caption{%
     Ladder diagram of figure~\ref{getrequest}.
   }\label{getrequestladder}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+  \begin{tikzpicture}
+    \node[rectangle,minimum width=.8\textwidth,minimum height=.8\textheight] (ladder) {};
+      \draw[black,very thick] (ladder.north west) -- (ladder.south west);
+      \draw[black,very thick] (ladder.north east) -- (ladder.south east);
+    \node[above of=ladder, xshift=-4.5cm,yshift=7cm] (local 0) {local machine};
+    \node[above of=ladder, xshift=4.5cm, yshift=7cm] (web 0) {webserver};
+    \foreach \i [count=\j from 0]in {1,...,14}{
+      \node [below=0.85cm of local \j] (local \i) {};
+      \node [below=0.85cm of web \j] (web \i) {};
+    }
+
+    \draw[connecting arrow] (local 0) -- node[with slope] {SYN} (web 1);
+    \draw[connecting arrow]   (web 1) -- node[with slope] {SYN, ACK} (local 2);
+    \draw[connecting arrow] (local 2) -- node[with slope] {ACK} (web 3);
+    \draw[normal arrow]     (local 3) -- node[with slope] {HTTP GET /example.html} (web 4);
+    \draw[normal arrow]       (web 4) -- node[with slope] {HTTP 200 OK} (local 5);
+    \draw[closing arrow]    (local 5) -- node[with slope] {FIN, ACK} (web 6);
+    \draw[closing arrow]      (web 6) -- node[with slope] {ACK} (local 7);
+    \draw[connecting arrow] (local 7) -- node[with slope] {SYN} (web 8);
+    \draw[connecting arrow]   (web 8) -- node[with slope] {SYN, ACK} (local 9);
+    \draw[connecting arrow] (local 9) -- node[with slope] {ACK} (web 10);
+    \draw[normal arrow]    (local 10) -- node[with slope] {HTTP GET /document/screenshots/packet\_drop.png} (web 11);
+    \draw[normal arrow]      (web 11) -- node[with slope] {HTTP 200 OK} (local 12);
+    \draw[closing arrow]   (local 12) -- node[with slope] {FIN, ACK} (web 13);
+    \draw[closing arrow]     (web 13) -- node[with slope] {ACK} (local 14);
+
+  \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    A simplified ladder diagram showing the transaction in figure~\ref{getrequest}
+  }\label{ladder}
 \end{figure}
 
 \begin{figure}[H]
@@ -828,11 +912,53 @@ amount of data by any means.
 
 \subsection{Data Flow Diagram}
 
-\textbf{\color{red}{This seems to be fairly relevant and to do with how data goes through my program
-    i.e.\ going from the network to my port scanner into a target object and other scanners
-before version detection and finally displaying to the user. Make a flowchart for this.}}
+In my application there will be three way information flow: 
+\begin{enumerate}
+  \item{sending packets (data) out from my application}
+  \item{receiving packets back from the targets}
+  \item{how my program sends data around between functions}
+\end{enumerate}
 
-\href{https://en.wikipedia.org/wiki/Data-flow_diagram<Paste>}{https://en.wikipedia.org/wiki/Data-flow\_diagram}
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+  \begin{tikzpicture}[node distance=2cm]
+    % \node [function] (no) {hi};
+    % \node [inputoutput, below of=no] (beans) {for you};
+    \node [inputoutput] (input) {Get User Input};
+    \node [function, below of=input, yshift=-0.5cm] (hosts) {Generate List of Hosts and Ports to Scan};
+    \node [function, below of=hosts, yshift=-1cm] (listen) {Start Listener};
+    \node [function, below of=listen, yshift=-1cm] (create) {Create the \gls{tcp} / \gls{udp} / \gls{icmp} Probes};
+    \node [inputoutput, below of=create, yshift=-0.5cm] (send) {Send the Probes to the Hosts Specified};
+    \node [function, below of=send,yshift=-0.3cm] (stop) {Stop Listener};
+    \node [datastore, right of=stop, xshift=2cm, yshift=2.3cm] (responses) {Receive and Store the Responses};
+      \draw [black,very thick] (responses.north west) -- (responses.north east);
+      \draw [black,very thick] (responses.south west) -- (responses.south east);
+    \node [function, below of=stop, yshift=-1cm] (return) {Return the Information About Each Host};
+    \node [inputoutput, right of=return, xshift=2cm] (finish) {Output Information to User};
+    \node [method,left of=listen, xshift=-1.5cm] {\verb|socket.accept|};
+    \node [method,left of=create, xshift=-1.5cm, text width=2.6cm] {\verb|struct.pack| \verb|socket.connect|};
+    \node [method,left of=send, xshift=-1.5cm] {\verb|socket.sendto|};
+    \node [method,left of=stop, xshift=-1.5cm] {\verb|socket.close|};
+    \node [method,right of=responses,yshift=1.2cm,xshift=-0.62cm,text width=2.4cm] {\verb|socket.recv| \verb|struct.unpack|};
+
+    \path[arrow]{
+      (input) edge node [right] {} (hosts)
+      (hosts) edge node [right] {} (listen)
+      (listen) edge node [right] {} (create)
+      (create) edge node [right] {} (send)
+      (send) edge node [right] {} (stop)
+      (listen) edge[bend left] node [left] {} (responses)
+      (responses) edge[bend left] node [left] {} (stop)
+      (stop) edge node [right] {} (return)
+      (return) edge node[bend right] [right] {} (finish)
+    };
+  \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    A data flow digram for information in my application.
+  }\label{dataflow}
+\end{figure}
 
 \subsection{Description of Solution Details}
 
@@ -1302,15 +1428,7 @@ in every type of scanning.
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Design Data Dictionary}
-
-\textbf{\color{red}{I have no idea what this means.
-All I can find is that it relates to database structure???}}
-
 \section{Technical Solution}
-
-\subsection{Program Listing} 
-\subsection{Comments (Core)}
 
 \subsection{Overview to direct the examiner to areas of complexity and explain design evidence}
 
@@ -1329,10 +1447,51 @@ All I can find is that it relates to database structure???}}
 \subsection{Potential improvements}
 
 \section{Appendices}
+\lstset{language=python}
 
-You may show you program listing here
+\subsection{icmp\_ping}
+\lstinputlisting[caption=A prototype program for sending ICMP ECHO REQEST packets,label=icmpechosend]{../../Code/icmp_ping/icmp_echo_send.py}
+\lstinputlisting[caption=A prototype program for receiving ICMP ECHO REQEST packets,label=icmpechorecv]{../../Code/icmp_ping/icmp_echo_recv.py}
 
-User feedback and survey data
+\subsection{ping\_scanner}
+\lstinputlisting[caption=A prototype program for performing `ping' scans,label=pingscanner]{../../Code/ping_scanner/ping_scan.py}
+
+\subsection{subnet\_to\_addresses}
+\lstinputlisting[caption=A program which translates a CIDR specified subnet into a list of addresses and prints them out in sorted order,label=subnettoaddresses]{../../Code/subnet_to_address.py}
+
+\subsection{tcp\_scan}
+\verb|Connect()| scanning
+\lstinputlisting[caption=prototype TCP Connect() scanner only attempting to detect the state of port 22,label=connectsshattempt]{../../Code/tcp_scan/connect_scan/ssh_attempt.py}
+\lstinputlisting[caption=A program that performs TCP Connect() scanning, label=connectscanportlist]{../../Code/tcp_scan/connect_scan/scan_port_list.py}
+
+SYN scanning
+\lstinputlisting[caption=A prototype program that tries to detect the state of port 22 via TCP SYN scanning (aka half open scanning),label=synsshattempt]{../../Code/tcp_scan/syn_scan/ssh_attempt.py}
+\lstinputlisting[caption=A program that performs TCP SYN scanning (aka half open scanning),label=synscanportlist]{../../Code/tcp_scan/syn_scan/scan_port_list.py}
+
+\subsection{udp\_scan}
+\lstinputlisting[caption=A prototype program to detect whether UDP port 53 is open on a target machine, label=dnsattempt]{../../Code/udp_scan/dns_attempt.py}
+\lstinputlisting[caption=A program for performing scans on UDP ports.,label=udpscanportlist]{../../Code/udp_scan/scan_port_list.py}
+\lstinputlisting[caption=A program I made to open a port via UDP for testing my UDP scanner.,label=openxport]{../../Code/udp_scan/open_X_port_to_UDP.py}
+
+\subsection{version\_detection}
+\lstinputlisting[caption=A program which does version detection on services.,label=versiondetection]{../../Code/version_detection/version_detection.py}
+
+\subsection{modules}
+\lstinputlisting[caption=A python module I wrote for parsing and holding the version detection probes from the nmap\_service\_probes file.,label=directives]{../../Code/modules/directives.py}
+\lstinputlisting[caption=A python module I made to dissect and hold protocol headers.,label=headers]{../../Code/modules/headers.py}
+\lstinputlisting[caption=A python module I wrote to contain lots of useful functions which I found I was declaring in multiple places and makign changes so I decided to keep an up to date central one.,label=iputils]{../../Code/modules/ip_utils.py}
+\lstinputlisting[caption=A python module I made to hold all of the listeners I had made for each of the different scanning types.,label=listeners]{../../Code/modules/listeners.py}
+\lstinputlisting[caption=A python module I made to hold all of the scanners I had made for each of the different scanning types.,label=scanners]{../../Code/modules/scanners.py}
+
+\subsection{examples}
+\lstinputlisting[caption=A program I wrote to run all of the example scripts I made from one main script to solve the issue of the PATH being used for determining import when I could use Pythons built in module structure instead.,label=runexamples]{../../Code/run_examples.py}
+
+\subsection{netscan}
+\lstinputlisting[caption=The program which provides the command line user interface for my projects functionality.,label=netscan]{../../Code/netscan.py}
+
+\subsection{tests}
+\lstinputlisting[caption=A few unit tests I wrote to cover some basic functions that I use as underpinnings for a lot of my other work so I wanted to make sure I hadn't accidentally broken any of them.,label=tests]{../../Code/tests/test_ip_utils.py}
+
 
 \clearpage
 \printnoidxglossaries{}

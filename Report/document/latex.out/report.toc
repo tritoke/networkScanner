@@ -29,8 +29,6 @@
 \contentsline {subsection}{\numberline {6.2}ping\_scanner}{42}{subsection.6.2}% 
 \contentsline {subsection}{\numberline {6.3}subnet\_to\_addresses}{44}{subsection.6.3}% 
 \contentsline {subsection}{\numberline {6.4}tcp\_scan}{45}{subsection.6.4}% 
-\contentsline {subsubsection}{\numberline {6.4.1}connect\_scan}{45}{subsubsection.6.4.1}% 
-\contentsline {subsubsection}{\numberline {6.4.2}syn\_scan}{46}{subsubsection.6.4.2}% 
 \contentsline {subsection}{\numberline {6.5}udp\_scan}{49}{subsection.6.5}% 
 \contentsline {subsection}{\numberline {6.6}version\_detection}{54}{subsection.6.6}% 
 \contentsline {subsection}{\numberline {6.7}modules}{59}{subsection.6.7}% 

@@ -14,12 +14,8 @@
   \item{\sout{In 1.4 you need to clarify where nmap sits in a PC software stack. And explain what you mean by scanning types. Is there a diagram and more publicly available details on how nmap works that you could copy and refer to? --- I'm not sure what you mean by sits in the software stack and there is a book on nmap that is freely and publicly available on the internet as a collection of webpages. --- Is nmap an application at level 7, taking user commands, but translating and running code at layer 4??? Whatever you can add to describe nmap in more detail will be great.}}
   \item{\sout{Data dictionary. You now start to think about how your code will work. A data dictionary is the first stab at what data you will store temporarily in Ram or what your application may commit to secondary storage. In the real world this is important to know so that the useable Ram would not be  compromised.  In this section it normally uses a table where you identify the main data types and the amount of data for each scenario. If you were on a rocket going to mars the Ram is limited!! Every app we write has been carefully vetted to ensure we don’t run out of space!! Joke!! --- I believe my scanner uses very little memory but I could go into some of the specific data structures I have used and how expensive they are? --- Exactly. You must be using some registers and data storage for all the data you receive etc.}}
   \item{\sout{1.9 - you’ve made too many references to why you have done, this section is supposed to be how you are going to do it. Firstly, make mention to the prototyping you did. This is where I asked you guys to take lots of screenshots of when you were trialling things. You need to re-write this to imagine you are writing down how you propose to approach the design before actually going ahead with it. --- ok so I actually still have a lot of the screen shots so I think rewriting this should be ok, I can show each of my prototyping steps for each one etc.}}
-  \item{Then in the data flow diagrams you can identify what data packets are created in which modules of your code and how they are sent to the lower layers of the OSI model via the python interfaces.}
-
-
-  \item{Please change “super convenient” to “efficient” and explain in a bit more detail why by explaining what you would have to do if you couldn’t use it.}
-
-  \item{I love the ladder diagram on page 7 but can you show a very simple version with just the main packets within the explanation on page 5 within the paragraphs at the top of the page. It will really help the wonderful explanation.}
+  \item{\sout{Then in the data flow diagrams you can identify what data packets are created in which modules of your code and how they are sent to the lower layers of the OSI model via the python interfaces.}}
+  \item{\sout{I love the ladder diagram on page 7 but can you show a very simple version with just the main packets within the explanation on page 5 within the paragraphs at the top of the page. It will really help the wonderful explanation.}}
 
 \end{enumerate}
 
@@ -51,6 +47,20 @@
   \item{2.5 Excellent! Are there more to add????}
 
   \item{2.6 Details about the data storage in run time and persistent, as for analysis stage but here you will know ‘exactly’ what you will need }
+
+  \item{1.1 a simple diagram or 2 on page 4 and/or 5 to show the flow of signals and the laptop/server just to give an overview.  I still do think there is opportunity to add more ladder diagrams to aid the excellent description}
+
+  \item{1.7 this shows where does the data used within your program originate and where is it stored, it should be a quite simple diagram for you.}
+
+  \item{1.10 you need more description on how you will actually test it, maybe an example of a command and arguments, and what this will run on i.e one laptop, or a whole network of supercomputers, you need to basically identify the test environment, any ip addresses you would use or need setting up. Give an overview of how it is set up in a diagram??  What software would you need to run it, what applications on the laptop, what commands etc}
+
+  \item{2.1 as mentioned earlier today, the nice description in 2.1 contains information that is sort of sprung out of the blue, this needs mentioneding in the analysis and potential solutions, apologies of you have and I have missed it.}
+
+  \item{2.2 I'm a bit confused, here is a list what netscan supports, are you using the same commands and arguments? Show here the commands your code will run,  but either here or in the user interface section or in 2.4 you need to list all of the commands and the parameters the user can enter, and how to get it running, and the error messages that will arise if the user enters an illegal argument or command}
+
+  \item{2.3 add flowcharts of how your code performs its internal processes, I'm not sure how we link in to the ladder diagrams, i.e.\ you code flowhart initiates a signal, it awaits a response, it then acts on the type of signal and data accordingly, but it would be nice to show the link between your code and the signals being sent and received. Have a think.}
+
+  \item{2.4 please do make a full attempt at identifying every command and argument that you want to be able to process, clearly explain the system to ensure the user can't add incorrect arguments and how this is handled,}
 
 \end{itemize}
 \end{document}

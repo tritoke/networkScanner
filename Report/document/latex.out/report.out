@@ -29,11 +29,9 @@
 \BOOKMARK [2][-]{subsection.6.2}{ping\137scanner}{section.6}% 29
 \BOOKMARK [2][-]{subsection.6.3}{subnet\137to\137addresses}{section.6}% 30
 \BOOKMARK [2][-]{subsection.6.4}{tcp\137scan}{section.6}% 31
-\BOOKMARK [3][-]{subsubsection.6.4.1}{connect\137scan}{subsection.6.4}% 32
-\BOOKMARK [3][-]{subsubsection.6.4.2}{syn\137scan}{subsection.6.4}% 33
-\BOOKMARK [2][-]{subsection.6.5}{udp\137scan}{section.6}% 34
-\BOOKMARK [2][-]{subsection.6.6}{version\137detection}{section.6}% 35
-\BOOKMARK [2][-]{subsection.6.7}{modules}{section.6}% 36
-\BOOKMARK [2][-]{subsection.6.8}{examples}{section.6}% 37
-\BOOKMARK [2][-]{subsection.6.9}{netscan}{section.6}% 38
-\BOOKMARK [2][-]{subsection.6.10}{tests}{section.6}% 39
+\BOOKMARK [2][-]{subsection.6.5}{udp\137scan}{section.6}% 32
+\BOOKMARK [2][-]{subsection.6.6}{version\137detection}{section.6}% 33
+\BOOKMARK [2][-]{subsection.6.7}{modules}{section.6}% 34
+\BOOKMARK [2][-]{subsection.6.8}{examples}{section.6}% 35
+\BOOKMARK [2][-]{subsection.6.9}{netscan}{section.6}% 36
+\BOOKMARK [2][-]{subsection.6.10}{tests}{section.6}% 37
