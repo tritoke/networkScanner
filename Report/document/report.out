@@ -12,7 +12,7 @@
 \BOOKMARK [1][-]{section.2}{Design}{}% 12
 \BOOKMARK [2][-]{subsection.2.1}{Overall System Design \(High Level Overview\)}{section.2}% 13
 \BOOKMARK [2][-]{subsection.2.2}{Design of User Interfaces HCI}{section.2}% 14
-\BOOKMARK [2][-]{subsection.2.3}{System Algorithms \(Flowcharts\)}{section.2}% 15
+\BOOKMARK [2][-]{subsection.2.3}{System Algorithms}{section.2}% 15
 \BOOKMARK [2][-]{subsection.2.4}{Input data Validation}{section.2}% 16
 \BOOKMARK [2][-]{subsection.2.5}{Proposed Algorithms for complex structures \(flow charts or Pseudo Code\)}{section.2}% 17
 \BOOKMARK [1][-]{section.3}{Technical Solution}{}% 18
@@ -29,11 +29,9 @@
 \BOOKMARK [2][-]{subsection.6.2}{ping\137scanner}{section.6}% 29
 \BOOKMARK [2][-]{subsection.6.3}{subnet\137to\137addresses}{section.6}% 30
 \BOOKMARK [2][-]{subsection.6.4}{tcp\137scan}{section.6}% 31
-\BOOKMARK [3][-]{subsubsection.6.4.1}{connect\137scan}{subsection.6.4}% 32
-\BOOKMARK [3][-]{subsubsection.6.4.2}{syn\137scan}{subsection.6.4}% 33
-\BOOKMARK [2][-]{subsection.6.5}{udp\137scan}{section.6}% 34
-\BOOKMARK [2][-]{subsection.6.6}{version\137detection}{section.6}% 35
-\BOOKMARK [2][-]{subsection.6.7}{modules}{section.6}% 36
-\BOOKMARK [2][-]{subsection.6.8}{examples}{section.6}% 37
-\BOOKMARK [2][-]{subsection.6.9}{netscan}{section.6}% 38
-\BOOKMARK [2][-]{subsection.6.10}{tests}{section.6}% 39
+\BOOKMARK [2][-]{subsection.6.5}{udp\137scan}{section.6}% 32
+\BOOKMARK [2][-]{subsection.6.6}{version\137detection}{section.6}% 33
+\BOOKMARK [2][-]{subsection.6.7}{modules}{section.6}% 34
+\BOOKMARK [2][-]{subsection.6.8}{examples}{section.6}% 35
+\BOOKMARK [2][-]{subsection.6.9}{netscan}{section.6}% 36
+\BOOKMARK [2][-]{subsection.6.10}{tests}{section.6}% 37

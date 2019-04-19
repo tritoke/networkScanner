@@ -1343,9 +1343,35 @@ a short format e.g.\ \verb|-p| and with a most verbose format \verb|--ports| thi
 the user to be clearer if they are using the tool as part of an automated script to perform
 scanning as it is more immediately obvious what the more verbose flags do.
 
-\subsection{System Algorithms (Flowcharts)}
+\subsection{System Algorithms}
 
-\textbf{\color{red}{When I have finished the first draft of the text bits I will add pictures / flowcharts}}
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+    \begin{tikzpicture}[node distance=2cm]
+      \node [startstop] (start) {start};
+      \node [io, below of=start, text width=3cm] (input) {get list of addresses to scan};
+      \node [process, below of=input] (listener) {start listener};
+      \node [decision, below of=listener, text width=3cm, yshift=-0.8cm] (loop) {are there more addresses to scan?};
+      \node [process, right of=loop, xshift=3.2cm] (get) {get the next address to scan};
+      \node [io, below of=get, text width=3cm] (send) {send \gls{icmp} ECHO REQUEST};
+      \node [process, below of=loop, yshift=-2cm] (wait) {wait for listener to return results};
+      \node [process, below of=wait] (output) {return the results to the user};
+      \node [startstop, below of=output] (end) {end};
+
+      \draw [arrow] (start) -- (input);
+      \draw [arrow] (input) -- (listener);
+      \draw [arrow] (listener) -- (loop);
+      \draw [arrow] (loop) -- node[midway,above] {yes} (get);
+      \draw [arrow] (send) -| node[midway,above,xshift=2cm] {yes} (loop);
+
+    \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    The logic for how I will do Ping Scanning.
+  }\label{pingscanflow}
+\end{figure}
+
 
 \subsection{Input data Validation}
 
@@ -1353,7 +1379,7 @@ My program takes very little input from the user which means that there is a ver
 program crashing due to user input error as the errors are detected All data which is entered is 
 either parsed using a regular expression with the case of the \glspl{port} directive (\verb|-p|) or 
 is run through checking functions like \verb|ip_utils.is_valid_ip|. As well as using these checking 
-functions whenever an\gls{ipaddr}is converted between ``long form'' and ``dot form'' which is used 
+functions whenever an~\gls{ipaddr} is converted between ``long form'' and ``dot form'' which is used 
 in every type of scanning.
 
 \subsection{Proposed Algorithms for complex structures (flow charts or Pseudo Code)}

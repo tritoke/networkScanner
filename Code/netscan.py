@@ -91,6 +91,21 @@ else:
     base_addr = args.target_spec
     addresses = {base_addr}
 
+
+def error_exit(error_type: str) -> bool:
+    messages = {
+        "permission": "\n".join((
+            "You have insufficient permissions to run this type of scan",
+            "EXITING!"
+        ))
+    }
+    try:
+        print(messages[error_type])
+    except KeyError:
+        print(f"ERROR MESSAGE NOT FOUND: {error_type}")
+    exit(-1)
+
+
 if args.sL:
     print("Targets:")
     print("\n".join(sorted(addresses, key=ip_utils.dot_to_long)))
@@ -103,13 +118,17 @@ else:
             """
             return round(x, n - (1 + int(floor(log10(abs(x))))))
 
-        print("\n".join(
-            f"host: [{host}]\t" +
-            "responded to an ICMP ECHO REQUEST in " +
-            f"{str(sig_figs(taken, 2))+'s':<10s} " +
-            f"ttl: [{ip_head.time_to_live}]"
-            for host, taken, ip_head in scanners.ping(addresses)
-        ))
+        try:
+            print("\n".join(
+                f"host: [{host}]\t" +
+                "responded to an ICMP ECHO REQUEST in " +
+                f"{str(sig_figs(taken, 2))+'s':<10s} " +
+                f"ttl: [{ip_head.time_to_live}]"
+                for host, taken, ip_head in scanners.ping(addresses)
+            ))
+        except PermissionError:
+            error_exit("permission")
+
     else:
         if args.Pn:
             targets = [
@@ -121,14 +140,17 @@ else:
                 for addr in addresses
             ]
         else:
-            targets = [
-                directives.Target(
-                    addr,
-                    defaultdict(set),
-                    defaultdict(set),
-                )
-                for addr, _, _ in scanners.ping(addresses)
-            ]
+            try:
+                targets = [
+                    directives.Target(
+                        addr,
+                        defaultdict(set),
+                        defaultdict(set),
+                    )
+                    for addr, _, _ in scanners.ping(addresses)
+                ]
+            except PermissionError:
+                error_exit("permission")
         # define the ports to scan
         if args.ports == "-":
             # case they have specified all ports
@@ -158,10 +180,13 @@ else:
 
         for target in targets:
             if not args.sU or args.sS:
-                tcp_ports = scanners.tcp(
-                    target.address,
-                    ports["TCP"]
-                )
+                try:
+                    tcp_ports = scanners.tcp(
+                        target.address,
+                        ports["TCP"]
+                    )
+                except PermissionError:
+                    error_exit("permission")
                 target.open_ports["TCP"].update(tcp_ports["OPEN"])
                 target.open_filtered_ports["TCP"].update(tcp_ports["FILTERED"])
             if args.sT:
@@ -169,10 +194,14 @@ else:
                     scanners.connect(target.address, ports["TCP"])
                 )
             if args.sU:
-                udp_ports = scanners.udp(
-                    target.address,
-                    ports["UDP"]
-                )
+                try:
+                    udp_ports = scanners.udp(
+                        target.address,
+                        ports["UDP"]
+                    )
+                except PermissionError:
+                    error_exit("permission")
+
                 target.open_ports["UDP"].update(
                     udp_ports["OPEN"]
                 )
