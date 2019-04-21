@@ -54,6 +54,7 @@
   minimum height=1cm,
   text centered,
   draw=black,
+  inner sep=0,
   fill=red!30
 ]
 \tikzstyle{io} = [
@@ -63,6 +64,8 @@
   minimum width=3cm,
   minimum height=1cm,
   text centered,
+  text width=3cm,
+  inner sep=0,
   draw=black,
   trapezium stretches=true,
   fill=blue!30
@@ -73,6 +76,7 @@
   minimum height=1cm,
   text centered,
   text width=3cm,
+  inner sep=0,
   draw=black,
   fill=orange!30
 ]
@@ -83,6 +87,7 @@
   text centered,
   draw=black,
   aspect=2,
+  inner sep=0,
   fill=green!30
 ]
 \tikzstyle{arrow} = [
@@ -1350,7 +1355,7 @@ scanning as it is more immediately obvious what the more verbose flags do.
   \begin{framed}
     \begin{tikzpicture}[node distance=2cm]
       \node [startstop] (start) {start};
-      \node [io, below of=start, text width=3cm] (input) {get list of addresses to scan};
+      \node [io, below of=start, text width=3cm] (input) {get addresses to scan};
       \node [process, below of=input] (listener) {start listener};
       \node [decision, below of=listener, text width=3cm, yshift=-0.8cm] (loop) {are there more addresses to scan?};
       \node [process, right of=loop, xshift=3.2cm] (get) {get the next address to scan};
@@ -1362,14 +1367,166 @@ scanning as it is more immediately obvious what the more verbose flags do.
       \draw [arrow] (start) -- (input);
       \draw [arrow] (input) -- (listener);
       \draw [arrow] (listener) -- (loop);
-      \draw [arrow] (loop) -- node[midway,above] {yes} (get);
-      \draw [arrow] (send) -| node[midway,above,xshift=2cm] {yes} (loop);
+      \draw [arrow] (loop) -- node[midway,above,xshift=-0.2cm] {yes} (get);
+      \draw [arrow] (get) -- (send);
+      \draw [arrow] (send) -| node[midway,above,xshift=2cm] {} (loop);
+      \draw [arrow] (loop) -- ([xshift=-1cm]loop.west) node[above,xshift=0.5cm] {no} -- ([xshift=-1cm,yshift=-2.5cm]loop.west) -| (wait);
+      \draw [arrow] (wait) -- (output);
+      \draw [arrow] (output) -- (end);
 
     \end{tikzpicture}
   \end{framed}
   \caption{%
     The logic for how I will do Ping Scanning.
   }\label{pingscanflow}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+    \begin{tikzpicture}[node distance=2cm]
+      \node [startstop] (start) {start};
+      \node [io, below of=start] (get) {get ports to scan};
+      \node [io, below of=get, text width = 5cm,yshift=-0.2cm] (connect) {attempt to connect to the next port with \verb|socket.connect|};
+      \node [decision, below of=connect, text width=3cm, yshift=-1cm] (save) {did the connection succeed?};
+      \node [process, right of=save, xshift=3cm] (add) {save port to list of open ports};
+      \node [decision, below of=save, text width=3cm, yshift=-1.5cm, xshift=2cm] (loop) {are there more ports to scan?};
+      \node [process, below of=loop, yshift=-0.8cm, text width=5cm] (return) {return the list of ports which were successfully connected to.};
+      \node [startstop, below of=return] (end) {end};
+
+      \draw [arrow] (start) -- (get);
+      \draw [arrow] (get) -- (connect);
+      \draw [arrow] (connect) -- (save);
+      \draw [arrow] (save) -- node[midway,above,xshift=-0.1cm] {yes} (add);
+      \draw [arrow] (save) |- node[midway, below] {no} ([yshift=0.5cm]loop.north) -- (loop);
+      \draw [arrow] (add) |- ([yshift=0.5cm]loop.north) -- (loop);
+      \draw [arrow] (loop) -| node[midway, above, xshift=-1.5cm] {yes} ([xshift=5cm,yshift=1cm]connect.east) -| (connect.north);
+      \draw [arrow] (loop) -- node[midway, right] {no} (return);
+      \draw [arrow] (return) -- (end);
+
+    \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    The logic for how I will do TCP connect Scanning.
+  }\label{tcpconnectscanflow}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+    \begin{tikzpicture}[node distance=2cm]
+      \node [startstop] (start) {start};
+      \node [io, below of=start, text width=3cm] (input) {get ports to scan};
+      \node [process, below of=input] (listener) {start listener};
+      \node [decision, below of=listener, text width=3cm, yshift=-0.8cm] (loop) {are there more ports to scan?};
+      \node [process, right of=loop, xshift=3.2cm] (get) {get the next port to scan};
+      \node [io, below of=get, text width=3cm] (send) {send \gls{tcp} SYN packet};
+      \node [process, below of=loop, yshift=-2cm] (wait) {wait for listener to return results};
+      \node [process, below of=wait] (output) {return the results to the user};
+      \node [startstop, below of=output] (end) {end};
+
+      \draw [arrow] (start) -- (input);
+      \draw [arrow] (input) -- (listener);
+      \draw [arrow] (listener) -- (loop);
+      \draw [arrow] (loop) -- node[midway,above,xshift=-0.2cm] {yes} (get);
+      \draw [arrow] (get) -- (send);
+      \draw [arrow] (send) -| node[midway,above,xshift=2cm] {} (loop);
+      \draw [arrow] (loop) -- ([xshift=-1cm]loop.west) node[above,xshift=0.5cm] {no} -- ([xshift=-1cm,yshift=-2.5cm]loop.west) -| (wait);
+      \draw [arrow] (wait) -- (output);
+      \draw [arrow] (output) -- (end);
+
+    \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    The logic for how I will do TCP SYN scanning.
+  }\label{tcpsynscanflow}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+    \begin{tikzpicture}[node distance=1.5cm]
+      \node [startstop] (start) {start};
+      \node [io,below of=start] (get) {get ports to scan};
+      \node [process, below of=get] (udp listener) {start udp listener};
+      \node [io, below of=udp listener, inner sep=0] (send 1) {send next \gls{udp} packet};
+      \node [decision, below of=send 1, text width=2cm, yshift=-0.2cm] (loop 1) {more ports to scan?};
+      \node [decision, below of=loop 1, left=0.5cm of loop 1, yshift=-0.3cm] (loop 2) {on second loop?};
+      \node [process, right=0.7cm of loop 2] (udp wait) {wait for \gls{udp} listener};
+      \node [process, below=0.5cm of udp wait] (icmp listener) {start \gls{icmp} listener};
+      \node [io, below=0.5cm of icmp listener, inner sep=0] (send 2) {send next \gls{udp} packet};
+      \node [process, below=0.5cm of send 2] (icmp wait) {wait for \gls{icmp} listener};
+      \node [decision, below=0.5cm of icmp wait, text width = 2cm] (loop 3) {more ports to scan?};
+      \node [process, left=0.5cm of loop 3] (return) {return results};
+      \node [startstop, below=0.5cm of return] (end) {end};
+
+      \draw [arrow] (start) -- (get);
+      \draw [arrow] (get) -- (udp listener);
+      \draw [arrow] (udp listener) -- (send 1);
+      \draw [arrow] (send 1) -- (loop 1);
+      \draw [arrow] (loop 1.east) -| ([xshift=1cm,yshift=0.75cm]send 1.east) node [right,yshift=-1.25cm] {yes} -| (send 1.north);
+      \draw [arrow] (loop 1) -| node [above, xshift=1cm] {no} (loop 2);
+      \draw [arrow] (loop 2.west) -| ([xshift=-4cm,yshift=0.75cm]send 1.west) node [left,yshift=-2cm] {no} -| (send 1.north);
+      \draw [arrow] (loop 2) -- node [xshift=-0.1cm,above] {yes} (udp wait);
+      \draw [arrow] (udp wait) -- (icmp listener);
+      \draw [arrow] (icmp listener) -- (send 2);
+      \draw [arrow] (send 2) -- (icmp wait);
+      \draw [arrow] (icmp wait) -- (loop 3);
+      \draw [arrow] (loop 3.east) -| ([xshift=1cm,yshift=0.75cm]icmp listener.east) node [right,yshift=-3cm] {yes} -| (icmp listener);
+      \draw [arrow] (loop 3) -- node [above,xshift=0.1cm] {no} (return);
+      \draw [arrow] (return) -- (end);
+
+    \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    The logic behind how \gls{udp} scanning works.
+  }\label{udpscanflow}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \begin{framed}
+    \begin{tikzpicture}[node distance=1.5cm]
+      \node [startstop] (start) {start};
+      \node [io, right=1.5cm of start, text width=2cm] (get ports) {get ports to scan};
+      \node [io, below=0.5cm of get ports, text width=2.5cm] (parse probes) {read and parse probe file};
+      \node [process, below=0.5cm of parse probes] (send probe) {send the next probe};
+      \node [process, below=0.5cm of send probe] (wait) {wait for response};
+      \node [process, below=0.5cm of wait] (softmatch) {try to softmatch response};
+      \node [decision, below=0.5cm of softmatch, text width=2.5cm] (softmatched) {did softmatch succeed?};
+      \node [process, below=0.5cm of softmatched] (match) {try to match response};
+      \node [decision, left=1cm of match, text width=2.5cm] (softmatch loop) {are there more softmatches?};
+      \node [decision, below=0.5cm of match, text width=2cm] (matched) {did match succeed?};
+      \node [decision, below=0.5cm of matched, text width=2.5cm] (match loop) {are there more matches};
+      \node [decision, left=0.5cm of match loop, text width=2.5cm] (probe loop) {are there more probes?};
+      \node [process, below=0.5cm of probe loop] (return) {return results};
+      \node [startstop, below=0.5cm of match loop] (end) {end};
+
+      \draw [arrow] (start) -- (get ports);
+      \draw [arrow] (get ports) -- (parse probes);
+      \draw [arrow] (parse probes) -- (send probe);
+      \draw [arrow] (send probe) -- (wait);
+      \draw [arrow] (wait) -- (softmatch);
+      \draw [arrow] (softmatch) -- (softmatched);
+      \draw [arrow] (softmatched.east) -| node[above] {yes} ([yshift=0.75cm,xshift=0.75cm]match.east) -| (match);
+      \draw [arrow] (softmatched) -| node[above, xshift=1.25cm] {no} (softmatch loop);
+      \draw [arrow] (softmatch loop) -- node [above, xshift=-0.1cm] {no} (match);
+      \draw [arrow] (softmatch loop)-|node[right,yshift=2.5cm]{yes}([xshift=-5.25cm,yshift=0.75cm]softmatch.west)-|(softmatch);
+      \draw [arrow] (match) -- (matched);
+      \draw [arrow] (match loop) -| node [right,] {yes} ([xshift=0.75cm,yshift=0.75cm] match.east) -| (match.north);
+      \draw [arrow] (matched) -- node [right] {no} (match loop);
+      \draw [arrow] (match loop) -- node [above, yshift=0.1cm] {no} (probe loop);
+      \draw [arrow] (matched) -| node [above, xshift=1.35cm] {yes} (probe loop);
+      \draw [arrow] (probe loop) -| node [left,yshift=5.5cm] {yes} ([xshift=-6cm,yshift=0.75cm]send probe.west) -| (send probe);
+      \draw [arrow] (probe loop) -- node [midway, right, yshift=0.1cm] {no} (return);
+      \draw [arrow] (return) -- (end);
+
+    \end{tikzpicture}
+  \end{framed}
+  \caption{%
+    The logic behind how version detection works.
+  }\label{versiondetectflow}
 \end{figure}
 
 
