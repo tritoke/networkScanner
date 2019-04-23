@@ -82,7 +82,7 @@ def connect(address: str, ports: Set[int]) -> Set[int]:
                 open_ports.add(port)
                 # if the connection was successful then add the port to the
                 # list of open ports
-        except ConnectionRefusedError:
+        except (ConnectionRefusedError, OSError) as e:
             pass
     return open_ports
 
@@ -96,6 +96,7 @@ def tcp(dest_ip: str, portlist: Set[int]) -> listeners.PORTS:
         local_ip = ip_utils.get_local_ip()
     p = Pool(1)
     listener = p.apply_async(listeners.tcp, ((local_ip, src_port), 5))
+    time.sleep(0.01)
     # start the TCP ACK listener in the background
     for port in portlist:
         # flag = 2 for syn scan
@@ -119,6 +120,9 @@ def tcp(dest_ip: str, portlist: Set[int]) -> listeners.PORTS:
     p.join()
     ports = listener.get()
     ports["FILTERED"] = portlist - ports["OPEN"] - ports["CLOSED"]
+    if local_ip == "127.0.0.1":
+        ports["OPEN"] -= set([src_port])
+
     return ports
 
 
@@ -134,13 +138,13 @@ def udp(
     recieved at all.
     """
 
-    local_ip = ip_utils.get_local_ip()
     local_port = ip_utils.get_free_port()
-    # get local ip address and port number
+    # get port number
     ports: listeners.PORTS = defaultdict(set)
     ports["REMAINING"] = ports_to_scan
     p = Pool(1)
     udp_listen = p.apply_async(listeners.udp, (dest_ip, 4))
+    time.sleep(0.01)
     # start the UDP listener
     with closing(
             socket.socket(
@@ -156,9 +160,7 @@ def udp(
                 try:
                     packet = ip_utils.make_udp_packet(
                         local_port,
-                        dest_port,
-                        local_ip,
-                        dest_ip
+                        dest_port
                     )
                     # create the UDP packet to send
                     s.sendto(packet, (dest_ip, dest_port))
@@ -176,7 +178,9 @@ def udp(
     p.join()
 
     ports["OPEN"].update(udp_listen.get())
-
+    # if we are on localhost remove the scanning port
+    if dest_ip == "127.0.0.1":
+        ports["OPEN"] -= set([local_port])
     ports["REMAINING"] -= ports["OPEN"]
     # only scan the ports which we know are not open
     with closing(
@@ -190,24 +194,22 @@ def udp(
             try:
                 packet = ip_utils.make_udp_packet(
                     local_port,
-                    dest_port,
-                    local_ip,
-                    dest_ip
+                    dest_port
                 )
                 # make a new UDP packet
                 p = Pool(1)
                 icmp_listen = p.apply_async(
                     listeners.icmp_unreachable,
-                    dest_ip,
+                    (dest_ip,),
                 )
                 # start the ICMP listener
-                time.sleep(1)
+                time.sleep(0.01)
                 s.sendto(packet, (dest_ip, dest_port))
                 # send packet
                 p.close()
                 p.join()
                 icmp_code = icmp_listen.get()
-                # recieve ICMP code from the ICMP listener
+                # receive ICMP code from the ICMP listener
                 if icmp_code in {0, 1, 2, 9, 10, 13}:
                     ports["FILTERED"].add(dest_port)
                 elif icmp_code == 3:
@@ -229,6 +231,7 @@ def udp(
         - ports["FILTERED"]
         - ports["CLOSED"]
     )
+    del(ports["REMAINING"])
     # set comprehension to update the list of open filtered ports
     return ports
 

@@ -469,7 +469,7 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
     # matches both the num-num port range format
     # and the plain num port specification
     # num-num form must come first otherwise it breaks.
-    proto_regex = re.compile(r"([ TU]):?([0-9,-]+)")
+    proto_regex = re.compile(r"([ TU]?):?([0-9,-]+)")
     # THE SPACE IS IMPORTANT!!!
     # it allows ports specified before TCP/UDP ports
     # to be specified globally as in for all protocols.
@@ -491,6 +491,7 @@ def parse_ports(portstring: str) -> DefaultDict[str, Set[int]]:
         # with operator.ior (inclusive or) and then let
         # ports be the set of all the ports in that list.
         proto_map = {
+            "":  "ANY",
             " ": "ANY",
             "U": "UDP",
             "T": "TCP"

@@ -92,13 +92,14 @@ else:
     addresses = {base_addr}
 
 
-def error_exit(error_type: str) -> bool:
+def error_exit(error_type: str, scan_type: str, scanning: str) -> bool:
     messages = {
         "permission": "\n".join((
             "You have insufficient permissions to run this type of scan",
             "EXITING!"
         ))
     }
+    print(f"You tried to scan {scanning} using scan type: {scan_type}")
     try:
         print(messages[error_type])
     except KeyError:
@@ -127,7 +128,7 @@ else:
                 for host, taken, ip_head in scanners.ping(addresses)
             ))
         except PermissionError:
-            error_exit("permission")
+            error_exit("permission", "ping scan", str(addresses))
 
     else:
         if args.Pn:
@@ -150,7 +151,7 @@ else:
                     for addr, _, _ in scanners.ping(addresses)
                 ]
             except PermissionError:
-                error_exit("permission")
+                error_exit("permission", "ping_scan", str(addresses))
         # define the ports to scan
         if args.ports == "-":
             # case they have specified all ports
@@ -179,28 +180,31 @@ else:
             )
 
         for target in targets:
-            if not args.sU or args.sS:
+            if not args.sU and not args.sT or args.sS:
                 try:
                     tcp_ports = scanners.tcp(
                         target.address,
-                        ports["TCP"]
+                        ports["TCP"] | ports["ANY"]
                     )
                 except PermissionError:
-                    error_exit("permission")
+                    error_exit("permission", "tcp_scan", target.address)
                 target.open_ports["TCP"].update(tcp_ports["OPEN"])
                 target.open_filtered_ports["TCP"].update(tcp_ports["FILTERED"])
             if args.sT:
                 target.open_ports["TCP"].update(
-                    scanners.connect(target.address, ports["TCP"])
+                    scanners.connect(
+                        target.address,
+                        ports["TCP"] | ports["ANY"]
+                    )
                 )
             if args.sU:
                 try:
                     udp_ports = scanners.udp(
                         target.address,
-                        ports["UDP"]
+                        ports["UDP"] | ports["ANY"]
                     )
                 except PermissionError:
-                    error_exit("permission")
+                    error_exit("permission", "udp_scan", target.address)
 
                 target.open_ports["UDP"].update(
                     udp_ports["OPEN"]
@@ -244,3 +248,15 @@ else:
                                 for key, val in cpe_vals.items():
                                     print(f"{key}: {val}")
                         print()
+                    else:
+                        print(f"{port} service: {service_name}?")
+
+            print("Filtered ports:")
+            for proto, filtered_ports in target.open_filtered_ports.items():
+                for port in filtered_ports:
+                    try:
+                        service_name = services[proto][port]
+                    except KeyError:
+                        service_name = "unknown"
+                    print(f"{port} service: {service_name}?")
+

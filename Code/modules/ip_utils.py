@@ -152,7 +152,7 @@ def ip_range(ip: str, network_bits: int) -> Set[str]:
     return set(
         long_to_dot(long_ip)
         for long_ip in
-        range(lower_bound, upper_bound + 1)
+        range(lower_bound+1, upper_bound)
     )
 
 
@@ -353,9 +353,7 @@ def make_tcp_packet(
 
 def make_udp_packet(
         src: int,
-        dst: int,
-        from_address: str,
-        to_address: str
+        dst: int
 ) -> bytes:
     """
     Takes in: source IP address and port, destination IP address and port.
@@ -363,14 +361,6 @@ def make_udp_packet(
     the IP addresses are needed for calculating the checksum.
     """
     # validate data passed in
-    if not is_valid_ip(from_address):
-        raise ValueError(
-            f"Invalid source IP address: [{from_address}]"
-        )
-    if not is_valid_ip(to_address):
-        raise ValueError(
-            f"Invalid destination IP address: [{to_address}]"
-        )
     if not is_valid_port_number(src):
         raise ValueError(
             f"Invalid source port: [{src}]"
@@ -379,36 +369,17 @@ def make_udp_packet(
         raise ValueError(
             f"Invalid destination port: [{dst}]"
         )
-
-    UDP_length = 8
-    # pack the dummy and psuedo headers needed for the checksum
-    dummy_header = struct.pack(
-        "!HHHH",
-        src,
-        dst,
-        UDP_length,
-        0
-    )
-    # 17 is the UDP protocol number
-    psuedo_header = struct.pack(
-        "!IIBBH",
-        src,
-        dst,
-        0,
-        17,
-        len(dummy_header)
-    )
-
-    checksum = ip_checksum(psuedo_header + dummy_header)
-    # pack the data and checksum into the right format
+    data = b"Most services don't respond to an empty data field"
+    # pack the data
     # and return the packed bytes
+    # UDP checksum is optional over IPv4
     return struct.pack(
         "!HHHH",
         src,
         dst,
-        UDP_length,
-        checksum
-    )
+        8+len(data),
+        0
+    ) + data
 
 
 def wait_for_socket(sock: socket.socket, wait_time: float) -> float:

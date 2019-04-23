@@ -573,50 +573,56 @@ signature to the user as the Python socket library does some processing before t
 
   \item{%
     Probe another computer's networking from a \gls{bbox} perspective.
-  }
+  }\label{blackbox}
+  \item{%
+    To help the user with usage/help messages when prompted.  
+  }\label{usage}
   \item{%
     Send \gls{icmp} ECHO requests to determine whether a machine is active
     or not.
-  }
+  }\label{ping}
   \item{%
     Translate \gls{cidr} specified subnets into a list of domains.
-  }
+  }\label{cidr}
+  \item{%
+    Perform any scan type without first checking whether the host is up.
+  }\label{nocheck}
   \item{%
     Detect whether a TCP port is open (can be connected to).
-  }
+  }\label{tcpopen}
   \item{%
     Detect whether a TCP port is closed (will refuse connections).
-  }
+  }\label{tcpclosed}
   \item{%
     Detect whether a TCP port is filtered (a firewall is
     preventing or monitoring access).
-  }
+  }\label{tcpfiltered}
   \item{%
     Detect whether a UDP port is open (can be connected to).
-  }
+  }\label{udpopen}
   \item{%
     Detect whether a UDP port is closed (will refuse connections).
-  }
+  }\label{udpclosed}
   \item{%
     Detect whether a UDP port is filtered (a firewall is
     preventing or monitoring access).
-  }
+  }\label{udpfiltered}
   \item{%
     Detect the operating system of another machine on the network
     solely from sending packets to the machine and interpreting the responses.
-  }
+  }\label{osdetect}
   \item{%
     Detect what service is listening behind a port.
-  }
+  }\label{servicedetect}
   \item{%
     Detect the version of the service running behind a port.
-  }
+  }\label{versiondetect}
 
 \end{enumerate}
 
 \subsection{Description of current system or existing solutions}
 
-Nmap is currently the most popular tool for doing\gls{port}scanning and host enumeration.
+Nmap is currently the most popular tool for doing \gls{port} scanning and host enumeration.
 It supports the scanning types for determining information about remote hosts.
 
 \begin{itemize}
@@ -1615,11 +1621,422 @@ in every type of scanning.
 
 \subsection{Overview to direct the examiner to areas of complexity and explain design evidence}
 
+\textbf{\color{red} need to do this.}
+
 \section{Testing}
 
 \subsection{Test Plan}
 
-\subsection{Test Table / Testing Evidence (Core: lots of screenshots)}
+I will be testing my application using a combination of unit tests and wireshark where applicable.
+Unit tests are more suitable to doing tests on specific functions to make sure that regressions don't occur while developing
+the application. A regression is a when a feature or change that was implemented into the program is by accident and would 
+cause the application to break. Wireshark I will use to show the scanning portion of my code and where external connections
+are made/custom packets created.
+
+\subsection{Test Table / Testing Evidence}
+
+\subsubsection{Printing a usage message when run without parameters}
+
+To show this I will run my program passing it no parameters.
+This should print out a message of the form: \verb|USAGE: ./<program> <required> <parameters>|
+where everything in angle brackets should be replaced by what is necessary for my program. 
+In figure~\ref{noparametertest} you can see me run \verb|./netscan.py| with no parameters and it
+prints out the required usage message telling me that I am missing the target\_spec parameter, this
+shows that it passed this test.
+This shows success criteria~\ref{usage}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/noparameters.png}
+  \caption{%
+    Screenshot showing my program being run without parameters.
+  }\label{noparametertest}
+\end{figure}
+
+\subsubsection{Printing a help message when passed -h}
+
+To show this I will run my program with the \verb|-h| flag.
+This should print out a message showing each of the options as well as what each of them do.
+It should also print out whether they are positional arguments or optional arguments and if
+an argument can have two forms then it should print out both forms of the flag, i.e. \verb|-p --ports|.
+In figure~\ref{hflagtest} you can see me run my program with the \verb|-h| flag and it proceeds to
+print of a help message with messages with what each option is for as well as short and long form of
+arguments, this shows my program passed this test.
+This shows success criteria~\ref{usage}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/hmessage.png}
+  \caption{%
+    Screenshot showing my program being run with the -h flag.
+  }\label{hflagtest}
+\end{figure}
+
+\subsubsection{Printing a help message when passed -help}
+To show this I will run my program with the \verb|--help| flag.
+This should produce the exact same output as with \verb|-h|.
+This shows the exact same message as in the test of \verb|-h|.
+To prove this if I take the sha1sum of the output for both flags we can see
+that the hashes are identical and therefore the originals were also identical,
+this is shown in figure~\ref{messagehash}.
+This shows success criteria~\ref{usage}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/helpmessage.png}
+  \caption{%
+    Screenshot showing my program being run with the help flag.
+  }\label{helpflagtest}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/messagehashes.png}
+  \caption{%
+    Screenshot showing the hashes of the two help messages.
+  }\label{messagehash}
+\end{figure}
+
+\subsubsection{Translating a CIDR specified subnet into a list of IP addresses}
+To show this I will run my program with the \verb|-sL| flag and I will specify
+a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
+such that it will fit on my terminal and therefore in a screenshot).
+I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
+To prove that my program works I will screenshot the output when run with the
+stated parameters and I will use a website to translate the same subnet and show
+that it displays the same addresses as my program.
+In figure~\ref{cidrtest} you can see that the output from my program matches
+the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
+which is also shown by the screen shot of the same subnet translated by
+the ipcalc utility on linux.
+This proves my program works and covers success criteria~\ref{cidr}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/iplist.png}
+  \caption{%
+    Screenshot showing the output of my program when asked to translate the subnet 192.168.1.0/28.
+  }\label{cidrtest}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/ipcalclist.png}
+  \caption{%
+    Screenshot showing the range displayed by the ipcalc utility when asked to calculate
+    the same subnet.
+  }\label{cidrwebproof}
+\end{figure}
+
+\subsubsection{Scanning a subnet with ICMP ECHO REQUEST messages}
+To show this I will run my program with the \verb|-sn| flag and specify the
+subnet of my local network \verb|192.168.178.0/24|.
+This should produce a list of all the hosts which are up on the network.
+In figure~\ref{lanscantest} you can see you can see my program's output
+showing that the hosts:
+\begin{itemize}
+  \item{192.168.178.60}
+  \item{192.168.178.56}
+  \item{192.168.178.30}
+  \item{192.168.178.1}
+\end{itemize}
+all responded with \gls{icmp} ECHO REPLY messages, this is reflected
+in a packet capture I took while performing the scan. A section of this
+scan is shown in figure~\ref{lanscanwireshark} where you can see some of
+\gls{icmp} ECHO REQUEST messages my program sent, along with some of the requests
+to hosts that don't exist, note the different addresses in the source and destination fields
+and the Echo (ping) request vs reply in the info column. This successfully shows success
+criteria~\ref{blackbox} and~\ref{ping}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/pingscantest.png}
+  \caption{%
+    Screenshot showing the output of a scan of my local network.
+  }\label{lanscantest}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/pingscantest_wireshark.png}
+  \caption{%
+    Screenshot showing a selection of the packets being sent by this scan.
+  }\label{lanscanwireshark}
+\end{figure}
+
+\subsubsection{Scanning without first checking whether hosts are up.}
+To show this I will perform a TCP scan on a small subnet where I
+know there are no hosts and show that the scan continues despite there actually
+being no host on the other end. To do this I will pass the \verb|-Pn| flag
+and I will specify the subnet \verb|192.168.43.0/28| which I know has no has no hosts
+on it. I will also specify \verb|-p 12345| to only scan port 12345 so that there are
+fewer requests in the packet capture. Finally I will specify \verb|-sS| to do \gls{tcp}
+SYN SCANNING.\@ I expect to see a multiple of 14 \gls{arp} messages.
+This is because I don't know how many times my \gls{nic} will retry at getting
+the destination \gls{mac} address. It needs to destination \gls{mac} address to send
+the packet to its destination as we are scanning a private IP range of my router.
+In figure~\ref{nocheckoutput} you can see the output of my program when run with the
+specified flags, you can see that as expected it showed that there were no open ports
+on those machines as they don't exist. In figure~\ref{nocheckwireshark} you can see the
+packet capture of the packets my code sent, however there are only ARP messages, this is
+because we are scanning in the private IP range of my router which was the only
+way I could guarantee that there was no machine at the other end. However this is
+as expected, as well as this we can see 42 \gls{arp} requests, which is $3\times14$
+\gls{arp} requests, which would indicate each scan made three \gls{arp} requests before
+giving up. This shows my program can perform scans without first checking if the host is
+up, showing success criteria~\ref{nocheck}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/nocheckhostoutput.png}
+  \caption{%
+    Screenshot showing the output from my code when asked to port scan a subnet
+    with no machines behind the addresses.
+  }\label{nocheckoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/nocheckpcap.png}
+  \caption{%
+    Screenshot showing the ARP requests my NIC sent to attempt to determine
+    where to send the attempted connection packets.
+  }\label{nocheckwireshark}
+\end{figure}
+
+\subsubsection{Detecting whether a TCP port is open}
+To show this I will perform a \gls{tcp} \verb|Connect()| scan on my local
+machine while running a script which will listen on port 12345 for any connections
+and send back a message. To do this I will pass my program the flags \verb|-sT| and
+\verb|-p 12345| as well as specifying localhost to scan (127.0.0.1).
+I expect to see a \gls{tcp} SYN-ACK handshake between my program and the script and
+then my program to output that the port is open. In figure~\ref{tcpopenpcap} you can
+see the expected \gls{tcp} SYN-ACK handshake performed by my program and the script
+in figure~\ref{tcpopenscript}.
+You can see the output of my program in figure~\ref{tcpopenoutput}, as expected
+it outputs that port 12345 is open. This shows success criteria~\ref{blackbox}
+and~\ref{tcpopen}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpopenscript.png}
+  \caption{%
+    Screenshot showing the script I ran to accept a connection on localhost port 12345.
+  }\label{tcpopenscript}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpopenoutput.png}
+  \caption{%
+    Screenshot showing the output of my script when run with the specified flags
+    and while the script in figure~\ref{tcpopenscript} was running.
+  }\label{tcpopenoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpopenpcap.png}
+  \caption{%
+    Screenshot showing the packet capture of the TCP SYN-ACK handshake performed
+    by the scan in figure~\ref{tcpopenoutput} with the script in~\ref{tcpopenscript}.
+  }\label{tcpopenpcap}
+\end{figure}
+
+\subsubsection{Detecting whether a TCP port is closed}
+To show this I will perform a \gls{tcp} \verb|Connect()| scan
+on my local machine except instead of running a script to catch the
+request I will just let it try to connect to the closed port.
+I expect to see a \gls{tcp} SYN packet sent to the port and then a RST, ACK
+packet sent back, my program should output no open ports.
+To do this I will pass my program the same options as in the test for
+a \gls{tcp} open port.
+In figure~\ref{tcpclosedpcap} you can see the attempted connection to
+127.0.0.1 port 12345 along with the RST, ACK packet afterwards indicating
+the port is closed. This is reflected in figure~\ref{tcpclosedoutput}
+with no open ports showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpclosedoutput.png}
+  \caption{%
+    Screenshot showing the output of my program when run with the specified options.
+  }\label{tcpclosedoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpclosedpcap.png}
+  \caption{%
+    Screenshot showing the packet capture of the TCP SYN-RST closed port indication
+    caused by the scan in figure~\ref{tcpclosedoutput}.
+  }\label{tcpclosedpcap}
+\end{figure}
+
+\subsubsection{Detecting whether a TCP port is filtered}
+To show this I will perform a \gls{tcp} SYN scan on localhost port 12345
+except I will also introduce a firewall rule to drop all requests to localhost.
+I expect this to produce no response to the initial SYN packet sent by my
+program and my program to output that port as filtered. To test this I will
+run my program with the flags \verb|-sS,-p 12345,-Pn| this will cause it to not
+check whether the host is up, to perform a \gls{tcp} SYN scan and only scan port 12345.
+I will also introduce a firewall rule using the linux iptables utility to drop
+all requests to localhost as so: \verb|iptables -I INPUT -s 127.0.0.1 -j DROP|.
+The output of my program is shown in figure~\ref{tcpfilteredoutput} you can
+see that port 12345 is displayed as filtered and in the packet capture shown in
+figure~\ref{tcpfilteredpcap} you can see that there is no response to our initial packet
+which corresponds to what I thought would happen with an iptables rule in place
+to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpfilteredoutput.png}
+  \caption{%
+    Screenshot showing the output of my program when run with the specified options
+    and a firewall in place to drop all packets to 127.0.0.1.
+  }\label{tcpfilteredoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/tcpfilteredpcap.png}
+  \caption{%
+    Screenshot showing the packet capture of the scan in figure~\ref{tcpfilteredoutput}
+  }\label{tcpfilteredpcap}
+\end{figure}
+
+\subsubsection{Detecting whether a UDP port is open}
+To show this I will perform a \gls{udp} scan on a script I have already written while
+developing \gls{udp} scanning which can be seen in listing~\ref{udpopenscript}.
+I expect to see my program output port 12345 as open and in the packet capture I
+expect to see two \gls{udp} packets followed by two response \gls{udp} packets from my
+listener program. I will test this using the following flags: \verb|-Pn,-p 12345,-sU|
+these translate to scanning port 12345 over UDP and not checking the host is up beforehand.
+In figure~\ref{udpopenoutput} you can see the output of my program when run as specified
+and you can see that it correctly detects port 12345 as being open.
+In figure~\ref{udpopenpcap} you can see the packet capture of my program being run
+however this is not as I expected, I didn't foresee the \gls{icmp} destination unreachable
+messages, these are sent by the kernel in response to the UDP probe which it doesn't know what
+to do with, however apart from those the capture shows everything as expected.
+This shows success criteria~\ref{blackbox} and~\ref{udpopen}.
+
+\lstinputlisting[firstline=3,caption=Script to open port 12345 to UDP.,label=udpopenscript]{../../Code/udp_scan/open_X_port_to_UDP.py}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpopenoutput.png}
+  \caption{%
+    Screenshot showing the output of my program when run with the options specified
+    above, and the script in listing~\ref{udpopenscript} is running.
+  }\label{udpopenoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpopenpcap.png}
+  \caption{%
+    screenshot showing the packet capture of the scan in figure~\ref{udpopenoutput}
+  }\label{udpopenpcap}
+\end{figure}
+
+\subsubsection{Detecting whether a UDP port is closed}
+To show this I will perform a \gls{udp} scan on a port which
+has no service listening behind it. I expect my program to print out
+no filtered ports and no open ports showing that the port was closed.
+In the packet capture I expect to see three \gls{udp} packets and three response
+\gls{icmp} packets. To test this I will use my program with the following flags:
+\verb|-p 12345,-Pn,-sU| which perform a \gls{udp} port scan without first checking
+if the host is up. In figure~\ref{udpclosedoutput} you can see the output of my program
+when run with the options specified above, you can see that there are no ports displayed
+as either open or filtered, this shows the my program successfully marked the port as closed.
+This shows success criteria~\ref{blackbox} and~\ref{udpclosed}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpclosedoutput.png}
+  \caption{%
+    screenshot showing the output of my program when scanning with the
+    options specified above.
+  }\label{udpclosedoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpclosedpcap.png}
+  \caption{%
+    screenshot showing the packet capture of the scan in figure~\ref{udpclosedoutput}
+  }\label{udpclosedcap}
+\end{figure}
+
+\subsubsection{Detecting whether a UDP port is filtered}
+To show this I will use my program to perform a \gls{udp} scan on my local machine
+with a firewall rule to drop any ports sent to the localhost address. I expect to see
+my program to output the port as filtered and in the packet capture I expect to see
+three \gls{udp} packets with no response to any of them.
+In figure~\ref{udpfilteredoutput} you can see my program correctly identifies
+the port as being filtered and in figure~\ref{udpfilteredpcap} you can see
+the packet capture of the scan which also as expected shows the three \gls{udp}
+packets with no reply packets. This shows success criteria~\ref{blackbox}
+and~\ref{udpfiltered}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpfilteredoutput.png}
+  \caption{%
+    screenshot showing the output of my program when scanning with the
+    options specified above.
+  }\label{udpfilteredoutput}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/udpfilteredpcap.png}
+  \caption{%
+    screenshot showing the packet capture of the scan in figure~\ref{udpfilteredoutput}
+  }\label{udpfilteredpcap}
+\end{figure}
+
+\subsubsection{Detecting the operating system of another machine}
+I haven't directly added this as a feature to my project partly because
+I didn't have time and also because it is partially achieved by version
+scanning in that if a particular service is detected and that service
+is OS dependent then you can be fairly certain that machine is running
+that OS.\@ For example if a machine is open on \gls{tcp} port 22
+and SSH is detected to be running behind that port then they are likely
+to be running a linux machine. Even more likely if the scan reveals some
+further information such as the \gls{cpe}. In figure~\ref{sshversiondetect}
+you can see a scan of my machine where I have \gls{ssh} running,
+my program reveals that the version is 7.9 and the vendor is openbsd
+which is a unix like operating system, this shows that my ssh version
+is unix based and therefore I am likely to be running on linux, which is
+the case. So although it is not directly a feature in a round a bout way.
+This partially completes success criteria~\ref{osdetect}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/sshversiondetect.png}
+  \caption{%
+    screenshot showing a version scan of my local machine.
+  }\label{sshversiondetect}
+\end{figure}
+
+\subsubsection{Detecting the service and its version running behind a port}
+To show this I will use my program to perform a version detection scan on my local machine
+while I am running \gls{ssh}. I expect to see my program identify that \gls{ssh} is running
+on \gls{tcp} port 22 and that it detects it as OpenSSH version 7.9. To test this
+I will run my program with the \verb|-sV| flag to indicate version detection and
+I will run it against the localhost address. In figure~\ref{versiondetect}
+you can see that my program successfully identified \gls{ssh} as running on
+\gls{tcp} port 22 as well as the expected identification of OpenSSH version 7.9
+operating on protocol version 2.
+It also identified some CPE information such as OpenSSH coming from the openbsd
+distribution.
+This shows success criteria~\ref{blackbox} and~\ref{versiondetect}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{screenshots/sshversiondetect.png}
+  \caption{%
+    screenshot showing a version scan of my local machine running ssh.
+  }\label{versiondetecttest}
+\end{figure}
 
 \section{Evaluation}
 
@@ -1643,11 +2060,11 @@ in every type of scanning.
 \lstinputlisting[caption=A program which translates a CIDR specified subnet into a list of addresses and prints them out in sorted order,label=subnettoaddresses]{../../Code/subnet_to_address.py}
 
 \subsection{tcp\_scan}
-\verb|Connect()| scanning
+\subsubsection{connect\_scan}
 \lstinputlisting[caption=prototype TCP Connect() scanner only attempting to detect the state of port 22,label=connectsshattempt]{../../Code/tcp_scan/connect_scan/ssh_attempt.py}
 \lstinputlisting[caption=A program that performs TCP Connect() scanning, label=connectscanportlist]{../../Code/tcp_scan/connect_scan/scan_port_list.py}
 
-SYN scanning
+\subsubsection{syn\_scan}
 \lstinputlisting[caption=A prototype program that tries to detect the state of port 22 via TCP SYN scanning (aka half open scanning),label=synsshattempt]{../../Code/tcp_scan/syn_scan/ssh_attempt.py}
 \lstinputlisting[caption=A program that performs TCP SYN scanning (aka half open scanning),label=synscanportlist]{../../Code/tcp_scan/syn_scan/scan_port_list.py}
 
@@ -1673,7 +2090,8 @@ SYN scanning
 \lstinputlisting[caption=The program which provides the command line user interface for my projects functionality.,label=netscan]{../../Code/netscan.py}
 
 \subsection{tests}
-\lstinputlisting[caption=A few unit tests I wrote to cover some basic functions that I use as underpinnings for a lot of my other work so I wanted to make sure I hadn't accidentally broken any of them.,label=tests]{../../Code/tests/test_ip_utils.py}
+\lstinputlisting[caption=Unit tests I wrote for the ip\_utils module.,label=testiputils]{../../Code/tests/test_ip_utils.py}
+\lstinputlisting[caption=Unit tests I wrote for the directives module.,label=testdirectives]{../../Code/tests/test_directives.py}
 
 
 \clearpage

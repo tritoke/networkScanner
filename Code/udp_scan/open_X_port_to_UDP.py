@@ -13,4 +13,4 @@ with closing(
     print("opened port 12345 on localhost")
     while True:
         data, addr = s.recvfrom(1024)
-        s.sendto(bytes("Well hello there young one.", "utf-8"), addr)
+        s.sendto(bytes("Well hello there good sir.", "utf-8"), addr)

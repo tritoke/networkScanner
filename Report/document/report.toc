@@ -1,37 +1,53 @@
 \contentsline {section}{\numberline {1}Analysis}{2}{section.1}% 
 \contentsline {subsection}{\numberline {1.1}Identification and Background to the Problem}{2}{subsection.1.1}% 
-\contentsline {subsection}{\numberline {1.2}Analysis of problem}{11}{subsection.1.2}% 
-\contentsline {subsection}{\numberline {1.3}Success Criteria}{17}{subsection.1.3}% 
-\contentsline {subsection}{\numberline {1.4}Description of current system or existing solutions}{17}{subsection.1.4}% 
-\contentsline {subsection}{\numberline {1.5}Prospective Users}{23}{subsection.1.5}% 
-\contentsline {subsection}{\numberline {1.6}Data Dictionary}{23}{subsection.1.6}% 
-\contentsline {subsection}{\numberline {1.7}Data Flow Diagram}{24}{subsection.1.7}% 
-\contentsline {subsection}{\numberline {1.8}Description of Solution Details}{26}{subsection.1.8}% 
-\contentsline {subsection}{\numberline {1.9}Acceptable Limitations}{36}{subsection.1.9}% 
-\contentsline {subsection}{\numberline {1.10}Test Strategy}{36}{subsection.1.10}% 
-\contentsline {section}{\numberline {2}Design}{37}{section.2}% 
-\contentsline {subsection}{\numberline {2.1}Overall System Design (High Level Overview)}{37}{subsection.2.1}% 
-\contentsline {subsection}{\numberline {2.2}Design of User Interfaces HCI}{37}{subsection.2.2}% 
-\contentsline {subsection}{\numberline {2.3}System Algorithms}{39}{subsection.2.3}% 
-\contentsline {subsection}{\numberline {2.4}Input data Validation}{44}{subsection.2.4}% 
-\contentsline {subsection}{\numberline {2.5}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{44}{subsection.2.5}% 
-\contentsline {section}{\numberline {3}Technical Solution}{46}{section.3}% 
-\contentsline {subsection}{\numberline {3.1}Overview to direct the examiner to areas of complexity and explain design evidence}{46}{subsection.3.1}% 
-\contentsline {section}{\numberline {4}Testing}{46}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}Test Plan}{46}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}Test Table / Testing Evidence (Core: lots of screenshots)}{46}{subsection.4.2}% 
-\contentsline {section}{\numberline {5}Evaluation}{46}{section.5}% 
-\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{46}{subsection.5.1}% 
-\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{46}{subsection.5.2}% 
-\contentsline {subsection}{\numberline {5.3}Potential improvements}{46}{subsection.5.3}% 
-\contentsline {section}{\numberline {6}Appendices}{46}{section.6}% 
-\contentsline {subsection}{\numberline {6.1}icmp\_ping}{46}{subsection.6.1}% 
-\contentsline {subsection}{\numberline {6.2}ping\_scanner}{48}{subsection.6.2}% 
-\contentsline {subsection}{\numberline {6.3}subnet\_to\_addresses}{50}{subsection.6.3}% 
-\contentsline {subsection}{\numberline {6.4}tcp\_scan}{51}{subsection.6.4}% 
-\contentsline {subsection}{\numberline {6.5}udp\_scan}{55}{subsection.6.5}% 
-\contentsline {subsection}{\numberline {6.6}version\_detection}{60}{subsection.6.6}% 
-\contentsline {subsection}{\numberline {6.7}modules}{65}{subsection.6.7}% 
-\contentsline {subsection}{\numberline {6.8}examples}{101}{subsection.6.8}% 
-\contentsline {subsection}{\numberline {6.9}netscan}{102}{subsection.6.9}% 
-\contentsline {subsection}{\numberline {6.10}tests}{107}{subsection.6.10}% 
+\contentsline {subsection}{\numberline {1.2}Analysis of problem}{12}{subsection.1.2}% 
+\contentsline {subsection}{\numberline {1.3}Success Criteria}{18}{subsection.1.3}% 
+\contentsline {subsection}{\numberline {1.4}Description of current system or existing solutions}{18}{subsection.1.4}% 
+\contentsline {subsection}{\numberline {1.5}Prospective Users}{24}{subsection.1.5}% 
+\contentsline {subsection}{\numberline {1.6}Data Dictionary}{24}{subsection.1.6}% 
+\contentsline {subsection}{\numberline {1.7}Data Flow Diagram}{25}{subsection.1.7}% 
+\contentsline {subsection}{\numberline {1.8}Description of Solution Details}{27}{subsection.1.8}% 
+\contentsline {subsection}{\numberline {1.9}Acceptable Limitations}{37}{subsection.1.9}% 
+\contentsline {subsection}{\numberline {1.10}Test Strategy}{37}{subsection.1.10}% 
+\contentsline {section}{\numberline {2}Design}{38}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Overall System Design (High Level Overview)}{38}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Design of User Interfaces HCI}{38}{subsection.2.2}% 
+\contentsline {subsection}{\numberline {2.3}System Algorithms}{40}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.4}Input data Validation}{45}{subsection.2.4}% 
+\contentsline {subsection}{\numberline {2.5}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{45}{subsection.2.5}% 
+\contentsline {section}{\numberline {3}Technical Solution}{47}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Overview to direct the examiner to areas of complexity and explain design evidence}{47}{subsection.3.1}% 
+\contentsline {section}{\numberline {4}Testing}{47}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Test Plan}{47}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Test Table / Testing Evidence}{47}{subsection.4.2}% 
+\contentsline {subsubsection}{\numberline {4.2.1}Printing a usage message when run without parameters}{47}{subsubsection.4.2.1}% 
+\contentsline {subsubsection}{\numberline {4.2.2}Printing a help message when passed -h}{47}{subsubsection.4.2.2}% 
+\contentsline {subsubsection}{\numberline {4.2.3}Printing a help message when passed -help}{48}{subsubsection.4.2.3}% 
+\contentsline {subsubsection}{\numberline {4.2.4}Translating a CIDR specified subnet into a list of IP addresses}{49}{subsubsection.4.2.4}% 
+\contentsline {subsubsection}{\numberline {4.2.5}Scanning a subnet with ICMP ECHO REQUEST messages}{50}{subsubsection.4.2.5}% 
+\contentsline {subsubsection}{\numberline {4.2.6}Scanning without first checking whether hosts are up.}{51}{subsubsection.4.2.6}% 
+\contentsline {subsubsection}{\numberline {4.2.7}Detecting whether a TCP port is open}{53}{subsubsection.4.2.7}% 
+\contentsline {subsubsection}{\numberline {4.2.8}Detecting whether a TCP port is closed}{54}{subsubsection.4.2.8}% 
+\contentsline {subsubsection}{\numberline {4.2.9}Detecting whether a TCP port is filtered}{55}{subsubsection.4.2.9}% 
+\contentsline {subsubsection}{\numberline {4.2.10}Detecting whether a UDP port is open}{56}{subsubsection.4.2.10}% 
+\contentsline {subsubsection}{\numberline {4.2.11}Detecting whether a UDP port is closed}{57}{subsubsection.4.2.11}% 
+\contentsline {subsubsection}{\numberline {4.2.12}Detecting whether a UDP port is filtered}{57}{subsubsection.4.2.12}% 
+\contentsline {subsubsection}{\numberline {4.2.13}Detecting the operating system of another machine}{58}{subsubsection.4.2.13}% 
+\contentsline {subsubsection}{\numberline {4.2.14}Detecting the service and its version running behind a port}{59}{subsubsection.4.2.14}% 
+\contentsline {section}{\numberline {5}Evaluation}{60}{section.5}% 
+\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{60}{subsection.5.1}% 
+\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{60}{subsection.5.2}% 
+\contentsline {subsection}{\numberline {5.3}Potential improvements}{60}{subsection.5.3}% 
+\contentsline {section}{\numberline {6}Appendices}{60}{section.6}% 
+\contentsline {subsection}{\numberline {6.1}icmp\_ping}{60}{subsection.6.1}% 
+\contentsline {subsection}{\numberline {6.2}ping\_scanner}{62}{subsection.6.2}% 
+\contentsline {subsection}{\numberline {6.3}subnet\_to\_addresses}{64}{subsection.6.3}% 
+\contentsline {subsection}{\numberline {6.4}tcp\_scan}{65}{subsection.6.4}% 
+\contentsline {subsubsection}{\numberline {6.4.1}connect\_scan}{65}{subsubsection.6.4.1}% 
+\contentsline {subsubsection}{\numberline {6.4.2}syn\_scan}{66}{subsubsection.6.4.2}% 
+\contentsline {subsection}{\numberline {6.5}udp\_scan}{69}{subsection.6.5}% 
+\contentsline {subsection}{\numberline {6.6}version\_detection}{75}{subsection.6.6}% 
+\contentsline {subsection}{\numberline {6.7}modules}{80}{subsection.6.7}% 
+\contentsline {subsection}{\numberline {6.8}examples}{115}{subsection.6.8}% 
+\contentsline {subsection}{\numberline {6.9}netscan}{116}{subsection.6.9}% 
+\contentsline {subsection}{\numberline {6.10}tests}{121}{subsection.6.10}% 
