@@ -1,10 +1,13 @@
 \documentclass[titlepage]{article}
 
+\usepackage{appendix}
 \usepackage{graphicx} % for embedding pictures
+\graphicspath{ {screenshots/} }
 \usepackage{wrapfig} % for use with figures
 \usepackage{tikz} % for doing flow charts and stuff directly inside of latex
 \usepackage{framed} % if you want a frame around a figure
 \usepackage[hidelinks]{hyperref} % allows embedding links
+\usepackage{url} % allows for citing websites and having the URL appear after
 \usepackage[T1]{fontenc} % fixes weird font size/encoding issues
 \usepackage[utf8]{inputenc} % ensures input is UTF-8
 \usepackage{listings} % used to format code
@@ -162,6 +165,7 @@
 \maketitle
 
 \tableofcontents
+\clearpage
 
 \section{Analysis}
 
@@ -256,7 +260,7 @@ wire.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/dhcp_negotiation.png}
+  \includegraphics[width=\textwidth]{dhcp_negotiation.png}
   \caption{\gls{dhcp} address negotiation}\label{dhcp_negotiate}
 \end{figure}
 
@@ -274,7 +278,7 @@ All computer networking is encapsulated in the \gls{osi} which has 7 layers:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/osi_model.png}
+  \includegraphics[width=\textwidth]{osi_model.png}
   \caption{%
     OSI model diagram, source: https://www.electronicdesign.com
   }\label{osi_model}
@@ -337,7 +341,7 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/basic_webpage.png}
+  \includegraphics[width=\textwidth]{basic_webpage.png}
   \caption{%
     A basic static \gls{html} webpage.
   }\label{basicwebpage}
@@ -345,7 +349,7 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/website_get.png}
+  \includegraphics[width=\textwidth]{website_get.png}
   \caption{%
     A full chain of \glspl{pkt} that shows retrieving a basic webpage
     from the server.
@@ -354,7 +358,7 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/website_get_ladder.png}
+  \includegraphics[width=\textwidth]{website_get_ladder.png}
   \caption{%
     Ladder diagram of figure~\ref{getrequest}.
   }\label{getrequestladder}
@@ -398,7 +402,7 @@ Ethernet II and finally frame 4 which is the bytes that went down the wire.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/deconstructed_packet.png}
+  \includegraphics[width=\textwidth]{deconstructed_packet.png}
   \caption{%
     A look inside a TCP \gls{pkt}.
   }\label{deconstructed}
@@ -416,7 +420,9 @@ not always possible due to the limited information that \glspl{service} will rev
 themselves. Firewalls also play large part in making scanning networks difficult as sometimes they 
 simply drop \glspl{pkt} instead of sending a \gls{tcp} RST \gls{pkt} (reset connection \gls{pkt}). 
 When firewalls drop \glspl{pkt} it becomes exponentially more difficult as you don't know whether 
-your \gls{pkt} was corrupted or lost in transit or if it was just dropped. \\\\ To demonstrate this 
+your \gls{pkt} was corrupted or lost in transit or if it was just dropped.
+Dropping a packet means that when a packet is received no response is sent back
+as if the connection was just ``dropped''. \\\\ To demonstrate this 
 I will show three things:
 
 \begin{enumerate}
@@ -449,7 +455,7 @@ then close the connection.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/data_transfer.png}
+  \includegraphics[width=\textwidth]{data_transfer.png}
   \caption{%
     Packets starting a TCP session, transferring some data then ending it.
   }\label{data_transfer}
@@ -457,7 +463,7 @@ then close the connection.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/sender.png}
+  \includegraphics[width=\textwidth]{sender.png}
   \caption{%
     Transferring some basic text data over a TCP connection.
   }\label{sender}
@@ -465,7 +471,7 @@ then close the connection.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/receiver.png}
+  \includegraphics[width=\textwidth]{receiver.png}
   \caption{%
     Receiving some basic text data over a TCP connection.
   }\label{receiver}
@@ -473,7 +479,7 @@ then close the connection.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/data.png}
+  \includegraphics[width=\textwidth]{data.png}
   \caption{%
     Highlighted packet carrying the data being transferred in figure~\ref{sender}.
   }\label{data}
@@ -527,7 +533,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/packet_drop.png}
+  \includegraphics[width=\textwidth]{packet_drop.png}
   \caption{%
     Attempted connection to a closed port with and without firewall rule to drop \glspl{pkt}.
   }\label{firewall}
@@ -535,7 +541,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/packet_drop_code.png}
+  \includegraphics[width=\textwidth]{packet_drop_code.png}
   \caption{%
     The code used to produce firewall \gls{pkt} dropping example in figure~\ref{firewall}
   }\label{firewall_code}
@@ -578,12 +584,12 @@ signature to the user as the Python socket library does some processing before t
     To help the user with usage/help messages when prompted.  
   }\label{usage}
   \item{%
+    Translate \gls{cidr} specified subnets into a list of domains.
+  }\label{cidr}
+  \item{%
     Send \gls{icmp} ECHO requests to determine whether a machine is active
     or not.
   }\label{ping}
-  \item{%
-    Translate \gls{cidr} specified subnets into a list of domains.
-  }\label{cidr}
   \item{%
     Perform any scan type without first checking whether the host is up.
   }\label{nocheck}
@@ -649,8 +655,8 @@ knocking} (where \glspl{pkt} must be sent to a sequence of \glspl{port} in order
 the final\gls{port}is allowed). It also supports a plethora of options to avoid firewalls or 
 \gls{ids} such as sending \glspl{pkt} with spoofed \glspl{csum}/source addresses and sending decoy 
 probes. Nmap can do many more things than I have listed above as is illustrated quite clearly by the
-fact there is an entire working on using nmap 
-(\href{https://nmap.org/book/}{https://nmap.org/book/}). The following is an example nmap scan
+fact there is an entire working on using nmap (\href{https://nmap.org/book/}{https://nmap.org/book/}).
+The following is an example nmap scan
 which I did on my home network: \verb|nmap -sC -sV -oA networkscan 192.168.1.0/24|. Breaking
 it down this means to enable script scanning \verb|-sc|, enable version detection \verb|-sV|
 and then output all results in all the common formats: XML, nmap and greppable, using the
@@ -772,6 +778,8 @@ dive into why a port was marked as closed etc or the exact bytes that a service 
 In terms of where nmap lives in the software stack is that it is an application at level 7 when the
 user interacts with it but it uses several libraries which interact at level 2 which it uses to get
 the raw headers of the packets being sent and thus gain information from them.
+Nmap has virtually no competitors other than possibly Angry IP Scanner which
+is another open source network scanner expect it has a much smaller user base.
 
 \begin{figure}[H]
 
@@ -855,7 +863,16 @@ engineers. In my case my prospective users would be my school's system administr
 allow them to see an outsiders perspective on for example the \gls{server} running the school's 
 website page or to see if any of the programs on the \glspl{server} were leaking information
 through \glspl{banner} etc. (most \glspl{service} send a \gls{banner} with information like what
-protocol version they use and other information) 
+protocol version they use and other information).
+Banners are short strings of text which a service or program will send to identify itself when
+it receives a new connection. They often contain information such as protocol version etc, which
+allows the connecting client to know how to communicate with the service. However they can also
+reveal too much information such as the version number of the service running, if the service
+version is old then it is likely that bugs will have been found in the program since then
+this information could allow an attacker to gain access to the server by exploiting the vulnerability
+in that service. This can obviously be prevented by keeping services up to date, however that
+is not always possible so as a best practice banners should reveal the minimum amount of information
+possible such that the client can interact with the service.
 
 \subsection{Data Dictionary}
 
@@ -1111,7 +1128,7 @@ def ip_checksum(packet: bytes) -> int:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/deconstructed_headers.png}
+  \includegraphics[width=\textwidth]{deconstructed_headers.png}
   \caption{%
     Dissecting an \gls{icmp} ECHO REQUEST packet.
   }\label{echodissect}
@@ -1119,7 +1136,7 @@ def ip_checksum(packet: bytes) -> int:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/ping_send_success.png}
+  \includegraphics[width=\textwidth]{ping_send_success.png}
   \caption{%
     Screenshot of wireshark showing a successful send of an \gls{icmp} ECHO REQUEST packet.
   }\label{pingsuccess}
@@ -1127,7 +1144,7 @@ def ip_checksum(packet: bytes) -> int:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/local_self_ping.png}
+  \includegraphics[width=\textwidth]{local_self_ping.png}
   \caption{%
     Screenshot showing me first successfully dissecting an \gls{icmp} ECHO REQUEST packet.
   }\label{dissectsuccess}
@@ -1224,7 +1241,7 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/pingscan.png}
+  \includegraphics[width=\textwidth]{pingscan.png}
   \caption{%
     Screenshot of wireshark showing a successful ping scan.
   }\label{pingscansuccess}
@@ -1287,6 +1304,30 @@ parsers that I have written for the different protocols are working. I can also 
 \glspl{csum} in each of the various protocols is valid as wireshark does \gls{csum} verification for 
 various protocols. 
 
+I will be running these tests on my laptop which is a thinkpad T480 running arch linux
+with kernel version 5.0.7. I am using wireshark version 3.1.0, Python version 3.7.2 and
+pytest version 4.3.1. I am also using pyenv version 1.2.9 to manage the version of python in
+my python environment. I am using no modules outside of the python standard library so that
+my program is as portable as possible and its functionality is as reproducible as possible.
+
+To do the unit testing side of my testing you will need python 3.7.2 and pytest 4.3.1
+to run the tests you will need to run python -m pytest inside the Code directory, this will
+call pytest and then it will find the tests inside the tests directory and run them, it
+will then display the number of tests that passed along with lots of information on the
+tests that failed such as what the arguments were etc\ldots Pytest does this via introspection
+of the comparison and assert commands, this means that it uses its own versions of those commands
+which allow it to get more information out about what went wrong. Such as which element in a list
+was the one that caused the comparison to return false etc.
+
+The wireshark side of the testing you will need a version of wireshark and iptables.
+You will then need to set up wireshark in listen mode on the right interface so that it
+captures the packets that my program is sending, from there you can inspect the sent packets and
+determine whether they fit what was expected in the test description or whether they don't match at
+all. For filtered packet tests you will need to run the command \verb|iptables -I INPUT -s 127.0.0.1 -j DROP|
+and scan the localhost address and after the test you need to run the \verb|iptables -F| command
+to flush all the iptables rules to prevent any confusion in future caused by an firewall rule
+that shouldn't be there.
+
 \section{Design}
 
 \subsection{Overall System Design (High Level Overview)}
@@ -1314,8 +1355,8 @@ in the received \gls{pkt}.
 
 \subsection{Design of User Interfaces HCI}
 
-I have designed my system to have a similar interface to the most common tool currently used: nmap 
-this is because I believe that having a familiar interface will not only make it easier for someone 
+I have designed my system to have a similar interface to the most common tool currently used: nmap.
+This is because I believe that having a familiar interface will not only make it easier for someone 
 who is familiar with nmap to use my tool it also makes it so that anything learnt using either tool 
 is applicable to both which benefits everyone.
 
@@ -1352,7 +1393,9 @@ It shows clearly which are required arguments and which are optional ones, as we
 each argument actually does. It also allows some some arguments to be called with either
 a short format e.g.\ \verb|-p| and with a most verbose format \verb|--ports| this allows
 the user to be clearer if they are using the tool as part of an automated script to perform
-scanning as it is more immediately obvious what the more verbose flags do.
+scanning as it should be more immediately obvious what the more verbose flags do.
+If the user enters erroneous data they will normally be greeted by a python ValueError
+which explains exactly what the issue was with their input and prints the offending parameter.
 
 \subsection{System Algorithms}
 
@@ -1538,14 +1581,39 @@ scanning as it is more immediately obvious what the more verbose flags do.
 
 \subsection{Input data Validation}
 
-My program takes very little input from the user which means that there is a very low chance of the 
-program crashing due to user input error as the errors are detected All data which is entered is 
-either parsed using a regular expression with the case of the \glspl{port} directive (\verb|-p|) or 
-is run through checking functions like \verb|ip_utils.is_valid_ip|. As well as using these checking 
-functions whenever an~\gls{ipaddr} is converted between ``long form'' and ``dot form'' which is used 
-in every type of scanning.
+I perform data validation in all of the functions in the fundamental modules
+which I have made. This is because a lot of the functionality of my project
+is based around the code in these modules so I need to know if I am passing
+bad input data to a function. So that I know there is a bug that I need to
+fix. This also helps when the program is interacting with the user if it
+detects invalid data it will raise a ValueError which is python's error
+message for when an error is raised because the data passed in has the
+incorrect value, for example trying to turn the string \verb|"I love apples"|
+into an integer value will result in the error message:
+\verb|ValueError: invalid literal for int() with base 10: 'I love apples'|
+This informs you that you have tried to turn \verb|"I love apples"|
+into an integer with base 10 and it is invalid. An example from
+my code would be if I were to ask it to print out a subnet with 33 network
+bits it will raise a value error as network bits must be between 0 and 32.
+This is shown in figure~\ref{validation}.
+In general there are very few pieces of data that the user enters which can be erroneous,
+the user enters the IP address to scan, the ports to scan and the number of network bits
+in the case of a subnet. My program has functions which are used for verifying each of
+these, for the case of port numbers and IP addresses I have explicit functions which
+do this: \verb|def is_valid_port_number(port_num: int) -> bool:| and
+\verb|def is_valid_ip(ip: Union[str, int]) -> bool:|. For network bits they are validated
+inside of the function which generates the range of IP addresses for a subnet by a simple
+check on whether the number of network bits is between 0 and 32.
 
-\subsection{Proposed Algorithms for complex structures (flow charts or Pseudo Code)}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{validation.png}
+  \caption{%
+    A screenshot of the output of my code when asked to translate a subnet with 33 network bits.
+  }\label{validation}
+\end{figure}
+
+\subsection{Algorithm for complex structures}
 
 \begin{algorithm}
   \caption{%
@@ -1618,10 +1686,67 @@ in every type of scanning.
 \end{algorithm}
 
 \section{Technical Solution}
+I have placed all of my code in Appendix~\ref{code}. This is because it takes up 60 odd pages
+and as such it would make it a pain to have to page through to get to the testing section.
+However I will be going through each of the items in this appendix and explaining what they do.
 
-\subsection{Overview to direct the examiner to areas of complexity and explain design evidence}
+Appendix~\ref{app:icmpping} contains all the code which I wrote while in an early experimentation
+phase where I was testing out how I was planning to make and structure the project.
 
-\textbf{\color{red} need to do this.}
+Appendix~\ref{app:pingscanner} contains all the code which I wrote while writing my initial prototype
+of my ping scanner which uses \gls{icmp} ECHO REQUEST messages to detect hosts which are online on a given
+subnet.
+It is used to meet success criteria~\ref{ping}.
+
+Appendix~\ref{app:subnettoaddresses} contains all the code which I wrote while writing a tool which
+can translate a \gls{cidr} specified subnet into the list of \gls{ip} addresses for that subnet,
+it has logic to exclude the broadcast address and host addresses for each subnet.
+This is used to meet success criteria~\ref{cidr}.
+
+Appendix~\ref{app:tcpscan} contains all of the prototypes for \gls{tcp} based scanning which are contained
+in the sub Appendices~\ref{app:connectscan} and~\ref{app:synscan}. Appendix~\ref{app:connectscan} contains
+all of the code which I created whilst prototyping connect scanning. It satisfies success criteria~\ref{tcpopen}
+and~\ref{tcpclosed}. Appendix~\ref{app:synscan} contains all of the code I wrote while prototyping \gls{tcp} SYN
+scanning. It satisfies success criteria~\ref{tcpopen},~\ref{tcpclosed} and~\ref{tcpfiltered}.
+
+Appendix~\ref{app:udpscan} contains all of the code I wrote while prototyping \gls{udp} scanning.
+It satisfies success criteria~\ref{udpopen},~\ref{udpclosed} and~\ref{udpfiltered}.
+
+Appendix~\ref{app:versiondetection} contains all of the code I wrote while prototyping version detection
+scanning. It satisfies success criteria~\ref{servicedetect} and~\ref{versiondetect}.
+
+Appendix~\ref{app:modules} contains all of the modules I wrote to help me make me with creating
+my main application which I will come on to later. These modules mainly contain code which I reuse often
+such as code to calculate an ip checksum or validate an \gls{ipaddr}.
+
+Appendix~\ref{app:examples} contains a script I wrote which will run each of the prototype applications I
+made. This doesn't satisfy any of the success criteria but was very useful for solving issues I had with
+importing python modules where due to the directory structure everything as to do started from the root of
+the directory structure otherwise everything goes a bit mad, and this was my solution for running everything
+at the root of the directory structure as this sits at the root and can call the \verb|main()| function
+defined in each of the modules along with also being able to import all of the modules in the modules directory.
+
+Appendix~\ref{app:netscan} contains the code for my final application which satisfies all of the success
+criteria bar~\ref{osdetect} which is partially completed via version detect scanning.
+
+Appendix~\ref{app:tests} contains all of the for my unit tests which I run using \verb|python -m pytest|
+and it automatically goes and runs each function and can give me verbose information on each one.
+I have named all of the test functions in a very verbose way and I only test one thing in each function.
+This means that it is much easier for me to read from the name of a failed test exactly what went wrong
+with what function and what argument caused it. An example of this can be seen in figure~\ref{testing}
+where I have changed on of the tests so that it fails. You can see in that it shows me a clear difference
+between what was expected on one side of the assertion statement and then what actually happened on the
+other side. In this case it shows that in the left set there is an extra element of 192.168.1.1 and in
+the right an extra element of 192.168.1.0, this is very helpful for preventing regressions in the code
+where I would write feature and accidentally break another piece of functionality.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{testing.png}
+  \caption{%
+    A screenshot of running pytest with a deliberately broken test.
+  }\label{testing}
+\end{figure}
 
 \section{Testing}
 
@@ -1631,9 +1756,10 @@ I will be testing my application using a combination of unit tests and wireshark
 Unit tests are more suitable to doing tests on specific functions to make sure that regressions don't occur while developing
 the application. A regression is a when a feature or change that was implemented into the program is by accident and would 
 cause the application to break. Wireshark I will use to show the scanning portion of my code and where external connections
-are made/custom packets created.
+are made/custom packets created. The following are the tests using wireshark,
+the unit tests are in Appendix~\ref{app:tests}.
 
-\subsection{Test Table / Testing Evidence}
+\subsection{Testing Evidence}
 
 \subsubsection{Printing a usage message when run without parameters}
 
@@ -1646,7 +1772,7 @@ shows that it passed this test.
 This shows success criteria~\ref{usage}.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/noparameters.png}
+  \includegraphics[width=\textwidth]{noparameters.png}
   \caption{%
     Screenshot showing my program being run without parameters.
   }\label{noparametertest}
@@ -1665,7 +1791,7 @@ This shows success criteria~\ref{usage}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/hmessage.png}
+  \includegraphics[width=\textwidth]{hmessage.png}
   \caption{%
     Screenshot showing my program being run with the -h flag.
   }\label{hflagtest}
@@ -1682,7 +1808,7 @@ This shows success criteria~\ref{usage}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/helpmessage.png}
+  \includegraphics[width=\textwidth]{helpmessage.png}
   \caption{%
     Screenshot showing my program being run with the help flag.
   }\label{helpflagtest}
@@ -1690,41 +1816,10 @@ This shows success criteria~\ref{usage}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/messagehashes.png}
+  \includegraphics[width=\textwidth]{messagehashes.png}
   \caption{%
     Screenshot showing the hashes of the two help messages.
   }\label{messagehash}
-\end{figure}
-
-\subsubsection{Translating a CIDR specified subnet into a list of IP addresses}
-To show this I will run my program with the \verb|-sL| flag and I will specify
-a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
-such that it will fit on my terminal and therefore in a screenshot).
-I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
-To prove that my program works I will screenshot the output when run with the
-stated parameters and I will use a website to translate the same subnet and show
-that it displays the same addresses as my program.
-In figure~\ref{cidrtest} you can see that the output from my program matches
-the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
-which is also shown by the screen shot of the same subnet translated by
-the ipcalc utility on linux.
-This proves my program works and covers success criteria~\ref{cidr}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{screenshots/iplist.png}
-  \caption{%
-    Screenshot showing the output of my program when asked to translate the subnet 192.168.1.0/28.
-  }\label{cidrtest}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{screenshots/ipcalclist.png}
-  \caption{%
-    Screenshot showing the range displayed by the ipcalc utility when asked to calculate
-    the same subnet.
-  }\label{cidrwebproof}
 \end{figure}
 
 \subsubsection{Scanning a subnet with ICMP ECHO REQUEST messages}
@@ -1749,7 +1844,7 @@ criteria~\ref{blackbox} and~\ref{ping}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/pingscantest.png}
+  \includegraphics[width=\textwidth]{pingscantest.png}
   \caption{%
     Screenshot showing the output of a scan of my local network.
   }\label{lanscantest}
@@ -1757,10 +1852,41 @@ criteria~\ref{blackbox} and~\ref{ping}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/pingscantest_wireshark.png}
+  \includegraphics[width=\textwidth]{pingscantest_wireshark.png}
   \caption{%
     Screenshot showing a selection of the packets being sent by this scan.
   }\label{lanscanwireshark}
+\end{figure}
+
+\subsubsection{Translating a CIDR specified subnet into a list of IP addresses}
+To show this I will run my program with the \verb|-sL| flag and I will specify
+a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
+such that it will fit on my terminal and therefore in a screenshot).
+I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
+To prove that my program works I will screenshot the output when run with the
+stated parameters and I will use a website to translate the same subnet and show
+that it displays the same addresses as my program.
+In figure~\ref{cidrtest} you can see that the output from my program matches
+the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
+which is also shown by the screen shot of the same subnet translated by
+the ipcalc utility on linux.
+This proves my program works and covers success criteria~\ref{cidr}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{iplist.png}
+  \caption{%
+    Screenshot showing the output of my program when asked to translate the subnet 192.168.1.0/28.
+  }\label{cidrtest}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{ipcalclist.png}
+  \caption{%
+    Screenshot showing the range displayed by the ipcalc utility when asked to calculate
+    the same subnet.
+  }\label{cidrwebproof}
 \end{figure}
 
 \subsubsection{Scanning without first checking whether hosts are up.}
@@ -1786,7 +1912,7 @@ giving up. This shows my program can perform scans without first checking if the
 up, showing success criteria~\ref{nocheck}.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/nocheckhostoutput.png}
+  \includegraphics[width=\textwidth]{nocheckhostoutput.png}
   \caption{%
     Screenshot showing the output from my code when asked to port scan a subnet
     with no machines behind the addresses.
@@ -1795,7 +1921,7 @@ up, showing success criteria~\ref{nocheck}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/nocheckpcap.png}
+  \includegraphics[width=\textwidth]{nocheckpcap.png}
   \caption{%
     Screenshot showing the ARP requests my NIC sent to attempt to determine
     where to send the attempted connection packets.
@@ -1817,7 +1943,7 @@ and~\ref{tcpopen}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpopenscript.png}
+  \includegraphics[width=\textwidth]{tcpopenscript.png}
   \caption{%
     Screenshot showing the script I ran to accept a connection on localhost port 12345.
   }\label{tcpopenscript}
@@ -1825,7 +1951,7 @@ and~\ref{tcpopen}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpopenoutput.png}
+  \includegraphics[width=\textwidth]{tcpopenoutput.png}
   \caption{%
     Screenshot showing the output of my script when run with the specified flags
     and while the script in figure~\ref{tcpopenscript} was running.
@@ -1834,7 +1960,7 @@ and~\ref{tcpopen}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpopenpcap.png}
+  \includegraphics[width=\textwidth]{tcpopenpcap.png}
   \caption{%
     Screenshot showing the packet capture of the TCP SYN-ACK handshake performed
     by the scan in figure~\ref{tcpopenoutput} with the script in~\ref{tcpopenscript}.
@@ -1855,7 +1981,7 @@ the port is closed. This is reflected in figure~\ref{tcpclosedoutput}
 with no open ports showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpclosedoutput.png}
+  \includegraphics[width=\textwidth]{tcpclosedoutput.png}
   \caption{%
     Screenshot showing the output of my program when run with the specified options.
   }\label{tcpclosedoutput}
@@ -1863,7 +1989,7 @@ with no open ports showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpclosedpcap.png}
+  \includegraphics[width=\textwidth]{tcpclosedpcap.png}
   \caption{%
     Screenshot showing the packet capture of the TCP SYN-RST closed port indication
     caused by the scan in figure~\ref{tcpclosedoutput}.
@@ -1887,7 +2013,7 @@ to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpfilteredoutput.png}
+  \includegraphics[width=\textwidth]{tcpfilteredoutput.png}
   \caption{%
     Screenshot showing the output of my program when run with the specified options
     and a firewall in place to drop all packets to 127.0.0.1.
@@ -1896,7 +2022,7 @@ to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/tcpfilteredpcap.png}
+  \includegraphics[width=\textwidth]{tcpfilteredpcap.png}
   \caption{%
     Screenshot showing the packet capture of the scan in figure~\ref{tcpfilteredoutput}
   }\label{tcpfilteredpcap}
@@ -1921,7 +2047,7 @@ This shows success criteria~\ref{blackbox} and~\ref{udpopen}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpopenoutput.png}
+  \includegraphics[width=\textwidth]{udpopenoutput.png}
   \caption{%
     Screenshot showing the output of my program when run with the options specified
     above, and the script in listing~\ref{udpopenscript} is running.
@@ -1930,7 +2056,7 @@ This shows success criteria~\ref{blackbox} and~\ref{udpopen}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpopenpcap.png}
+  \includegraphics[width=\textwidth]{udpopenpcap.png}
   \caption{%
     screenshot showing the packet capture of the scan in figure~\ref{udpopenoutput}
   }\label{udpopenpcap}
@@ -1950,7 +2076,7 @@ This shows success criteria~\ref{blackbox} and~\ref{udpclosed}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpclosedoutput.png}
+  \includegraphics[width=\textwidth]{udpclosedoutput.png}
   \caption{%
     screenshot showing the output of my program when scanning with the
     options specified above.
@@ -1959,7 +2085,7 @@ This shows success criteria~\ref{blackbox} and~\ref{udpclosed}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpclosedpcap.png}
+  \includegraphics[width=\textwidth]{udpclosedpcap.png}
   \caption{%
     screenshot showing the packet capture of the scan in figure~\ref{udpclosedoutput}
   }\label{udpclosedcap}
@@ -1978,7 +2104,7 @@ and~\ref{udpfiltered}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpfilteredoutput.png}
+  \includegraphics[width=\textwidth]{udpfilteredoutput.png}
   \caption{%
     screenshot showing the output of my program when scanning with the
     options specified above.
@@ -1987,7 +2113,7 @@ and~\ref{udpfiltered}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/udpfilteredpcap.png}
+  \includegraphics[width=\textwidth]{udpfilteredpcap.png}
   \caption{%
     screenshot showing the packet capture of the scan in figure~\ref{udpfilteredoutput}
   }\label{udpfilteredpcap}
@@ -2011,7 +2137,7 @@ This partially completes success criteria~\ref{osdetect}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/sshversiondetect.png}
+  \includegraphics[width=\textwidth]{sshversiondetect.png}
   \caption{%
     screenshot showing a version scan of my local machine.
   }\label{sshversiondetect}
@@ -2028,15 +2154,42 @@ you can see that my program successfully identified \gls{ssh} as running on
 operating on protocol version 2.
 It also identified some CPE information such as OpenSSH coming from the openbsd
 distribution.
-This shows success criteria~\ref{blackbox} and~\ref{versiondetect}.
+This shows success criteria~\ref{blackbox},~\ref{servicedetect} and~\ref{versiondetect}.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{screenshots/sshversiondetect.png}
+  \includegraphics[width=\textwidth]{sshversiondetect.png}
   \caption{%
     screenshot showing a version scan of my local machine running ssh.
   }\label{versiondetecttest}
 \end{figure}
+
+\subsection{Test Table}
+\newcounter{row number}
+\newcommand\rownumber{\stepcounter{row number}\arabic{row number}}
+\begin{center}
+  \begin{tabular}{r l l l r r}
+    \toprule
+    Test No.   & Test Data   & Expectation & Result & Fig & Success Criteria \\
+    \midrule
+    \rownumber{} & & usage message & Pass &\ref{noparametertest} &\ref{usage}  \\
+    \rownumber{} & \verb| -h| & help message & Pass &\ref{hflagtest} &\ref{usage}  \\
+    \rownumber{} & \verb|--help| & help message & Pass &\ref{helpflagtest} &\ref{usage}  \\
+    \rownumber{} & \verb| -sL| & print addresses & Pass &\ref{cidrtest} &\ref{cidr}  \\
+    \rownumber{} & \verb| -sn| & ping scan & Pass &\ref{lanscantest} &\ref{ping}  \\
+    \rownumber{} & \verb| -Pn| & assume host up& Pass &\ref{nocheckoutput} &\ref{nocheck}  \\
+    \rownumber{} & \verb% -sS|sT% & TCP port open& Pass &\ref{tcpopenoutput} &\ref{tcpopen}  \\
+    \rownumber{} & \verb% -sS|sT% & TCP port closed& Pass &\ref{tcpclosedoutput} &\ref{tcpclosed}  \\
+    \rownumber{} & \verb| -sS| & TCP port filtered& Pass &\ref{tcpfilteredoutput} &\ref{tcpfiltered}  \\
+    \rownumber{} & \verb| -sU| & UDP port open& Pass &\ref{udpopenoutput} &\ref{udpopen}  \\
+    \rownumber{} & \verb| -sU| & UDP port closed& Pass &\ref{udpclosedoutput} &\ref{udpclosed}  \\
+    \rownumber{} & \verb| -sU| & UDP port filtered& Pass &\ref{udpfilteredoutput} &\ref{udpfiltered}  \\
+    \rownumber{} & \verb| -sV| & OS detection & Partial &\ref{sshversiondetect} &\ref{osdetect}  \\
+    \rownumber{} & \verb| -sV| & service detection & Pass &\ref{sshversiondetect} &\ref{servicedetect}  \\
+    \rownumber{} & \verb| -sV| & version detection & Pass &\ref{sshversiondetect} &\ref{versiondetect}  \\
+    \bottomrule
+  \end{tabular}
+\end{center}
 
 \section{Evaluation}
 
@@ -2046,52 +2199,58 @@ This shows success criteria~\ref{blackbox} and~\ref{versiondetect}.
 
 \subsection{Potential improvements}
 
-\section{Appendices}
-\lstset{language=python}
+\appendix
 
-\subsection{icmp\_ping}
+\section{Technical Solution}\label{code}
+\lstset{language=python}
+\subsection{icmp\_ping}\label{app:icmpping}
 \lstinputlisting[caption=A prototype program for sending ICMP ECHO REQEST packets,label=icmpechosend]{../../Code/icmp_ping/icmp_echo_send.py}
 \lstinputlisting[caption=A prototype program for receiving ICMP ECHO REQEST packets,label=icmpechorecv]{../../Code/icmp_ping/icmp_echo_recv.py}
 
-\subsection{ping\_scanner}
+\subsection{ping\_scanner}\label{app:pingscanner}
 \lstinputlisting[caption=A prototype program for performing `ping' scans,label=pingscanner]{../../Code/ping_scanner/ping_scan.py}
 
-\subsection{subnet\_to\_addresses}
+\subsection{subnet\_to\_addresses}\label{app:subnettoaddresses}
 \lstinputlisting[caption=A program which translates a CIDR specified subnet into a list of addresses and prints them out in sorted order,label=subnettoaddresses]{../../Code/subnet_to_address.py}
 
-\subsection{tcp\_scan}
-\subsubsection{connect\_scan}
-\lstinputlisting[caption=prototype TCP Connect() scanner only attempting to detect the state of port 22,label=connectsshattempt]{../../Code/tcp_scan/connect_scan/ssh_attempt.py}
-\lstinputlisting[caption=A program that performs TCP Connect() scanning, label=connectscanportlist]{../../Code/tcp_scan/connect_scan/scan_port_list.py}
+\subsection{tcp\_scan}\label{app:tcpscan}
+\subsubsection{connect\_scan}\label{app:connectscan}
+\lstinputlisting[caption=prototype TCP connect scanner only attempting to detect the state of port 22,label=connectsshattempt]{../../Code/tcp_scan/connect_scan/ssh_attempt.py}
+\lstinputlisting[caption=A program that performs TCP connect scanning, label=connectscanportlist]{../../Code/tcp_scan/connect_scan/scan_port_list.py}
 
-\subsubsection{syn\_scan}
+\subsubsection{syn\_scan}\label{app:synscan}
 \lstinputlisting[caption=A prototype program that tries to detect the state of port 22 via TCP SYN scanning (aka half open scanning),label=synsshattempt]{../../Code/tcp_scan/syn_scan/ssh_attempt.py}
 \lstinputlisting[caption=A program that performs TCP SYN scanning (aka half open scanning),label=synscanportlist]{../../Code/tcp_scan/syn_scan/scan_port_list.py}
 
-\subsection{udp\_scan}
+\subsection{udp\_scan}\label{app:udpscan}
 \lstinputlisting[caption=A prototype program to detect whether UDP port 53 is open on a target machine, label=dnsattempt]{../../Code/udp_scan/dns_attempt.py}
 \lstinputlisting[caption=A program for performing scans on UDP ports.,label=udpscanportlist]{../../Code/udp_scan/scan_port_list.py}
 \lstinputlisting[caption=A program I made to open a port via UDP for testing my UDP scanner.,label=openxport]{../../Code/udp_scan/open_X_port_to_UDP.py}
 
-\subsection{version\_detection}
+\subsection{version\_detection}\label{app:versiondetection}
 \lstinputlisting[caption=A program which does version detection on services.,label=versiondetection]{../../Code/version_detection/version_detection.py}
 
-\subsection{modules}
+\subsection{modules}\label{app:modules}
 \lstinputlisting[caption=A python module I wrote for parsing and holding the version detection probes from the nmap\_service\_probes file.,label=directives]{../../Code/modules/directives.py}
 \lstinputlisting[caption=A python module I made to dissect and hold protocol headers.,label=headers]{../../Code/modules/headers.py}
 \lstinputlisting[caption=A python module I wrote to contain lots of useful functions which I found I was declaring in multiple places and makign changes so I decided to keep an up to date central one.,label=iputils]{../../Code/modules/ip_utils.py}
 \lstinputlisting[caption=A python module I made to hold all of the listeners I had made for each of the different scanning types.,label=listeners]{../../Code/modules/listeners.py}
 \lstinputlisting[caption=A python module I made to hold all of the scanners I had made for each of the different scanning types.,label=scanners]{../../Code/modules/scanners.py}
 
-\subsection{examples}
+\subsection{examples}\label{app:examples}
 \lstinputlisting[caption=A program I wrote to run all of the example scripts I made from one main script to solve the issue of the PATH being used for determining import when I could use Pythons built in module structure instead.,label=runexamples]{../../Code/run_examples.py}
 
-\subsection{netscan}
+\subsection{netscan}\label{app:netscan}
 \lstinputlisting[caption=The program which provides the command line user interface for my projects functionality.,label=netscan]{../../Code/netscan.py}
 
-\subsection{tests}
+\subsection{tests}\label{app:tests}
 \lstinputlisting[caption=Unit tests I wrote for the ip\_utils module.,label=testiputils]{../../Code/tests/test_ip_utils.py}
 \lstinputlisting[caption=Unit tests I wrote for the directives module.,label=testdirectives]{../../Code/tests/test_directives.py}
+
+\clearpage
+\bibliographystyle{plain}
+\nocite{*}
+\bibliography{bibliography}
 
 
 \clearpage

@@ -1,5 +1,5 @@
-\contentsline {section}{\numberline {1}Analysis}{2}{section.1}% 
-\contentsline {subsection}{\numberline {1.1}Identification and Background to the Problem}{2}{subsection.1.1}% 
+\contentsline {section}{\numberline {1}Analysis}{3}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}Identification and Background to the Problem}{3}{subsection.1.1}% 
 \contentsline {subsection}{\numberline {1.2}Analysis of problem}{12}{subsection.1.2}% 
 \contentsline {subsection}{\numberline {1.3}Success Criteria}{18}{subsection.1.3}% 
 \contentsline {subsection}{\numberline {1.4}Description of current system or existing solutions}{18}{subsection.1.4}% 
@@ -16,38 +16,38 @@
 \contentsline {subsection}{\numberline {2.4}Input data Validation}{45}{subsection.2.4}% 
 \contentsline {subsection}{\numberline {2.5}Proposed Algorithms for complex structures (flow charts or Pseudo Code)}{45}{subsection.2.5}% 
 \contentsline {section}{\numberline {3}Technical Solution}{47}{section.3}% 
-\contentsline {subsection}{\numberline {3.1}Overview to direct the examiner to areas of complexity and explain design evidence}{47}{subsection.3.1}% 
-\contentsline {section}{\numberline {4}Testing}{47}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}Test Plan}{47}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}Test Table / Testing Evidence}{47}{subsection.4.2}% 
-\contentsline {subsubsection}{\numberline {4.2.1}Printing a usage message when run without parameters}{47}{subsubsection.4.2.1}% 
-\contentsline {subsubsection}{\numberline {4.2.2}Printing a help message when passed -h}{47}{subsubsection.4.2.2}% 
-\contentsline {subsubsection}{\numberline {4.2.3}Printing a help message when passed -help}{48}{subsubsection.4.2.3}% 
-\contentsline {subsubsection}{\numberline {4.2.4}Translating a CIDR specified subnet into a list of IP addresses}{49}{subsubsection.4.2.4}% 
-\contentsline {subsubsection}{\numberline {4.2.5}Scanning a subnet with ICMP ECHO REQUEST messages}{50}{subsubsection.4.2.5}% 
-\contentsline {subsubsection}{\numberline {4.2.6}Scanning without first checking whether hosts are up.}{51}{subsubsection.4.2.6}% 
-\contentsline {subsubsection}{\numberline {4.2.7}Detecting whether a TCP port is open}{53}{subsubsection.4.2.7}% 
-\contentsline {subsubsection}{\numberline {4.2.8}Detecting whether a TCP port is closed}{54}{subsubsection.4.2.8}% 
-\contentsline {subsubsection}{\numberline {4.2.9}Detecting whether a TCP port is filtered}{55}{subsubsection.4.2.9}% 
-\contentsline {subsubsection}{\numberline {4.2.10}Detecting whether a UDP port is open}{56}{subsubsection.4.2.10}% 
-\contentsline {subsubsection}{\numberline {4.2.11}Detecting whether a UDP port is closed}{57}{subsubsection.4.2.11}% 
-\contentsline {subsubsection}{\numberline {4.2.12}Detecting whether a UDP port is filtered}{57}{subsubsection.4.2.12}% 
-\contentsline {subsubsection}{\numberline {4.2.13}Detecting the operating system of another machine}{58}{subsubsection.4.2.13}% 
-\contentsline {subsubsection}{\numberline {4.2.14}Detecting the service and its version running behind a port}{59}{subsubsection.4.2.14}% 
-\contentsline {section}{\numberline {5}Evaluation}{60}{section.5}% 
-\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{60}{subsection.5.1}% 
-\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{60}{subsection.5.2}% 
-\contentsline {subsection}{\numberline {5.3}Potential improvements}{60}{subsection.5.3}% 
-\contentsline {section}{\numberline {6}Appendices}{60}{section.6}% 
-\contentsline {subsection}{\numberline {6.1}icmp\_ping}{60}{subsection.6.1}% 
-\contentsline {subsection}{\numberline {6.2}ping\_scanner}{62}{subsection.6.2}% 
-\contentsline {subsection}{\numberline {6.3}subnet\_to\_addresses}{64}{subsection.6.3}% 
-\contentsline {subsection}{\numberline {6.4}tcp\_scan}{65}{subsection.6.4}% 
-\contentsline {subsubsection}{\numberline {6.4.1}connect\_scan}{65}{subsubsection.6.4.1}% 
-\contentsline {subsubsection}{\numberline {6.4.2}syn\_scan}{66}{subsubsection.6.4.2}% 
-\contentsline {subsection}{\numberline {6.5}udp\_scan}{69}{subsection.6.5}% 
-\contentsline {subsection}{\numberline {6.6}version\_detection}{75}{subsection.6.6}% 
-\contentsline {subsection}{\numberline {6.7}modules}{80}{subsection.6.7}% 
-\contentsline {subsection}{\numberline {6.8}examples}{115}{subsection.6.8}% 
-\contentsline {subsection}{\numberline {6.9}netscan}{116}{subsection.6.9}% 
-\contentsline {subsection}{\numberline {6.10}tests}{121}{subsection.6.10}% 
+\contentsline {section}{\numberline {4}Testing}{49}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Test Plan}{49}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Testing Evidence}{49}{subsection.4.2}% 
+\contentsline {subsubsection}{\numberline {4.2.1}Printing a usage message when run without parameters}{49}{subsubsection.4.2.1}% 
+\contentsline {subsubsection}{\numberline {4.2.2}Printing a help message when passed -h}{49}{subsubsection.4.2.2}% 
+\contentsline {subsubsection}{\numberline {4.2.3}Printing a help message when passed -help}{50}{subsubsection.4.2.3}% 
+\contentsline {subsubsection}{\numberline {4.2.4}Scanning a subnet with ICMP ECHO REQUEST messages}{51}{subsubsection.4.2.4}% 
+\contentsline {subsubsection}{\numberline {4.2.5}Translating a CIDR specified subnet into a list of IP addresses}{52}{subsubsection.4.2.5}% 
+\contentsline {subsubsection}{\numberline {4.2.6}Scanning without first checking whether hosts are up.}{53}{subsubsection.4.2.6}% 
+\contentsline {subsubsection}{\numberline {4.2.7}Detecting whether a TCP port is open}{56}{subsubsection.4.2.7}% 
+\contentsline {subsubsection}{\numberline {4.2.8}Detecting whether a TCP port is closed}{57}{subsubsection.4.2.8}% 
+\contentsline {subsubsection}{\numberline {4.2.9}Detecting whether a TCP port is filtered}{58}{subsubsection.4.2.9}% 
+\contentsline {subsubsection}{\numberline {4.2.10}Detecting whether a UDP port is open}{59}{subsubsection.4.2.10}% 
+\contentsline {subsubsection}{\numberline {4.2.11}Detecting whether a UDP port is closed}{60}{subsubsection.4.2.11}% 
+\contentsline {subsubsection}{\numberline {4.2.12}Detecting whether a UDP port is filtered}{60}{subsubsection.4.2.12}% 
+\contentsline {subsubsection}{\numberline {4.2.13}Detecting the operating system of another machine}{61}{subsubsection.4.2.13}% 
+\contentsline {subsubsection}{\numberline {4.2.14}Detecting the service and its version running behind a port}{62}{subsubsection.4.2.14}% 
+\contentsline {subsection}{\numberline {4.3}Test Table}{63}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}Evaluation}{64}{section.5}% 
+\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{64}{subsection.5.1}% 
+\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{64}{subsection.5.2}% 
+\contentsline {subsection}{\numberline {5.3}Potential improvements}{64}{subsection.5.3}% 
+\contentsline {section}{\numberline {A}Technical Solution}{64}{appendix.A}% 
+\contentsline {subsection}{\numberline {A.1}icmp\_ping}{64}{subsection.A.1}% 
+\contentsline {subsection}{\numberline {A.2}ping\_scanner}{65}{subsection.A.2}% 
+\contentsline {subsection}{\numberline {A.3}subnet\_to\_addresses}{68}{subsection.A.3}% 
+\contentsline {subsection}{\numberline {A.4}tcp\_scan}{69}{subsection.A.4}% 
+\contentsline {subsubsection}{\numberline {A.4.1}connect\_scan}{69}{subsubsection.A.4.1}% 
+\contentsline {subsubsection}{\numberline {A.4.2}syn\_scan}{70}{subsubsection.A.4.2}% 
+\contentsline {subsection}{\numberline {A.5}udp\_scan}{73}{subsection.A.5}% 
+\contentsline {subsection}{\numberline {A.6}version\_detection}{78}{subsection.A.6}% 
+\contentsline {subsection}{\numberline {A.7}modules}{83}{subsection.A.7}% 
+\contentsline {subsection}{\numberline {A.8}examples}{119}{subsection.A.8}% 
+\contentsline {subsection}{\numberline {A.9}netscan}{120}{subsection.A.9}% 
+\contentsline {subsection}{\numberline {A.10}tests}{125}{subsection.A.10}% 

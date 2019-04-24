@@ -149,11 +149,19 @@ def ip_range(ip: str, network_bits: int) -> Set[str]:
 
     # turn all the long form IP addresses between
     # the lower and upper bound into dot form
-    return set(
-        long_to_dot(long_ip)
-        for long_ip in
-        range(lower_bound+1, upper_bound)
-    )
+    if network_bits <= 30:
+        return set(
+            long_to_dot(long_ip)
+            for long_ip in
+            range(lower_bound+1, upper_bound)
+        )
+    else:
+        return set(
+            long_to_dot(long_ip)
+            for long_ip in
+            range(lower_bound, upper_bound+1)
+        )
+
 
 
 def get_local_ip() -> str:

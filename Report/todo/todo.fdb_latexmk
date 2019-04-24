@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1555672269 "todo.tex" "todo.pdf" "todo" 1555672270
+["pdflatex"] 1556104446 "todo.tex" "todo.pdf" "todo" 1556106384
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1550406775 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1550406775 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1550406775 1288 655e228510b4c2a1abe905c368440826 ""
@@ -14,9 +14,9 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1550406775 33301 a3134070eacafb10b1f371612ce2650d ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1554631778 3233842 1a92d1d21a91d82fa70913e968179e54 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1554631760 7919195 aeb7ef3c038f6868ad8818943f8c0f44 ""
-  "todo.aux" 1555672270 198 af29b569ab693d6839f0b9aac616e07d ""
-  "todo.tex" 1555672253 10018 5ff8b2061c3f8f1cf82d377df19a2285 ""
+  "todo.aux" 1556104446 198 af29b569ab693d6839f0b9aac616e07d ""
+  "todo.tex" 1556104435 10025 6a16a6d4a91a4a6722b1fa93a1c66b25 ""
   (generated)
-  "todo.log"
   "todo.pdf"
+  "todo.log"
   "todo.aux"
