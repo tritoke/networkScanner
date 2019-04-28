@@ -1,0 +1,61 @@
+\contentsline {section}{\numberline {1}Analysis}{3}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}Identification and Background to the Problem}{3}{subsection.1.1}% 
+\contentsline {subsection}{\numberline {1.2}Analysis of problem}{11}{subsection.1.2}% 
+\contentsline {subsubsection}{\numberline {1.2.1}Successful connection over TCP}{11}{subsubsection.1.2.1}% 
+\contentsline {subsubsection}{\numberline {1.2.2}An attempted connection to a closed port}{14}{subsubsection.1.2.2}% 
+\contentsline {subsubsection}{\numberline {1.2.3}An attempted connection with a firewall rule to drop packets}{15}{subsubsection.1.2.3}% 
+\contentsline {subsubsection}{\numberline {1.2.4}Project aims and methods}{16}{subsubsection.1.2.4}% 
+\contentsline {subsection}{\numberline {1.3}Success Criteria}{17}{subsection.1.3}% 
+\contentsline {subsection}{\numberline {1.4}Description of existing solutions}{18}{subsection.1.4}% 
+\contentsline {subsection}{\numberline {1.5}Prospective Users}{24}{subsection.1.5}% 
+\contentsline {subsection}{\numberline {1.6}Data Dictionary}{24}{subsection.1.6}% 
+\contentsline {subsection}{\numberline {1.7}Data Flow Diagram}{26}{subsection.1.7}% 
+\contentsline {subsection}{\numberline {1.8}Description of Solution Details}{27}{subsection.1.8}% 
+\contentsline {subsection}{\numberline {1.9}Acceptable Limitations}{39}{subsection.1.9}% 
+\contentsline {subsection}{\numberline {1.10}Test Strategy}{39}{subsection.1.10}% 
+\contentsline {section}{\numberline {2}Design}{41}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Overall System Design (High Level Overview)}{41}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Design of User Interface}{41}{subsection.2.2}% 
+\contentsline {subsection}{\numberline {2.3}System Algorithms}{43}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.4}Input data validation}{48}{subsection.2.4}% 
+\contentsline {subsection}{\numberline {2.5}Algorithm for complex structures}{48}{subsection.2.5}% 
+\contentsline {section}{\numberline {3}Technical Solution}{50}{section.3}% 
+\contentsline {section}{\numberline {4}Testing}{52}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}Test Plan}{52}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}Testing Evidence}{52}{subsection.4.2}% 
+\contentsline {subsubsection}{\numberline {4.2.1}Printing a usage message when run without parameters}{52}{subsubsection.4.2.1}% 
+\contentsline {subsubsection}{\numberline {4.2.2}Printing a help message when passed -h}{53}{subsubsection.4.2.2}% 
+\contentsline {subsubsection}{\numberline {4.2.3}Printing a help message when passed -help}{54}{subsubsection.4.2.3}% 
+\contentsline {subsubsection}{\numberline {4.2.4}Scanning a subnet with ICMP echo request messages}{54}{subsubsection.4.2.4}% 
+\contentsline {subsubsection}{\numberline {4.2.5}Translating a CIDR-specified subnet into a list of IP addresses}{55}{subsubsection.4.2.5}% 
+\contentsline {subsubsection}{\numberline {4.2.6}Scanning without first checking whether hosts are up.}{56}{subsubsection.4.2.6}% 
+\contentsline {subsubsection}{\numberline {4.2.7}Detecting whether a TCP port is open}{59}{subsubsection.4.2.7}% 
+\contentsline {subsubsection}{\numberline {4.2.8}Detecting whether a TCP port is closed}{60}{subsubsection.4.2.8}% 
+\contentsline {subsubsection}{\numberline {4.2.9}Detecting whether a TCP port is filtered}{61}{subsubsection.4.2.9}% 
+\contentsline {subsubsection}{\numberline {4.2.10}Detecting whether a UDP port is open}{62}{subsubsection.4.2.10}% 
+\contentsline {subsubsection}{\numberline {4.2.11}Detecting whether a UDP port is closed}{63}{subsubsection.4.2.11}% 
+\contentsline {subsubsection}{\numberline {4.2.12}Detecting whether a UDP port is filtered}{64}{subsubsection.4.2.12}% 
+\contentsline {subsubsection}{\numberline {4.2.13}Detecting the operating system of another machine}{64}{subsubsection.4.2.13}% 
+\contentsline {subsubsection}{\numberline {4.2.14}Detecting the service and its version running behind a port}{65}{subsubsection.4.2.14}% 
+\contentsline {subsubsection}{\numberline {4.2.15}User enters invalid ip address}{66}{subsubsection.4.2.15}% 
+\contentsline {subsubsection}{\numberline {4.2.16}User enters invalid number of network bits}{66}{subsubsection.4.2.16}% 
+\contentsline {subsubsection}{\numberline {4.2.17}User enters an invalid port number to scan}{67}{subsubsection.4.2.17}% 
+\contentsline {subsubsection}{\numberline {4.2.18}User enters an invalid number of network bits and a bad IP address}{67}{subsubsection.4.2.18}% 
+\contentsline {subsection}{\numberline {4.3}Test Table}{68}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}Evaluation}{69}{section.5}% 
+\contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{69}{subsection.5.1}% 
+\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{69}{subsection.5.2}% 
+\contentsline {subsection}{\numberline {5.3}Potential improvements}{70}{subsection.5.3}% 
+\contentsline {section}{\numberline {A}Technical Solution}{71}{appendix.A}% 
+\contentsline {subsection}{\numberline {A.1}icmp\_ping}{71}{subsection.A.1}% 
+\contentsline {subsection}{\numberline {A.2}ping\_scanner}{72}{subsection.A.2}% 
+\contentsline {subsection}{\numberline {A.3}subnet\_to\_addresses}{75}{subsection.A.3}% 
+\contentsline {subsection}{\numberline {A.4}tcp\_scan}{76}{subsection.A.4}% 
+\contentsline {subsubsection}{\numberline {A.4.1}connect\_scan}{76}{subsubsection.A.4.1}% 
+\contentsline {subsubsection}{\numberline {A.4.2}syn\_scan}{77}{subsubsection.A.4.2}% 
+\contentsline {subsection}{\numberline {A.5}udp\_scan}{80}{subsection.A.5}% 
+\contentsline {subsection}{\numberline {A.6}version\_detection}{85}{subsection.A.6}% 
+\contentsline {subsection}{\numberline {A.7}modules}{90}{subsection.A.7}% 
+\contentsline {subsection}{\numberline {A.8}examples}{126}{subsection.A.8}% 
+\contentsline {subsection}{\numberline {A.9}netscan}{127}{subsection.A.9}% 
+\contentsline {subsection}{\numberline {A.10}tests}{132}{subsection.A.10}% 

@@ -146,7 +146,7 @@
 
 % forces [sub]sections to contain everything that is defined before the next one
 \let\Oldsection\section{}
-\renewcommand{\section}{\FloatBarrier\Oldsection}
+\renewcommand{\section}{\clearpage\FloatBarrier\Oldsection}
 
 \let\Oldsubsection\subsection{}
 \renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
@@ -169,8 +169,6 @@
 \maketitle
 
 \tableofcontents
-
-\clearpage
 
 \setlength{\parskip}{6pt plus 1pt minus 1pt}
 
@@ -434,7 +432,6 @@ along with Ethernet II and finally frame 4 which is the bytes that went down the
 \lstset{language=HTML}
   \lstinputlisting[caption={\textit{\textit{example.html}}}, label={examplepage}]{../example.html}
 
-\clearpage
 \subsection{Analysis of problem}
 
 To reiterate, the problem my project tries to solve is how to look at devices on a network from a 
@@ -462,7 +459,7 @@ I will show three things:
 
 \subsubsection{Successful connection over TCP}
 For a \gls{tcp} connection to be established there is a 
-three way handshake between the communicating machines.
+three-way handshake between the communicating machines.
 Initially, the machine trying to establish the connection sends a \gls{tcp} SYN packet to the other machine.
 This packet holds a dual purpose\cite{rfc:tcp}: to ask for a connection, and, if it is accepted, to SYNchronise the 
 sequence numbers being used to detect whether packets have been lost in transport.
@@ -591,7 +588,7 @@ tcp_retries2 (integer; default: 15; since Linux 2.2)
   too short.
 \end{verbatim}
 
-\subsubsection{Project aims and methods}
+\subsubsection{Project aims and methods}\label{pythonreason}
 Having explained firewalls, how they affect port scanning and other things above, I will now explain 
 what I am actually trying to achieve with my project and how I am going to do it. I am trying to 
 make a tool similar to nmap~\cite{download:nmap}, which will be able to detect the state
@@ -627,7 +624,7 @@ signature to the user, as the Python socket library does some processing before 
     To help the user with usage/help messages when prompted.  
   }\label{usage}
   \item{%
-    Translate \gls{cidr} specified subnets into a list of domains.
+    Translate \gls{cidr}-specified subnets into a list of domains.
   }\label{cidr}
   \item{%
     Send \gls{icmp} ECHO requests to determine whether a machine is active
@@ -807,7 +804,8 @@ report at a given URL if we recognise the service. This system of submitting fin
 services explains why nmap is so good at recognising services: it has a lot of data to look at and learn
 from in regards to service fingerprinting.
 
-\verb|Networkscan.gnmap| contains exactly the same information as \verb|networkscan.nmap|,
+\verb|Networkscan.gnmap| contains exactly the same information as \\
+\verb|networkscan.nmap|,
 but the output is formatted to enable easy searching with the grep utility.
 I reproduce part of the output file below:
 \begin{verbatim}
@@ -995,7 +993,7 @@ While my program is running it will need to store many different things in memor
   \item{The probes to be used for version detection}
 \end{itemize}
 I am going to try to estimate the amount of RAM my program will use, based on scanning a 
-\gls{cidr} specified subnet of 192.168.1.0/24, and the most common 1000 ports of each machine.
+\gls{cidr}-specified subnet of 192.168.1.0/24, and the most common 1000 ports of each machine.
 For the purpose of RAM estimation I will not consider version detection, as I am unsure of how I will implement it currently.
 To measure the size of an object in Python we can use the \verb|getsizeof| function provided by the
 \verb|sys| module. I also have a file called `hosts' which contains the addresses specified by
@@ -1049,7 +1047,7 @@ amount of data by any means.
 
 \subsection{Data Flow Diagram}
 
-In my application there will be three way information flow: 
+In my application there will be three-way information flow: 
 \begin{enumerate}
   \item{Sending packets out from my application}
   \item{Receiving packets back from the targets}
@@ -1059,10 +1057,14 @@ My program will only hold information in memory and provides no utility
 for saving the information from scans. This is because on the target systems
 (Linux/Unix based machines), the shell which is used to run commands has
 a very simple way of placing output in files by use of
-Unix ``pipes'', which are how Unix-based operating systems how interprocess
-communications. An example for saving nmap output would be
-\verb|nmap 192.168.1.0 > outputfile|, thus
-removing any need for reimplementing an existing utility.
+Unix ``pipes'', which are how Unix-based operating systems handle interprocess
+communications. 
+If nmap did not have a dedicated saving utility, the following command could 
+be used to save the output of nmap to a text file called outputfile: \\
+\verb|nmap 192.168.1.0 > outputfile|. Thus, in my application, for the sake of
+simplicity, this is the method I will use to save output.
+
+Figure~\ref{dataflow} below shows the proposed data flow in my program.
 
 \begin{figure}[H]
   \centering
@@ -1105,30 +1107,36 @@ removing any need for reimplementing an existing utility.
 
 \subsection{Description of Solution Details}
 
+As already stated above on page~\pageref{pythonreason},
 I will be using Python version 3.7.2 for my project because I am already familiar with Python's
 syntax and its socket library has a very nice high level \gls{api} for making system calls to
-the kernel's low level networking functions. This makes it very nice for a networking project
-like mine as it allows me to easily prototype and explore many ideas about how I could implement
-my solution without wasting vast amounts of time.
+the kernel's low level networking functions. This makes it ideal for a networking project
+like mine, as it allows me to prototype easily, and explore many ideas about how I could implement
+my solution in a time-efficient manner.
 
-The first point of the success criteria that I wanted to get a feel for was receiving and sending
-\gls{icmp} ECHO requests aka pings. \gls{icmp} as a protocol sits at layer 3 of the \gls{osi}
-this means it is a layer below what you are normally give access to in the socket module. This
-means instead of getting a bytes object with just the data from the header you instead get a bytes
-object which contains the entire packet and you have to dissect it yourself to get the information
-out of it, this can be quite difficult if it weren't for the struct module. The struct module 
-provides a convenient API for converting between packed values i.e.\ packets in network endianness
-to unpacked values i.e.\ a double representing the current time in local endianness. Interactions
-with the socket module are mainly through the pack and unpack functions. For each of these
-functions you provide a format specifier defining how to unpack/pack the bytes/values. 
-In Listing~\ref{echosend} you can see an example of me using the struct.pack function to pack
-the values which comprise an \gls{icmp} ECHO REQUEST into a packet and sending it the localhost
-address (127.0.0.1). This program is effectively the complement to the program listed in
-Listing~\ref{echorecv} which uses struct.unpack to unpack value from the received \gls{icmp}
-packet before printing the fields out to the terminal. Listing~\ref{echosend} makes use of the
-IP checksum function which I wrote. In Figure~\ref{echodissect} you can see the output when
-I run the command \verb|ping 127.0.0.1| which the code in Figure\ref{echorecv} is listening for
-packets.
+I decided to start my project by researching how to write code for receiving and sending
+\gls{icmp} \verb|echo requests| (i.e.\ pings).
+\gls{icmp} sits at layer 3 of the \gls{osi}.
+This means that it functions at a layer below that to which you are normally given access in the socket module.
+Sending an \gls{icmp} \verb|echo request| requires a raw socket.
+A raw socket is one which will return everything contained by the ethernet/wifi frame, including
+the raw \gls{ip} headers.
+The bytes object received from a raw socket thus requires unpacking to extract relevant information.
+The struct module provides a convenient \gls{api} for converting between packed values,
+because there is usually a difference in endianness between the network and the local machine
+which requires translation.
+
+Interactions with the socket module are mainly through the pack and unpack functions.
+For each of these functions it is necessary to provide a format specifier defining how
+to unpack/pack the bytes/values. 
+In Listing~\ref{echosend}, you can see an example of me using the \verb|struct.pack| function to pack
+the values which comprise an \gls{icmp} \verb|echo request| into a packet and sending it the localhost
+address (127.0.0.1). This program is effectively the complement to the program in
+Listing~\ref{echorecv}, which uses \verb|struct.unpack| to unpack value from the received \gls{icmp}
+packet before printing the fields out to the terminal. Listing~\ref{echosend} makes use of an
+IP checksum function which I wrote (see Listing~\ref{checksum} below).
+In Figure~\ref{echodissect}, you can see the output when I run the command
+\verb|ping 127.0.0.1| which the code in Listing~\ref{echorecv} is listening for packets.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -1148,7 +1156,7 @@ packets.
 }}
 \end{algorithm}
 
-\begin{lstlisting}[label=echosend,caption=\textit{A prototype for sending \gls{icmp} ECHO REQUEST packets.}]
+\begin{lstlisting}[label=echosend,caption=\textit{A prototype for sending \gls{icmp} echo request packets.}]
 #!/usr/bin/Python3.7
 import socket
 import struct
@@ -1198,7 +1206,7 @@ ping_sock.sendto(packet, ("127.0.0.1", 1))
 }}
 \end{algorithm}
 
-\begin{lstlisting}[label=echorecv,caption=\textit{A prototype for receiving \gls{icmp} ECHO REQUEST packets.}]
+\begin{lstlisting}[label=echorecv,caption=\textit{A prototype for receiving \gls{icmp} echo request packets.}]
 #!/usr/bin/Python3.7
 
 import socket
@@ -1301,7 +1309,7 @@ def ip_checksum(packet: bytes) -> int:
   \centering
   \includegraphics[width=\textwidth]{deconstructed_headers.png}
   \caption{\textit{%
-    Dissecting an \gls{icmp} ECHO REQUEST packet.
+    Dissecting an \gls{icmp} echo request packet.
 }}\label{echodissect}
 \end{figure}
 
@@ -1309,7 +1317,7 @@ def ip_checksum(packet: bytes) -> int:
   \centering
   \includegraphics[width=\textwidth]{ping_send_success.png}
   \caption{\textit{%
-    Screenshot of Wireshark showing a successful send of an \gls{icmp} ECHO REQUEST packet.
+    Screenshot of Wireshark showing a successful send of an \gls{icmp} echo request packet.
 }}\label{pingsuccess}
 \end{figure}
 
@@ -1317,18 +1325,21 @@ def ip_checksum(packet: bytes) -> int:
   \centering
   \includegraphics[width=\textwidth]{local_self_ping.png}
   \caption{\textit{%
-    Screenshot showing me first successfully dissecting an \gls{icmp} ECHO REQUEST packet.
+    Screenshot showing me first successfully dissecting an \gls{icmp} echo request packet.
 }}\label{dissectsuccess}
 \end{figure}
 
-Having done these prototypes I have identified that it would probably be best to abstract the
+Having written a prototype program which was capable of sending an \gls{icmp} \verb|echo request|
+and another prototype which was capable of receiving and unpacking it.
+Having done these prototypes I identified that it would be best to abstract the
 code for dissecting all the headers i.e.\ \gls{icmp}, \gls{tcp} and \gls{ip} into classes
-where I can just pass the received packet into the class and have it dissect it for me and then
-I will also get access to some of the benefits of classes such as the \verb|__repr__| method
-which is called when you print classes out and allows me to control what is printed out.
-Before I started to write the final piece I wanted to make a prototype ping scanner, as this
-would allow me to get a feel for making a scanner as well as further exploring low level protocol
-interactions.
+where I can just pass the received packet into the class and have the class dissect it for me.
+This will also give me access to some of the benefits of classes, such as the \verb|__repr__| method,
+which is called when you print classes out and allows control over what is printed out.
+Before embarking on the final program,
+I decided to write a prototype ping scanner,
+as this would allow me to get a feel for making a scanner,
+and to further exploring low level protocol interactions.
 
 \begin{lstlisting}[label=pingscan,caption=\textit{An attempt at making a ping scanner.}]
 #!/usr/bin/Python3.7
@@ -1431,22 +1442,23 @@ host: [192.168.1.246] responded to an ICMP ECHO REQUEST in 0.049      seconds, t
 host: [192.168.1.8] responded to an ICMP ECHO REQUEST in 0.099      seconds, ttl: [64]
 \end{lstlisting}
 
-Now that I have done these prototypes I am fairly certain about how I will structure the rest of
+Completion of these prototypes has given me an understanding of how I will structure the rest of
 my scanners, how to interact with Python's socket programming interface and how I can use the
 struct module to make and dissect packets. My general plan for the scanners will be to start
-a process that listens for responses for a set amount of time and then start sending the packets
-in a different process before waiting for the listening process to get all the responses back and
+a process that listens for responses for a set amount of time and then starts sending the packets
+in a different process, before waiting for the listening process to get all the responses back and
 collecting the results from that process.
 
 \subsection{Acceptable Limitations}
 
-Originally I had planned to include dedicated operating system detection as an option
-however, I ran out of time having implemented version detection. However, it still does
-Operating system detection partially as some \glspl{service} are Linux only and while doing
-\gls{service} and version detection especially the \gls{cpe} parts
-of the matched \gls{service}/version will contain operating system information, such as
-microsoft ActiveSync would indicate that the system being scanned was a windows system
-which is reflected in the match directive and attached CPE information:
+My original concept included dedicated operating system detection as an option.
+However, if I find that time is short having implemented version detection, it will
+be an acceptable limitation to omit operating system detection.
+This is because version detection can provide some indication of the operating system
+in use, by virtue of the fact that some services are restricted to certain operating systems.
+For example, if the scanner detected that the service ActiveSync was in use,
+this would indicate that the system being scanned was a Windows system,
+which is reflected in the match directive and attached CPE information for ActiveSync:
 \begin{verbatim}
 match activesync m|^.\0\x01\0[^\0]\0[^\0]\0[^\0]\0[^\0]\0[^\0]\0.
 *\0\0\0$|s p/Microsoft ActiveSync/ o/Windows/ cpe:/a:microsoft:ac
@@ -1460,44 +1472,27 @@ I am going to use two different methods to test my program:
 \item{Unit testing}
 \item{Wireshark}
 \end{enumerate}
-I am using two separate testing strategies because they are both good at different things,
-both of which I need to show that my project works. First, I am using unit testing to test
-some general purpose functions which are pure functions (are independent of the current state
-of the machine) such as \verb|ip_range()| and other functions which I can just check the returned
-value against what it should be.
+I will employ two separate testing strategies because they are good at different things,
+both of which I need in order to show that my project works. First, I will use unit testing to test
+some general purpose functions, which are pure functions (are independent of the current state
+of the machine). 
 
-Wireshark is useful for the other half of the program which uses impure functions and the low level 
-networking e.g.\ \verb|make_tcp_packet()|. Wireshark makes this easy by allowing capture of all the 
-\glspl{pkt} going over the wire, as well as this it has a vast array of \gls{pkt} decoders (2231 in 
-my install) which it can use to dissect almost any \gls{pkt} that would be on the network. The main 
-benefit of Wireshark is that I can see my scanners sending \glspl{pkt} and then check whether the 
-parsers that I have written for the different protocols are working. I can also check that the 
-\glspl{csum} in each of the various protocols is valid as Wireshark does \gls{csum} verification for 
-various protocols. 
+I will use Wireshark to test those parts of the program which involve
+the use of impure functions and low level networking.
+Wireshark makes this easy by allowing capture of all the \glspl{pkt} going over the wire.
+As well as this, it has a vast array of \gls{pkt} decoders (2231 in 
+my install), which it can use to dissect almost any \gls{pkt} that is on the network.
+Wireshark will allow me to see my scanners sending packets, and to check
+whether the parsers I have written for the various protocol are working.
+I can also check that the \glspl{csum} in each of the various protocols are valid
+as Wireshark is capable of performing \gls{csum} verification for a wide variety of protocols. 
 
-I will be running these tests on my laptop which is a thinkpad T480 running arch Linux
-with kernel version 5.0.7. I am using Wireshark version 3.1.0, Python version 3.7.2 and
-pytest version 4.3.1. I am also using pyenv version 1.2.9 to manage the version of Python in
-my Python environment. I am using no modules outside of the Python standard library so that
-my program is as portable as possible and its functionality is as reproducible as possible.
-
-To do the unit testing side of my testing you will need Python 3.7.2 and pytest 4.3.1
-to run the tests you will need to run Python -m pytest inside the Code directory, this will
-call pytest and then it will find the tests inside the tests directory and run them, it
-will then display the number of tests that passed along with lots of information on the
-tests that failed such as what the arguments were etc\ldots Pytest does this via introspection
-of the comparison and assert commands, this means that it uses its own versions of those commands
-which allow it to get more information out about what went wrong. Such as which element in a list
-was the one that caused the comparison to return false etc.
-
-The Wireshark side of the testing you will need a version of Wireshark and iptables.
-You will then need to set up Wireshark in listen mode on the right interface so that it
-captures the packets that my program is sending, from there you can inspect the sent packets and
-determine whether they fit what was expected in the test description or whether they don't match at
-all. For filtered packet tests you will need to run the command \verb|iptables -I INPUT -s 127.0.0.1 -j DROP|
-and scan the localhost address and after the test you need to run the command \verb|iptables -F| 
-to flush all the iptables rules to prevent any confusion in future caused by an firewall rule
-that shouldn't be there.
+I will be running these tests on my laptop, which is a Thinkpad T480 running Arch Linux
+with kernel version 5.0.7. I have installed the following versions of each of the programs
+I will be using to test my code: Wireshark 3.1.0, Python 3.7.2 and PyTest 4.3.1.
+I am also using pyenv version 1.2.9 to manage the version of Python in
+my Python environment. I plan not to use any modules outside of the Python standard library,
+so that my program is as portable as possible and its functionality is as reproducible as possible.
 
 \section{Design}
 
@@ -1509,9 +1504,9 @@ There are two types of scanning implemented for different scan types in my progr
   \item{Version}
   \item{Listener / Sender}
 \end{itemize}
-\verb|Connect()| scanning is the simplest in that it takes in a list of \glspl{port} and simply 
-calls the \verb|socket.connect()| method on it and sees whether it can connect or not and the 
-\glspl{port} are marked accordingly as open or closed. 
+\verb|Connect()| scanning is the simplest, in that it takes in a list of \glspl{port} and simply 
+calls \verb|socket.connect| it and sees whether it can connect or not.
+The \glspl{port} are marked accordingly as open or closed. 
 
 Version scanning is very similar to \verb|Connect()| scanning in that it takes in a list of 
 \glspl{port} and connects to them, except it then sends a probe to the target to elicit a response 
@@ -1519,24 +1514,24 @@ and gain some information about the \gls{service} running behind the \gls{port}.
 
 Listener / sender scanning does exactly what it says on the tin: it sets up a ``listener'' in 
 another process to listen for responses from the host which the ``sender'' is sending \glspl{pkt} 
-to. It can then differentiate between open, open|filtered, filtered and closed \glspl{port} based on 
-whether it receives a \gls{pkt} back and what flags (part of\gls{tcp} \glspl{pkt} are a one byte 
-long section which store ``flags'' where each bit in the byte represents a different flag) are set 
-in the received \gls{pkt}. 
+to. It can then differentiate between open, open|filtered, filtered and closed \glspl{port},
+based on whether it receives a \gls{pkt} back and what flags are set in the received \gls{pkt}. 
+Flags are parts of \gls{tcp} \glspl{pkt} that constitute a one byte long section,
+which store ``flags'' where each bit in the byte represents a different flag.
 
-\subsection{Design of User Interfaces HCI}
+\subsection{Design of User Interface}
 
 I am designing my system to have a similar interface to the most common tool currently used: nmap.
 This is because I believe that having a familiar interface will not only make it easier for someone 
-who is familiar with nmap to use my tool it also makes it so that anything learnt using either tool 
-is applicable to both which benefits everyone.
+who is familiar with nmap to use my tool, it also has the advantage that anything learnt using either tool 
+is applicable to both, which benefits everyone.
 
-Based on this perception I plan to use the same option flags as nmap as well as similar help messages 
+Based on this perception, I plan to use the same option flags as nmap, as well as similar help messages 
 and an almost identical call signature (how the program is used on the command line). \\
-Running \verb|./netscan.py <options> <target specification| should be almost identical to
+Running \verb|./netscan.py <options> <target specification>| should be almost identical to
 \verb|nmap <options> <target specification>| in terms of which scan types will be run, which hosts
 will be scanned and which \glspl{port} are 
-scanned. Below you can see a concept help message for my program with all the arguments I plan to
+scanned. Below, you can see a concept help message, for my program with all the arguments I plan to
 implement.
 
 \begin{verbatim}
@@ -1545,18 +1540,18 @@ usage: netscan.py <options> <target specification>
 required arguments:     target specification
 
 optional arguments:     -h, --help -Pn, -sL, -sn, -sS,
-                        -sT, -sU, -sV, -p, --ports,
+                        -sT, -sU, -sV, -p, --ports, -O
                         --exclude_ports
 
 \end{verbatim}
 
-It shows clearly which are required arguments and which are optional ones.
-It also shows that some some arguments to be called with either
-a short format e.g.\ \verb|-p| and with a more verbose format \verb|--ports| this allows
-the user to be clearer if they are using the tool as part of an automated script to perform
-scanning as it should be more clearer what the more verbose flags do.
-If the user enters erroneous data they should be greeted by a ValueError
-which will explain exactly what the issue was with their input and will print out the
+The above shows clearly which are required arguments, and which are optional ones.
+It also shows that some some arguments can be called with either
+a short format e.g.\ \verb|-p| or with a more verbose format \verb|--ports|.
+This allows the user to be clearer if they are using the tool as part of an automated
+script to perform scanning, as it should easier to recall the function of the more verbose flags.
+If the user enters erroneous data, they should be greeted by a ValueError,
+which will explain exactly what the issue was with their input, and will print out the
 argument that caused the error.
 
 \subsection{System Algorithms}
@@ -1741,38 +1736,37 @@ argument that caused the error.
 \end{figure}
 
 
-\subsection{Input data Validation}
+\subsection{Input data validation}
 
 I plan to perform data validation in all of the functions in the fundamental modules
-which will hold the basic functionality for my project e.g.\ scanning functions etc\ldots.
+which will hold the basic functionality for my project, such as the scanning functions.
 This is because my project will revolve heavily around these functions and they
 will need to be as error free as possible.
 Adding input validation to these core functions will enable me to find
-errors in my code earlier for example passing a function a list of
-string instead of just a string might work in some cases but
-the function will have a completely different result and these
-types of programming errors can be quite hard to debug as they
-might not generate errors too often but will still break the application.
-Although it helps when programming it will mainly be there to guide
-the user by showing them where in their arguments the problem is
-which is far more useful than some program which simply exit with
-no extra information, just error occurred.
+errors in my code earlier.
+For example, passing a function a list of strings instead of just a string might work in some cases,
+but the function will have a completely different result.
+These types of programming errors can be quite hard to debug,
+as although they may not generate errors very often but on occasions they will still break the application.
+Although data validation helps when programming, it will mainly be there to guide the user by showing them where
+in their arguments the problem is. This is far more useful than some programs, which simply exit with
+no information, beyond the fact that error occurred.
 
 An example for a Python ValueError could be trying to turn the string \\
 \verb|"tacos"|
 into an integer. This will result in the following error message:\\
-\verb|ValueError: invalid literal for int() with base 10: 'tacos'| \\
+\verb|ValueError: invalid literal for int() with base 10: `tacos'| \\
 This informs you that you have tried to turn \verb|"tacos"|
-into an integer with base 10 and it is invalid which is clear and
-helpful error message because it tells you what you tried to do that
-went wrong and it tells you what you argument was the one which caused the
-error.
+into an integer with base 10, which is invalid.
+This is a clear and helpful error message,
+because it tells you what you tried to do that went wrong,
+and which argument was the one that caused the error.
 
 \subsection{Algorithm for complex structures}
 
 \begin{algorithm}
   \caption{\textit{%
-  My algorithm for turning a \gls{cidr} specified \gls{subnet} into a list of actual \gls{ipaddr}es
+  My algorithm for turning a \gls{cidr}-specified \gls{subnet} into a list of actual \gls{ipaddr}es
 }}\label{ip_range}
   \begin{algorithmic}[1]
     \Procedure{ip\_range}{}
@@ -1847,21 +1841,22 @@ I will be going through each of the items in this appendix and explaining what t
 Appendix~\ref{app:icmpping} contains all the code which I wrote while in an early experimentation
 phase where I was testing out how I was planning to make and structure the project.
 
-Appendix~\ref{app:pingscanner} contains all the code which I wrote while writing my initial prototype
-of my ping scanner which uses \gls{icmp} ECHO REQUEST messages to detect hosts which are online on a given
+Appendix~\ref{app:pingscanner} contains all the code which I wrote while writing the initial prototype
+of my ping scanner which uses \gls{icmp} \verb|echo request| messages to detect hosts which are online on a given
 subnet.
-It is used to meet success criteria~\ref{ping}.
+This is used to meet success criterion~\ref{ping}.
 
-Appendix~\ref{app:subnettoaddresses} contains all the code which I wrote while writing a tool which
-can translate a \gls{cidr} specified subnet into the list of \gls{ip} addresses for that subnet,
-it has logic to exclude the broadcast address and host addresses for each subnet.
-This is used to meet success criteria~\ref{cidr}.
+Appendix~\ref{app:subnettoaddresses} contains all the code which I wrote while writing a tool to
+translate a \gls{cidr}-specified subnet into the list of \gls{ip} addresses for that subnet.
+It uses logic to exclude the broadcast address and host addresses for each subnet.
+This is used to meet success criterion~\ref{cidr}.
 
-Appendix~\ref{app:tcpscan} contains all of the prototypes for \gls{tcp} based scanning which are contained
-in the sub Appendices~\ref{app:connectscan} and~\ref{app:synscan}. Appendix~\ref{app:connectscan} contains
-all of the code which I created whilst prototyping connect scanning. It satisfies success criteria~\ref{tcpopen}
-and~\ref{tcpclosed}. Appendix~\ref{app:synscan} contains all of the code I wrote while prototyping \gls{tcp} SYN
-scanning. It satisfies success criteria~\ref{tcpopen},~\ref{tcpclosed} and~\ref{tcpfiltered}.
+Appendix~\ref{app:tcpscan} contains all of the prototypes for \gls{tcp}-based scanning,
+which are contained in the sub-appendices~\ref{app:connectscan} and~\ref{app:synscan}.
+Appendix~\ref{app:connectscan} contains all of the code which I created whilst prototyping connect scanning.
+It satisfies success criteria~\ref{tcpopen} and~\ref{tcpclosed}.
+Appendix~\ref{app:synscan} contains all of the code I wrote while prototyping \gls{tcp} SYN scanning.
+It satisfies success criteria~\ref{tcpopen},~\ref{tcpclosed} and~\ref{tcpfiltered}.
 
 Appendix~\ref{app:udpscan} contains all of the code I wrote while prototyping \gls{udp} scanning.
 It satisfies success criteria~\ref{udpopen},~\ref{udpclosed} and~\ref{udpfiltered}.
@@ -1869,30 +1864,42 @@ It satisfies success criteria~\ref{udpopen},~\ref{udpclosed} and~\ref{udpfiltere
 Appendix~\ref{app:versiondetection} contains all of the code I wrote while prototyping version detection
 scanning. It satisfies success criteria~\ref{servicedetect} and~\ref{versiondetect}.
 
-Appendix~\ref{app:modules} contains all of the modules I wrote to help me make me with creating
-my main application which I will come on to later. These modules mainly contain code which I reuse often
-such as code to calculate an ip checksum or validate an \gls{ipaddr}.
+Appendix~\ref{app:modules} contains all of the modules I wrote to help with creating my main application,
+described later.
+These modules mainly contain code which I reuse often,
+such as code to calculate an ip checksum, or validate an \gls{ipaddr}.
 
-Appendix~\ref{app:examples} contains a script I wrote which will run each of the prototype applications I
-made. This doesn't satisfy any of the success criteria but was very useful for solving issues I had with
-importing Python modules where due to the directory structure everything as to do started from the root of
-the directory structure otherwise everything goes a bit mad, and this was my solution for running everything
-at the root of the directory structure as this sits at the root and can call the \verb|main()| function
-defined in each of the modules along with also being able to import all of the modules in the modules directory.
+Appendix~\ref{app:examples} contains a script I wrote which will run each of the prototype applications I made.
+This doesn't satisfy any of the success criteria,
+but was very useful for solving issues I had with importing Python modules,
+where owing to the directory structure everything has to be started from the root of the directory structure,
+otherwise errors occur.
+My solution for eliminating the errors was to run everything at the root of the directory structure,
+as this can call the \verb|main()| function defined in each of the modules,
+and can also import all of the modules in the modules directory.
 
-Appendix~\ref{app:netscan} contains the code for my final application which satisfies all of the success
-criteria bar~\ref{osdetect} which is partially completed via version detect scanning.
+Appendix~\ref{app:netscan} contains the code for my final application.
+This satisfies all of the success criteria apart from~\ref{osdetect},
+which as previously discussed, is alternatively completed via version detection scanning.
 
-Appendix~\ref{app:tests} contains all of the for my unit tests which I run using \\
-\verb|Python -m pytest| and it automatically goes and runs each function and can give me verbose information on each one.
-I have named all of the test functions in a very verbose way and I only test one thing in each function.
+Appendix~\ref{app:tests} contains all of the code for my unit tests which I run using \\
+\verb|Python -m pytest|.
+It automatically runs each function, and delivers verbose information on each one.
+I have deliberately named all of the test functions in a very verbose way and I only test one thing in each function.
 This means that it is much easier for me to read from the name of a failed test exactly what went wrong
-with what function and what argument caused it. An example of this can be seen in Figure~\ref{testing}
-where I have changed on of the tests so that it fails. You can see in that it shows me a clear difference
-between what was expected on one side of the assertion statement and then what actually happened on the
-other side. In this case it shows that in the left set there is an extra element of 192.168.1.1 and in
-the right an extra element of 192.168.1.0, this is very helpful for preventing regressions in the code
-where I would write feature and accidentally break another piece of functionality.
+with what function and what argument caused it.
+An example of this can be seen in Figure~\ref{testing},
+where I have changed one of the tests so that it fails.
+You can see that the output of the test shows me a clear difference between what
+was expected on one side of the assertion statement
+and then what actually happened on the other side.
+In this case,
+it shows that in the left set there is an extra element ``192.168.1.1''
+and in the right an extra element ``192.168.1.0''.
+This is very helpful for preventing regressions in the code.
+Until I wrote these unit tests,
+I found that I would write a new feature and accidentally break
+another piece of functionality as a consequence.
 
 \begin{figure}[H]
   \centering
@@ -1906,14 +1913,39 @@ where I would write feature and accidentally break another piece of functionalit
 
 \subsection{Test Plan}
 
-I will be testing my application using a combination of unit tests and Wireshark where applicable.
-Unit tests are more suitable to doing tests on specific functions to make sure that regressions don't occur while developing
-the application. A regression is a when a feature or change that was implemented into the program is by accident and would 
-cause the application to break. Wireshark I will use to show the scanning portion of my code and where external connections
-are made/custom packets created. The following are the tests using Wireshark,
+I will be testing my application using a combination of unit tests,
+and Wireshark where applicable.
+Unit tests are more suitable for doing tests on specific functions to make sure
+that regressions don't occur while developing the application.
+A regression is a when a feature or change that was implemented into the program 
+has accidental consequences that cause the application to break.
+I will use Wireshark to show the scanning portion of my code,
+and when external connections are made/custom packets created.
+Section~\ref{wiresharktests} contains the tests using Wireshark;
 the unit tests are in Appendix~\ref{app:tests}.
 
-\subsection{Testing Evidence}
+The Wireshark testing will require Wireshark and iptables.
+I will need to set up Wireshark in listen mode on the right interface so that it
+captures the packets that my program is sending.
+From there I will be able to inspect the sent packets and determine whether they fit
+what was expected in the test description or whether they don't match at all.
+For filtered packet tests I will need to run the command \verb|iptables -I INPUT -s 127.0.0.1 -j DROP|
+and scan the localhost address, and after the test I will need to run the command \verb|iptables -F| 
+to flush all the iptables rules to prevent any confusion in future caused by an firewall rule
+that shouldn't be there.
+
+To running the unit tests will require Python 3.7.2 and pytest 4.3.1.
+To run the tests I will need to run \verb|python -m pytest| inside the Code directory.
+This will call pytest,
+which will find the tests inside the tests directory and run them.
+It will then display the number of tests that passed along with lots of information on the
+tests that failed, such as what the arguments were etc.
+Pytest does this via introspection of the comparison and assert commands.
+This means that it uses its own versions of those commands which allow it to get more
+information out about what went wrong,
+such as which element in a list was the one that caused the comparison to return false etc.
+
+\subsection{Testing Evidence}\label{wiresharktests}
 
 \subsubsection{Printing a usage message when run without parameters}
 
@@ -1923,7 +1955,7 @@ where everything in angle brackets should be replaced by what is necessary for m
 In Figure~\ref{noparametertest} you can see me run \verb|./netscan.py| with no parameters and it
 prints out the required usage message telling me that I am missing the target\_spec parameter, this
 shows that it passed this test.
-This shows success criteria~\ref{usage}.
+This shows success criterion~\ref{usage}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{noparameters.png}
@@ -1941,7 +1973,7 @@ an argument can have two forms then it should print out both forms of the flag, 
 In Figure~\ref{hflagtest} you can see me run my program with the \verb|-h| flag and it proceeds to
 print of a help message with messages with what each option is for as well as short and long form of
 arguments, this shows my program passed this test.
-This shows success criteria~\ref{usage}.
+This shows success criterion~\ref{usage}.
 
 \begin{figure}[H]
   \centering
@@ -1953,12 +1985,13 @@ This shows success criteria~\ref{usage}.
 
 \subsubsection{Printing a help message when passed -help}
 To show this I will run my program with the \verb|--help| flag.
-This should produce the exact same output as with \verb|-h|.
-This shows the exact same message as in the test of \verb|-h|.
-To prove this if I take the sha1sum of the output for both flags we can see
-that the hashes are identical and therefore the originals were also identical,
+This should produce the same output as with \verb|-h|.
+This shows the same message as in the test of \verb|-h|.
+To prove this,
+if I take the sha1sum of the output for both flags,
+we can see that the hashes are identical and therefore the originals were also identical;
 this is shown in Figure~\ref{messagehash}.
-This shows success criteria~\ref{usage}.
+This shows success criterion~\ref{usage}.
 
 \begin{figure}[H]
   \centering
@@ -1976,7 +2009,7 @@ This shows success criteria~\ref{usage}.
 }}\label{messagehash}
 \end{figure}
 
-\subsubsection{Scanning a subnet with ICMP ECHO REQUEST messages}
+\subsubsection{Scanning a subnet with ICMP echo request messages}
 To show this I will run my program with the \verb|-sn| flag and specify the
 subnet of my local network \verb|192.168.178.0/24|.
 This should produce a list of all the hosts which are up on the network.
@@ -1988,13 +2021,14 @@ showing that the hosts:
   \item{192.168.178.30}
   \item{192.168.178.1}
 \end{itemize}
-all responded with \gls{icmp} ECHO REPLY messages, this is reflected
-in a packet capture I took while performing the scan. A section of this
-scan is shown in Figure~\ref{lanscanWireshark} where you can see some of
-\gls{icmp} ECHO REQUEST messages my program sent, along with some of the requests
-to hosts that don't exist, note the different addresses in the source and destination fields
-and the Echo (ping) request vs reply in the info column. This successfully shows success
-criteria~\ref{blackbox} and~\ref{ping}.
+all responded with \gls{icmp} echo reply messages.
+This is reflected in a packet capture I took while performing the scan.
+A section of this scan is shown in Figure~\ref{lanscanWireshark},
+where you can see some of \gls{icmp} echo request messages my program sent,
+along with some of the requests to hosts that don't exist.
+Note the different addresses in the source and destination fields,
+and the Echo (ping) request vs reply in the info column.
+This meets success criteria~\ref{blackbox} and~\ref{ping}.
 
 \begin{figure}[H]
   \centering
@@ -2012,19 +2046,20 @@ criteria~\ref{blackbox} and~\ref{ping}.
 }}\label{lanscanWireshark}
 \end{figure}
 
-\subsubsection{Translating a CIDR specified subnet into a list of IP addresses}
+\subsubsection{Translating a CIDR-specified subnet into a list of IP addresses}
 To show this I will run my program with the \verb|-sL| flag and I will specify
 a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
 such that it will fit on my terminal and therefore in a screenshot).
 I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
-To prove that my program works I will screenshot the output when run with the
-stated parameters and I will use a website to translate the same subnet and show
+To prove that my program works,
+I will screenshot the output when run with the stated parameters and I will use
+a website to translate the same subnet and show
 that it displays the same addresses as my program.
-In Figure~\ref{cidrtest} you can see that the output from my program matches
+In Figure~\ref{cidrtest}, you can see that the output from my program matches
 the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
 which is also shown by the screen shot of the same subnet translated by
 the ipcalc utility on Linux.
-This proves my program works and covers success criteria~\ref{cidr}.
+This proves my program works and covers success criterion~\ref{cidr}.
 
 \begin{figure}[H]
   \centering
@@ -2052,7 +2087,7 @@ on it. I will also specify \verb|-p 12345| to only scan port 12345 so that there
 fewer requests in the packet capture. Finally I will specify \verb|-sS| to do \gls{tcp}
 SYN SCANNING.\@ I expect to see a multiple of 14 \gls{arp} messages.
 This is because I don't know how many times my \gls{nic} will retry at getting
-the destination \gls{mac} address. It needs to destination \gls{mac} address to send
+the destination \gls{mac} address. It needs the destination \gls{mac} address to send
 the packet to its destination as we are scanning a private IP range of my router.
 In Figure~\ref{nocheckoutput} you can see the output of my program when run with the
 specified flags, you can see that as expected it showed that there were no open ports
@@ -2063,7 +2098,7 @@ way I could guarantee that there was no machine at the other end. However, this 
 as expected, as well as this we can see 42 \gls{arp} requests, which is $3\times14$
 \gls{arp} requests, which would indicate each scan made three \gls{arp} requests before
 giving up. This shows my program can perform scans without first checking if the host is
-up, showing success criteria~\ref{nocheck}.
+up, showing success criterion~\ref{nocheck}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{nocheckhostoutput.png}
@@ -2085,13 +2120,13 @@ up, showing success criteria~\ref{nocheck}.
 \subsubsection{Detecting whether a TCP port is open}
 To show this I will perform a \gls{tcp} \verb|Connect()| scan on my local
 machine while running a script which will listen on port 12345 for any connections
-and send back a message. To do this I will pass my program the flags \verb|-sT| and
+and send back a message. I will pass my program the flags \verb|-sT| and
 \verb|-p 12345| as well as specifying localhost to scan (127.0.0.1).
 I expect to see a \gls{tcp} SYN-ACK handshake between my program and the script and
 then my program to output that the port is open. In Figure~\ref{tcpopenpcap} you can
 see the expected \gls{tcp} SYN-ACK handshake performed by my program and the script
 in Figure~\ref{tcpopenscript}.
-You can see the output of my program in Figure~\ref{tcpopenoutput}, as expected
+You can see the output of my program in Figure~\ref{tcpopenoutput}; as expected
 it outputs that port 12345 is open. This shows success criteria~\ref{blackbox}
 and~\ref{tcpopen}.
 
@@ -2122,17 +2157,17 @@ and~\ref{tcpopen}.
 \end{figure}
 
 \subsubsection{Detecting whether a TCP port is closed}
-To show this I will perform a \gls{tcp} \verb|Connect()| scan
-on my local machine except instead of running a script to catch the
-request I will just let it try to connect to the closed port.
-I expect to see a \gls{tcp} SYN packet sent to the port and then a RST ACK
-packet sent back, my program should output no open ports.
-To do this I will pass my program the same options as in the test for
+To show this, I will perform a \gls{tcp} \verb|Connect()| scan
+on my local machine, except that instead of running a script to catch the
+request, I will just let it try to connect to the closed port.
+I expect to see a \gls{tcp} SYN packet sent to the port, and then a RST ACK
+packet sent back; my program should output no open ports.
+I will pass my program the same options as in the test for
 a \gls{tcp} open port.
-In Figure~\ref{tcpclosedpcap} you can see the attempted connection to
-127.0.0.1 port 12345 along with the RST ACK packet afterwards indicating
+In Figure~\ref{tcpclosedpcap}, you can see the attempted connection to
+127.0.0.1 port 12345, along with the RST ACK packet afterwards, indicating
 the port is closed. This is reflected in Figure~\ref{tcpclosedoutput}
-with no open ports showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
+with no open ports, showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{tcpclosedoutput.png}
@@ -2151,17 +2186,18 @@ with no open ports showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
 \end{figure}
 
 \subsubsection{Detecting whether a TCP port is filtered}
-To show this I will perform a \gls{tcp} SYN scan on localhost port 12345
-except I will also introduce a firewall rule to drop all requests to localhost.
+To show this I will perform a \gls{tcp} SYN scan on localhost port 12345,
+except that I will also introduce a firewall rule to drop all requests to localhost.
 I expect this to produce no response to the initial SYN packet sent by my
-program and my program to output that port as filtered. To test this I will
-run my program with the flags \verb|-sS,-p 12345,-Pn| this will cause it to not
-check whether the host is up, to perform a \gls{tcp} SYN scan and only scan port 12345.
+program, and my program to output that port as filtered. To test this, I will
+run my program with the flags \verb|-sS,-p 12345,-Pn|. 
+This will instruct it to perform a TCP SYN scan on port 12345 and not to check that the
+host is up before beginning the scan.
 I will also introduce a firewall rule using the Linux iptables utility to drop
 all requests to localhost as so: \verb|iptables -I INPUT -s 127.0.0.1 -j DROP|.
-The output of my program is shown in Figure~\ref{tcpfilteredoutput} you can
-see that port 12345 is displayed as filtered and in the packet capture shown in
-Figure~\ref{tcpfilteredpcap} you can see that there is no response to our initial packet
+The output of my program is shown in Figure~\ref{tcpfilteredoutput}.
+It can be seen that port 12345 is displayed as filtered, and in the packet capture shown in
+Figure~\ref{tcpfilteredpcap}, you can see that there is no response to our initial packet,
 which corresponds to what I thought would happen with an iptables rule in place
 to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered}.
 
@@ -2183,19 +2219,22 @@ to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered
 \end{figure}
 
 \subsubsection{Detecting whether a UDP port is open}
-To show this I will perform a \gls{udp} scan on a script I have already written while
-developing \gls{udp} scanning which can be seen in Listing~\ref{udpopenscript}.
-I expect to see my program output port 12345 as open and in the packet capture I
+To show this I will perform a \gls{udp} scan on a script I had already written while
+developing \gls{udp} scanning.
+This can be seen in Listing~\ref{udpopenscript}.
+I expect to see my program output port 12345 as open, and in the packet capture, I
 expect to see two \gls{udp} packets followed by two response \gls{udp} packets from my
-listener program. I will test this using the following flags: \verb|-Pn,-p 12345,-sU|
-these translate to scanning port 12345 over UDP and not checking the host is up beforehand.
-In Figure~\ref{udpopenoutput} you can see the output of my program when run as specified
+listener program. I will test this using the following flags: \verb|-Pn,-p 12345,-sU|.
+These translate to scanning port 12345 over UDP and not checking the host is up beforehand.
+In Figure~\ref{udpopenoutput}, you can see the output of my program when run as specified,
 and you can see that it correctly detects port 12345 as being open.
-In Figure~\ref{udpopenpcap} you can see the packet capture of my program being run
-however, this is not as I expected, I didn't foresee the \gls{icmp} destination unreachable
-messages, these are sent by the kernel in response to the UDP probe which it doesn't know what
-to do with, however, apart from those the capture shows everything as expected.
-This shows success criteria~\ref{blackbox} and~\ref{udpopen}.
+In Figure~\ref{udpopenpcap}, you can see the packet capture of my program being run.
+However, the output was not precisely as expected,
+as I did not foresee the \gls{icmp} destination unreachable messages,
+which were sent by the kernel in response to the UDP probe.
+However, apart from those messages,
+the capture shows the program detecting the \gls{udp} port was open,
+as expected. This meets success criteria~\ref{blackbox} and~\ref{udpopen}.
 
 \lstinputlisting[firstline=3,caption=\textit{Script to open port 12345 to UDP.},label=udpopenscript]{../../Code/udp_scan/open_X_port_to_UDP.py}
 
@@ -2219,13 +2258,14 @@ This shows success criteria~\ref{blackbox} and~\ref{udpopen}.
 \subsubsection{Detecting whether a UDP port is closed}
 To show this I will perform a \gls{udp} scan on a port which
 has no service listening behind it. I expect my program to print out
-no filtered ports and no open ports showing that the port was closed.
-In the packet capture I expect to see three \gls{udp} packets and three response
-\gls{icmp} packets. To test this I will use my program with the following flags:
+no filtered ports and no open ports, showing that the port was closed.
+In the packet capture, I expect to see three \gls{udp} packets and three response
+\gls{icmp} packets. To test this, I will use my program with the following flags:
 \verb|-p 12345,-Pn,-sU| which perform a \gls{udp} port scan without first checking
-if the host is up. In Figure~\ref{udpclosedoutput} you can see the output of my program
-when run with the options specified above, you can see that there are no ports displayed
-as either open or filtered, this shows the my program successfully marked the port as closed.
+if the host is up. In Figure~\ref{udpclosedoutput}, you can see the output of my program
+when run with the options specified above.
+There are no ports displayed as either open or filtered.
+This shows that my program successfully identified the port as closed.
 This shows success criteria~\ref{blackbox} and~\ref{udpclosed}.
 
 \begin{figure}[H]
@@ -2251,9 +2291,9 @@ with a firewall rule to drop any ports sent to the localhost address. I expect t
 my program to output the port as filtered and in the packet capture I expect to see
 three \gls{udp} packets with no response to any of them.
 In Figure~\ref{udpfilteredoutput} you can see my program correctly identifies
-the port as being filtered and in Figure~\ref{udpfilteredpcap} you can see
+the port as being filtered, and in Figure~\ref{udpfilteredpcap} you can see
 the packet capture of the scan which also as expected shows the three \gls{udp}
-packets with no reply packets. This shows success criteria~\ref{blackbox}
+packets with no reply packets. This shows the program meeting success criteria~\ref{blackbox}
 and~\ref{udpfiltered}.
 
 \begin{figure}[H]
@@ -2274,20 +2314,21 @@ and~\ref{udpfiltered}.
 \end{figure}
 
 \subsubsection{Detecting the operating system of another machine}
-I haven't directly added this as a feature to my project partly because
-I didn't have time and also because it is partially achieved by version
-scanning in that if a particular service is detected and that service
-is OS dependent then you can be fairly certain that machine is running
-that OS.\@ For example if a machine is open on \gls{tcp} port 22
-and SSH is detected to be running behind that port then they are likely
-to be running a Linux machine. Even more likely if the scan reveals some
-further information such as the \gls{cpe}. In Figure~\ref{sshversiondetect}
-you can see a scan of my machine where I have \gls{ssh} running,
-my program reveals that the version is 7.9 and the vendor is openbsd
-which is a Unix-like operating system, this shows that my ssh version
-is Unix based and therefore I am likely to be running on Linux, which is
-the case. So although it is not directly a feature in a round a bout way.
-This partially completes success criteria~\ref{osdetect}.
+I haven't directly added this as a feature to my project, largely because
+I discovered on implementing version scanning that this had the substantially the same effect.
+I found that in most instances it was possible to detect an operating system-dependent
+service and thereby deduce which operating system that machine was running.
+For example, if a machine is open on \gls{tcp} port 22,
+and \gls{ssh} is detected to be running behind that port,
+then the machine is most likely running Linux, as \gls{rdp} is more commonly used
+for this purpose on Windows machines.
+It would become even more likely that the target machine runs Linux
+if the scan reveals some further information such as the \gls{cpe}.
+In Figure~\ref{sshversiondetect} you can see a scan of my machine where I have \gls{ssh} running.
+My program reveals that the version is 7.9 and the vendor is openbsd, which is a Unix-like operating system.
+This shows that my \gls{ssh} version is Unix-based and therefore that my machine is likely running Linux,
+which is the case.
+This partially completes success criterion~\ref{osdetect}.
 
 \begin{figure}[H]
   \centering
@@ -2308,7 +2349,7 @@ you can see that my program successfully identified \gls{ssh} as running on
 operating on protocol version 2.
 It also identified some CPE information such as OpenSSH coming from the openbsd
 distribution.
-This shows success criteria~\ref{blackbox},~\ref{servicedetect} and~\ref{versiondetect}.
+This meets success criteria~\ref{blackbox},~\ref{servicedetect} and~\ref{versiondetect}.
 
 \begin{figure}[H]
   \centering
@@ -2322,12 +2363,12 @@ This shows success criteria~\ref{blackbox},~\ref{servicedetect} and~\ref{version
 To show this I will run my program with the \verb|target_spec|
 option being \\
 \verb|300.300.300.300| which is an invalid
-IPv4 because each of the octets is not between 0 and 255.
-I expect to see my program raise a Python value error
-saying that this is an invalid dot form \gls{ip} address,
+IPv4 address, because each of the octets is not between 0 and 255.
+I expect to see my program raise a Python ValueError
+saying that this is an invalid dot form \gls{ipaddr},
 and displaying \\
-\verb|300.300.300.300| as the invalid \gls{ip}
-address. In Figure~\ref{invalidip} you can see my program's output
+\verb|300.300.300.300| as the invalid \gls{ipaddr}.
+In Figure~\ref{invalidip} you can see my program's output
 for this invalid IP address. This shows a successful pass as it
 correctly identifies the invalid IP and displays the error
 and the argument that caused the error to the user.
@@ -2342,15 +2383,15 @@ and the argument that caused the error to the user.
 
 \subsubsection{User enters invalid number of network bits}
 To show this I will run my program and ask it to list the
-\gls{ip} addresses specified by the subnet \verb|192.168.1.0/33|
-\gls{ip} addresses are only 32 bits long so specifying 33
-network bits has no meaning and thus is invalid data.
+\gls{ip} addresses specified by the subnet \verb|192.168.1.0/33|.
+\gls{ip} addresses are only 32 bits, long so specifying 33
+network bits has no meaning, and thus is invalid data.
 I expect my program to raise a ValueError and print out
 that it was an invalid number of network bits that caused
-the error along with 33 being the network bits.
+the error, along with 33 being the network bits.
 In Figure~\ref{invalidnetworkbits} you can see that
-my program successfully identified the invalid number of network bits
-and raised the expected error and printed the expected information.
+my program successfully identified the invalid number of network bits,
+raised the expected error, and printed the expected information.
 
 \begin{figure}[H]
 \centering
@@ -2362,13 +2403,13 @@ and raised the expected error and printed the expected information.
 \end{figure}
 
 \subsubsection{User enters an invalid port number to scan}
-To show this I will run my program with the argument \verb|-p 99999|
-as port number can only go up to 65535 this is erroneous data
+To show this I will run my program with the argument \verb|-p 99999|.
+Because port numbers can only go up to 65535, this is erroneous data,
 and as such should generate an error message specifying that 
 you have tried to scan an invalid destination port.
 In Figure~\ref{invalidportnum} you can see that my program
 successfully identified 99999 as an invalid destination port
-and printed the correct error message accordingly
+and printed the correct error message accordingly.
 
 \begin{figure}[H]
 \centering
@@ -2380,13 +2421,13 @@ and printed the correct error message accordingly
 
 \subsubsection{User enters an invalid number of network bits and a bad IP address}
 To show this I will run my program with both an invalid \gls{ipaddr} and an
-invalid port number. I expect this to raise a value error for an invalid \gls{ipaddr}
-this is because the \glspl{ipaddr} are checked first and thus an invalid \gls{ipaddr}
+invalid port number. I expect this to raise a ValueError for the invalid \gls{ipaddr}.
+This is because the \glspl{ipaddr} are checked first, and thus an invalid \gls{ipaddr}
 would be caught before an error could be raised for an invalid port number.
 To show this I will pass my program the following arguments: \\
 \verb|192.168.1.a -p a|. In Figure~\ref{invalidipandport} you can see that
 my program catches the invalid \gls{ipaddr} and raises the correct ValueError
-as expected thus it passed the test.
+as expected, thus it passed the test.
 
 \begin{figure}[H]
 \centering
@@ -2430,51 +2471,57 @@ as expected thus it passed the test.
 
 \subsection{Reflection on final outcome}
 
-Overall I am very happy with how my program has turned out. Starting this
-project I did not believe I could do anywhere near as much as I have done.
-This is partly because I started this project to learn more about low level networking
-and networking in general because it was one of the areas where I didn't know much
-about and as such I didn't know how difficult any of it would be.
-I greatly enjoyed learning about all these networking topics
-from how the order that bytes are packed into the packet matters
-enormously, to how you are actually automatically assigned an IP address
-when you join a network.
+Overall, I am very happy with how my program has turned out. At the beginning of this
+project, I did not believe I could do anywhere near as much as I have done.
+My rationale for choosing this project was to learn more about low level networking,
+and networking in general, because these were areas where I felt my knowledge was deficient.
+I greatly enjoyed learning about various aspects of networking structure and protocols.
+For instance, I found it fascinating to discover that the order that bytes are packed into the packet matters
+enormously, and to learn how users are automatically assigned an IP address on joining a network.
 
-There are many areas where I encountered difficulty in this project while developing this program.
-The first problem was understanding what a packet it is and how do I send one that I have made myself
-using Python, there seemed to be very little in the way of documentation so I ended up reading
-lots of peoples answers to stack overflow questions where they have had similar problems.
-Once I knew that I could simply open a socket in raw mode and use the \verb|socket.sendto|
-method to send any arbitrary bytes to an address and Python would handle the IP header
-things got a lot easier from this perspective. The next major problem was getting the
-checksum correct for \gls{tcp} packets because they use a psuedo header which
-is sort of a header made from some fields in the \gls{ip} header but which are not
-in the \gls{tcp} header and they are used to calculate the checksum for the \gls{tcp}
-header. Figuring out how to pack these properly and in what endianness turned out to be
+There were many areas where I encountered difficulty while developing this program.
+The first problem was understanding what a packet is, and how I send one that I have made myself
+using Python. There seemed to be very little in the way of documentation, so I ended up reading
+many peoples' answers to questions on the Stack Overflow website, where they had encountered similar problems.
+Once I discovered that I could simply open a socket in raw mode and use the \verb|socket.sendto|
+method to send any arbitrary bytes to an address and Python would handle the IP header,
+it became easier to make progress. The next major problem was getting the
+checksum correct for \gls{tcp} packets, because they use a pseudo-header, which
+is sort of a header made from fields in the \gls{ip} header that are not
+in the \gls{tcp} header. They are used to calculate the checksum for the \gls{tcp}
+header. Figuring out how to pack these properly, and in what endianness, turned out to be
 one of the biggest difficulties in getting \gls{tcp} SYN scanning working.
 I had a completely different problem when it came to implementing \gls{udp}
-scanning. This is because when a \gls{udp} packet arrives and is destined for a closed port
-an \gls{icmp} destination unreachable message is sent back and on Linux systems these are time
-limited to a maximum of one per second thus I had to come up with a strategy that could deal with
-this. In the end I just added a maximum wait time for each packet I sent and listened that long for
-an \gls{icmp} destination unreachable message. Finally implementing version scanning came
-with its own host of problems from parsing the file which defines the probes and all the
-directives which are needed to interpret the service's response to actually matching the returned
-data using a regular expression that was parsed from a file.
-When Python parses text from a file it reads the literal characters so
-an escaped newline \verb|\n| would be read as a literal backslash then an n when instead
-we want the regular expression to match a newline character.
+scanning. This is because when a \gls{udp} packet arrives and is destined for a closed port,
+an \gls{icmp} destination unreachable message is sent back, and on Linux systems these are time-limited
+to a maximum of one per second. 
+Thus, I had to come up with a strategy that could deal with problem.
+In the end, I added a maximum wait time for each packet sent, and instructed the program to listen
+for that length of time to determine if an \gls{icmp} destination unreachable message was received.
+Implementing version scanning came with its own difficulties.
+Parsing the file which defines the probes and all the directives which are needed to interpret the service's
+response was challenging, as was matching the returned data using a regular expression that was parsed from a file.
 
 \subsection{Evaluation against objectives, end user feedback}
 When I set out on this project I intended to make a program which was able to scan other
-computers from a \gls{bbox} perspective in a way similar to nmap. I believe that I have achieved
-this goal because of the success criteria I set out at the start there was only one which I didn't
-fully complete and that was only for lack of time.
-
-% I think this sounds like shite
+computers on a network from a \gls{bbox} perspective in a way similar to nmap.
+Before commencing, I set out 14 pre-specified criteria against which the performance of my program
+could be measured. As has been demonstrated above, the program fully meets 13 of the 14 criteria,
+and partially meets the remaining criterion.
+I believe therefore that my program has substantially met all the objectives set out
+at the beginning.
 
 \subsection{Potential improvements}
+I believe that I could improve my program if it were to have a dedicated option for operating
+system detection. 
+It is clear that as a single individual, it would not be feasible for me to collect the required
+number of operating system signatures myself. Therefore, in order to implement this feature,
+I would need use another of the files from nmap: nmao-os-db, which contains
+a database of \gls{tcp}/\gls{ip} stack fingerprints that show how the \gls{tcp} and \gls{ip}
+protocols are implemented in virtually all currently-used operating systems, as well as in different
+versions of Linux and different service packs and versions of Windows.
 
+\clearpage
 \appendix
 
 \section{Technical Solution}\label{code}

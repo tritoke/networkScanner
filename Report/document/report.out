@@ -15,9 +15,9 @@
 \BOOKMARK [2][-]{subsection.1.10}{Test Strategy}{section.1}% 15
 \BOOKMARK [1][-]{section.2}{Design}{}% 16
 \BOOKMARK [2][-]{subsection.2.1}{Overall System Design \(High Level Overview\)}{section.2}% 17
-\BOOKMARK [2][-]{subsection.2.2}{Design of User Interfaces HCI}{section.2}% 18
+\BOOKMARK [2][-]{subsection.2.2}{Design of User Interface}{section.2}% 18
 \BOOKMARK [2][-]{subsection.2.3}{System Algorithms}{section.2}% 19
-\BOOKMARK [2][-]{subsection.2.4}{Input data Validation}{section.2}% 20
+\BOOKMARK [2][-]{subsection.2.4}{Input data validation}{section.2}% 20
 \BOOKMARK [2][-]{subsection.2.5}{Algorithm for complex structures}{section.2}% 21
 \BOOKMARK [1][-]{section.3}{Technical Solution}{}% 22
 \BOOKMARK [1][-]{section.4}{Testing}{}% 23
@@ -26,8 +26,8 @@
 \BOOKMARK [3][-]{subsubsection.4.2.1}{Printing a usage message when run without parameters}{subsection.4.2}% 26
 \BOOKMARK [3][-]{subsubsection.4.2.2}{Printing a help message when passed -h}{subsection.4.2}% 27
 \BOOKMARK [3][-]{subsubsection.4.2.3}{Printing a help message when passed -help}{subsection.4.2}% 28
-\BOOKMARK [3][-]{subsubsection.4.2.4}{Scanning a subnet with ICMP ECHO REQUEST messages}{subsection.4.2}% 29
-\BOOKMARK [3][-]{subsubsection.4.2.5}{Translating a CIDR specified subnet into a list of IP addresses}{subsection.4.2}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Scanning a subnet with ICMP echo request messages}{subsection.4.2}% 29
+\BOOKMARK [3][-]{subsubsection.4.2.5}{Translating a CIDR-specified subnet into a list of IP addresses}{subsection.4.2}% 30
 \BOOKMARK [3][-]{subsubsection.4.2.6}{Scanning without first checking whether hosts are up.}{subsection.4.2}% 31
 \BOOKMARK [3][-]{subsubsection.4.2.7}{Detecting whether a TCP port is open}{subsection.4.2}% 32
 \BOOKMARK [3][-]{subsubsection.4.2.8}{Detecting whether a TCP port is closed}{subsection.4.2}% 33

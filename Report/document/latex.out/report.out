@@ -1,8 +1,61 @@
 \BOOKMARK [1][-]{section.1}{Analysis}{}% 1
 \BOOKMARK [2][-]{subsection.1.1}{Identification and Background to the Problem}{section.1}% 2
 \BOOKMARK [2][-]{subsection.1.2}{Analysis of problem}{section.1}% 3
-\BOOKMARK [2][-]{subsection.1.3}{Success Criteria}{section.1}% 4
-\BOOKMARK [2][-]{subsection.1.4}{Description of current system or existing solutions}{section.1}% 5
-\BOOKMARK [2][-]{subsection.1.5}{Prospective Users}{section.1}% 6
-\BOOKMARK [2][-]{subsection.1.6}{Data Dictionary}{section.1}% 7
-\BOOKMARK [2][-]{subsection.1.7}{Data Flow Diagram}{section.1}% 8
+\BOOKMARK [3][-]{subsubsection.1.2.1}{Successful connection over TCP}{subsection.1.2}% 4
+\BOOKMARK [3][-]{subsubsection.1.2.2}{An attempted connection to a closed port}{subsection.1.2}% 5
+\BOOKMARK [3][-]{subsubsection.1.2.3}{An attempted connection with a firewall rule to drop packets}{subsection.1.2}% 6
+\BOOKMARK [3][-]{subsubsection.1.2.4}{Project aims and methods}{subsection.1.2}% 7
+\BOOKMARK [2][-]{subsection.1.3}{Success Criteria}{section.1}% 8
+\BOOKMARK [2][-]{subsection.1.4}{Description of existing solutions}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.5}{Prospective Users}{section.1}% 10
+\BOOKMARK [2][-]{subsection.1.6}{Data Dictionary}{section.1}% 11
+\BOOKMARK [2][-]{subsection.1.7}{Data Flow Diagram}{section.1}% 12
+\BOOKMARK [2][-]{subsection.1.8}{Description of Solution Details}{section.1}% 13
+\BOOKMARK [2][-]{subsection.1.9}{Acceptable Limitations}{section.1}% 14
+\BOOKMARK [2][-]{subsection.1.10}{Test Strategy}{section.1}% 15
+\BOOKMARK [1][-]{section.2}{Design}{}% 16
+\BOOKMARK [2][-]{subsection.2.1}{Overall System Design \(High Level Overview\)}{section.2}% 17
+\BOOKMARK [2][-]{subsection.2.2}{Design of User Interface}{section.2}% 18
+\BOOKMARK [2][-]{subsection.2.3}{System Algorithms}{section.2}% 19
+\BOOKMARK [2][-]{subsection.2.4}{Input data validation}{section.2}% 20
+\BOOKMARK [2][-]{subsection.2.5}{Algorithm for complex structures}{section.2}% 21
+\BOOKMARK [1][-]{section.3}{Technical Solution}{}% 22
+\BOOKMARK [1][-]{section.4}{Testing}{}% 23
+\BOOKMARK [2][-]{subsection.4.1}{Test Plan}{section.4}% 24
+\BOOKMARK [2][-]{subsection.4.2}{Testing Evidence}{section.4}% 25
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Printing a usage message when run without parameters}{subsection.4.2}% 26
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Printing a help message when passed -h}{subsection.4.2}% 27
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Printing a help message when passed -help}{subsection.4.2}% 28
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Scanning a subnet with ICMP echo request messages}{subsection.4.2}% 29
+\BOOKMARK [3][-]{subsubsection.4.2.5}{Translating a CIDR-specified subnet into a list of IP addresses}{subsection.4.2}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.6}{Scanning without first checking whether hosts are up.}{subsection.4.2}% 31
+\BOOKMARK [3][-]{subsubsection.4.2.7}{Detecting whether a TCP port is open}{subsection.4.2}% 32
+\BOOKMARK [3][-]{subsubsection.4.2.8}{Detecting whether a TCP port is closed}{subsection.4.2}% 33
+\BOOKMARK [3][-]{subsubsection.4.2.9}{Detecting whether a TCP port is filtered}{subsection.4.2}% 34
+\BOOKMARK [3][-]{subsubsection.4.2.10}{Detecting whether a UDP port is open}{subsection.4.2}% 35
+\BOOKMARK [3][-]{subsubsection.4.2.11}{Detecting whether a UDP port is closed}{subsection.4.2}% 36
+\BOOKMARK [3][-]{subsubsection.4.2.12}{Detecting whether a UDP port is filtered}{subsection.4.2}% 37
+\BOOKMARK [3][-]{subsubsection.4.2.13}{Detecting the operating system of another machine}{subsection.4.2}% 38
+\BOOKMARK [3][-]{subsubsection.4.2.14}{Detecting the service and its version running behind a port}{subsection.4.2}% 39
+\BOOKMARK [3][-]{subsubsection.4.2.15}{User enters invalid ip address}{subsection.4.2}% 40
+\BOOKMARK [3][-]{subsubsection.4.2.16}{User enters invalid number of network bits}{subsection.4.2}% 41
+\BOOKMARK [3][-]{subsubsection.4.2.17}{User enters an invalid port number to scan}{subsection.4.2}% 42
+\BOOKMARK [3][-]{subsubsection.4.2.18}{User enters an invalid number of network bits and a bad IP address}{subsection.4.2}% 43
+\BOOKMARK [2][-]{subsection.4.3}{Test Table}{section.4}% 44
+\BOOKMARK [1][-]{section.5}{Evaluation}{}% 45
+\BOOKMARK [2][-]{subsection.5.1}{Reflection on final outcome}{section.5}% 46
+\BOOKMARK [2][-]{subsection.5.2}{Evaluation against objectives, end user feedback}{section.5}% 47
+\BOOKMARK [2][-]{subsection.5.3}{Potential improvements}{section.5}% 48
+\BOOKMARK [1][-]{appendix.A}{Technical Solution}{}% 49
+\BOOKMARK [2][-]{subsection.A.1}{icmp\137ping}{appendix.A}% 50
+\BOOKMARK [2][-]{subsection.A.2}{ping\137scanner}{appendix.A}% 51
+\BOOKMARK [2][-]{subsection.A.3}{subnet\137to\137addresses}{appendix.A}% 52
+\BOOKMARK [2][-]{subsection.A.4}{tcp\137scan}{appendix.A}% 53
+\BOOKMARK [3][-]{subsubsection.A.4.1}{connect\137scan}{subsection.A.4}% 54
+\BOOKMARK [3][-]{subsubsection.A.4.2}{syn\137scan}{subsection.A.4}% 55
+\BOOKMARK [2][-]{subsection.A.5}{udp\137scan}{appendix.A}% 56
+\BOOKMARK [2][-]{subsection.A.6}{version\137detection}{appendix.A}% 57
+\BOOKMARK [2][-]{subsection.A.7}{modules}{appendix.A}% 58
+\BOOKMARK [2][-]{subsection.A.8}{examples}{appendix.A}% 59
+\BOOKMARK [2][-]{subsection.A.9}{netscan}{appendix.A}% 60
+\BOOKMARK [2][-]{subsection.A.10}{tests}{appendix.A}% 61

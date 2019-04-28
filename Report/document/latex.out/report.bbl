@@ -1,9 +1,49 @@
 \begin{thebibliography}{10}
 
-\bibitem{wiki:daemon}
+\bibitem{download:wireshark}
+Wireshark~Core Developers.
+\newblock Wireshark download page.
+\newblock \url{https://www.wireshark.org/download.html}.
+
+\bibitem{rfc:tcp}
+Information Sciences Institute~University of~Southern~California.
+\newblock {Transmission Control Protocol}.
+\newblock \url{https://tools.ietf.org/html/rfc793}, September 1981.
+
+\bibitem{python:socket}
+Python~Core Developers.
+\newblock Socket module documentation.
+\newblock \url{https://docs.python.org/3/library/socket.html}, April 2019.
+
+\bibitem{man:iptables}
+Linux Developers.
+\newblock {iptables Man Pages}.
+\newblock \url{https://linux.die.net/man/8/iptables}, March 2019.
+
+\bibitem{rfc:hostrequirements}
+Internet Engineering~Task Force.
+\newblock {Requirements for Internet Hosts -- Communication Layers}.
+\newblock \url{https://tools.ietf.org/html/rfc1122}, October 1989.
+
+\bibitem{man:tcp}
+Linux Developers.
+\newblock {TCP Man page}.
+\newblock \url{https://linux.die.net/man/7/tcp}, March 2019.
+
+\bibitem{download:nmap}
+Gordon ``fyodor'' lyon.
+\newblock Nmap download page.
+\newblock \url{https://nmap.org/download.html}.
+
+\bibitem{man:grep}
+Linux Developers.
+\newblock grep {Man Pages}.
+\newblock \url{https://linux.die.net/man/1/grep}, March 2019.
+
+\bibitem{wiki:headerchecksum}
 Anonymous.
-\newblock {Daemon (computing)}.
-\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
+\newblock {IPv4} header checksum.
+\newblock \url{https://en.wikipedia.org/wiki/IPv4_header_checksum}, April 2019.
 
 \bibitem{wiki:http}
 Anonymous.
@@ -11,16 +51,16 @@ Anonymous.
 \newblock \url{https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol},
   April 2019.
 
+\bibitem{wiki:daemon}
+Anonymous.
+\newblock {Daemon (computing)}.
+\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
+
 \bibitem{wiki:tcpip}
 Anonymous.
 \newblock Internet protocol suite.
 \newblock \url{https://en.wikipedia.org/wiki/Internet_protocol_suite}, March
   2019.
-
-\bibitem{wiki:headerchecksum}
-Anonymous.
-\newblock {IPv4} header checksum.
-\newblock \url{https://en.wikipedia.org/wiki/IPv4_header_checksum}, April 2019.
 
 \bibitem{wiki:osimodel}
 Anonymous.
@@ -32,6 +72,13 @@ Anonymous.
 \newblock {Wireshark}.
 \newblock \url{https://en.wikipedia.org/wiki/Wireshark}, April 2019.
 
+\bibitem{stackoverflow:sendicmprequest}
+Joe.
+\newblock send icmp echo request.
+\newblock
+  \url{https://stackoverflow.com/questions/24575524/send-icmp-echo-request},
+  July 2014.
+
 \bibitem{stackoverflow:rawwockets}
 brice.
 \newblock Python raw sockets.
@@ -39,51 +86,25 @@ brice.
   \url{https://stackoverflow.com/questions/1117958/how-do-i-use-raw-socket-in-python},
   June 2011.
 
-\bibitem{rfc:html}
-Berners-Lee~\& Connolly.
-\newblock {HyperText Markup Language - 2.0}.
-\newblock \url{https://tools.ietf.org/html/rfc2616}, November 1995.
-
-\bibitem{man:dhcpd}
-Linux Developers.
-\newblock {DHCPD Man Pages}.
-\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
-
-\bibitem{man:grep}
-Linux Developers.
-\newblock grep {Man Pages}.
-\newblock \url{https://linux.die.net/man/1/grep}, March 2019.
-
-\bibitem{man:icmp}
-Linux Developers.
-\newblock {ICMP Man page}.
-\newblock \url{https://linux.die.net/man/7/icmp}, March 2019.
-
-\bibitem{man:ip}
-Linux Developers.
-\newblock {IP Man page}.
-\newblock \url{https://linux.die.net/man/7/ip}, March 2019.
-
-\bibitem{man:iptables}
-Linux Developers.
-\newblock {iptables Man Pages}.
-\newblock \url{https://linux.die.net/man/8/iptables}, March 2019.
-
-\bibitem{man:tcp}
-Linux Developers.
-\newblock {TCP Man page}.
-\newblock \url{https://linux.die.net/man/7/tcp}, March 2019.
-
-\bibitem{man:udp}
-Linux Developers.
-\newblock {UDP Man page}.
-\newblock \url{https://linux.die.net/man/7/udp}, March 2019.
+\bibitem{python:defaultdict}
+Python~Core Developers.
+\newblock defaultdict documentation.
+\newblock
+  \url{https://docs.python.org/3/library/collections.html?highlight=collection#collections.defaultdict},
+  April 2019.
 
 \bibitem{python:builtins}
 Python~Core Developers.
 \newblock builtin data structures documentation.
 \newblock
   \url{https://docs.python.org/3/tutorial/datastructures.html#data-structures},
+  April 2019.
+
+\bibitem{python:typing}
+Python~Core Developers.
+\newblock type hinting documentation.
+\newblock
+  \url{https://docs.python.org/3/library/typing.html?highlight=typing#module-typing},
   April 2019.
 
 \bibitem{python:argparse}
@@ -93,11 +114,11 @@ Python~Core Developers.
   \url{https://docs.python.org/3/library/argparse.html?highlight=typing}, April
   2019.
 
-\bibitem{python:defaultdict}
+\bibitem{python:stderr}
 Python~Core Developers.
-\newblock defaultdict documentation.
+\newblock stderr documentation.
 \newblock
-  \url{https://docs.python.org/3/library/collections.html?highlight=collection#collections.defaultdict},
+  \url{https://docs.python.org/3/library/sys.html?highlight=stderr#sys.stderr},
   April 2019.
 
 \bibitem{python:multiprocessing}
@@ -106,77 +127,21 @@ Python~Core Developers.
 \newblock \url{https://docs.python.org/3/library/multiprocessing.html}, April
   2019.
 
-\bibitem{python:operator}
-Python~Core Developers.
-\newblock operator documentation.
-\newblock \url{https://docs.python.org/3/library/operator.html}, April 2019.
-
-\bibitem{python:socket}
-Python~Core Developers.
-\newblock Socket module documentation.
-\newblock \url{https://docs.python.org/3/library/socket.html}, April 2019.
-
-\bibitem{python:stderr}
-Python~Core Developers.
-\newblock stderr documentation.
-\newblock
-  \url{https://docs.python.org/3/library/sys.html?highlight=stderr#sys.stderr},
-  April 2019.
-
 \bibitem{python:struct}
 Python~Core Developers.
 \newblock struct documentation.
 \newblock \url{https://docs.python.org/3/library/struct.html}, April 2019.
 
-\bibitem{python:typing}
+\bibitem{python:operator}
 Python~Core Developers.
-\newblock type hinting documentation.
-\newblock
-  \url{https://docs.python.org/3/library/typing.html?highlight=typing#module-typing},
-  April 2019.
-
-\bibitem{download:wireshark}
-Wireshark~Core Developers.
-\newblock Wireshark download page.
-\newblock \url{https://www.wireshark.org/download.html}.
-
-\bibitem{rfc:http}
-et~al. Fielding.
-\newblock {HyperText Transfer Protocol}.
-\newblock \url{https://tools.ietf.org/html/rfc2616}, 1999.
-
-\bibitem{download:nmap}
-Gordon ``fyodor'' lyon.
-\newblock Nmap download page.
-\newblock \url{https://nmap.org/download.html}.
-
-\bibitem{rfc:udp}
-J.~Postel ISI.
-\newblock {User Datagram Protocol}.
-\newblock \url{https://www.ietf.org/rfc/rfc768.txt}, August 1980.
-
-\bibitem{rfc:icmp}
-J.~Postel ISI.
-\newblock {Internet Control Message Protocol}.
-\newblock \url{https://tools.ietf.org/html/rfc792}, September 1981.
-
-\bibitem{stackoverflow:sendicmprequest}
-Joe.
-\newblock send icmp echo request.
-\newblock
-  \url{https://stackoverflow.com/questions/24575524/send-icmp-echo-request},
-  July 2014.
+\newblock operator documentation.
+\newblock \url{https://docs.python.org/3/library/operator.html}, April 2019.
 
 \bibitem{nmap:portscanning}
 Gordon~'Fyodor' Lyon.
 \newblock port scanning techniques.
 \newblock \url{https://nmap.org/book/man-port-scanning-techniques.html},
   January 2001.
-
-\bibitem{nmap:versiondetectionfileformat}
-Gordon~'Fyodor' Lyon.
-\newblock service and version detection file format.
-\newblock \url{https://nmap.org/book/vscan-fileformat.html}, January 2001.
 
 \bibitem{nmap:versiondetection}
 Gordon~'Fyodor' Lyon.
@@ -188,19 +153,59 @@ Gordon~'Fyodor' Lyon.
 \newblock service and version detection techniques described.
 \newblock \url{https://nmap.org/book/vscan-technique.html}, January 2001.
 
+\bibitem{nmap:versiondetectionfileformat}
+Gordon~'Fyodor' Lyon.
+\newblock service and version detection file format.
+\newblock \url{https://nmap.org/book/vscan-fileformat.html}, January 2001.
+
 \bibitem{rfc:ip}
 Information Sciences Institute~University of~Southern~California.
 \newblock {I}nternet {P}rotocol.
 \newblock \url{https://tools.ietf.org/html/rfc791}, September 1981.
 
-\bibitem{rfc:tcp}
-Information Sciences Institute~University of~Southern~California.
-\newblock {Transmission Control Protocol}.
-\newblock \url{https://tools.ietf.org/html/rfc793}, September 1981.
+\bibitem{rfc:udp}
+J.~Postel ISI.
+\newblock {User Datagram Protocol}.
+\newblock \url{https://www.ietf.org/rfc/rfc768.txt}, August 1980.
+
+\bibitem{rfc:icmp}
+J.~Postel ISI.
+\newblock {Internet Control Message Protocol}.
+\newblock \url{https://tools.ietf.org/html/rfc792}, September 1981.
 
 \bibitem{rfc:dhcp}
 Bucknell~University R.~Droms.
 \newblock {Dynamic Host Configuration Protocol}.
 \newblock \url{https://www.ietf.org/rfc/rfc2131.txt}, March 1997.
+
+\bibitem{rfc:http}
+et~al. Fielding.
+\newblock {HyperText Transfer Protocol}.
+\newblock \url{https://tools.ietf.org/html/rfc2616}, 1999.
+
+\bibitem{rfc:html}
+Berners-Lee~\& Connolly.
+\newblock {HyperText Markup Language - 2.0}.
+\newblock \url{https://tools.ietf.org/html/rfc2616}, November 1995.
+
+\bibitem{man:ip}
+Linux Developers.
+\newblock {IP Man page}.
+\newblock \url{https://linux.die.net/man/7/ip}, March 2019.
+
+\bibitem{man:udp}
+Linux Developers.
+\newblock {UDP Man page}.
+\newblock \url{https://linux.die.net/man/7/udp}, March 2019.
+
+\bibitem{man:icmp}
+Linux Developers.
+\newblock {ICMP Man page}.
+\newblock \url{https://linux.die.net/man/7/icmp}, March 2019.
+
+\bibitem{man:dhcpd}
+Linux Developers.
+\newblock {DHCPD Man Pages}.
+\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
 
 \end{thebibliography}
