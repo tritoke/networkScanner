@@ -59,6 +59,9 @@ def dot_to_long(ip: str) -> int:
     ):
         raise ValueError(f"Invalid dot form IP address: [{ip}]")
 
+    if len(parts) != 4:
+        raise ValueError(f"Invalid dot form IP address: [{ip}]")
+
     else:
         # for each part of the dotted IP address
         # bit shift left each part by eight times
@@ -175,8 +178,11 @@ def get_local_ip() -> str:
                 socket.SOCK_DGRAM
             )
     ) as s:
-        s.connect(("google.com", 80))
-        ip, _ = s.getsockname()
+        try:
+            s.connect(("google.com", 80))
+            ip, _ = s.getsockname()
+        except:
+            ip = "127.0.0.1"
     return ip
 
 
@@ -203,7 +209,7 @@ def ip_checksum(packet: bytes) -> int:
     and returns the checksum.
     """
     if len(packet) % 2 == 1:
-        # if the length of the packet is even, add a NULL byte
+        # if the length of the packet is odd, add a NULL byte
         # to the end as padding
         packet += b"\0"
 
@@ -223,6 +229,7 @@ def ip_checksum(packet: bytes) -> int:
     if total > 0xFFFF:
         # adding the carries generated a carry
         total &= 0xFFFF
+        total += 1
 
     # invert the checksum and take the last 16 bits.
     return (~total & 0xFFFF)

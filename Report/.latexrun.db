@@ -8,12 +8,11 @@
           [],
           [
             "pdflatex",
-            "-synctex=1",
             "-interaction",
             "nonstopmode",
             "-recorder",
             "-output-directory",
-            ".",
+            "latex.out",
             "report.tex"
           ]
         ],
@@ -57,371 +56,14 @@
           [
             "PATH"
           ],
-          "/usr/bin:/home/tritoke/.pyenv/libexec:/home/tritoke/.pyenv/plugins/python-build/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/bin:/home/tritoke/.zplug/repos/zplug/zplug/bin:/home/tritoke/.zplug/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/shims:/home/tritoke/.pyenv/shims:/home/tritoke/.poetry/bin:/home/tritoke/.pyenv/bin:/home/tritoke/.local/bin:/home/tritoke/riscv/gcc-riscv/install64/bin:/home/tritoke/riscv/gcc-riscv/install/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/tritoke/.fzf/bin"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb"
-          ],
-          "fdcede8794018df5f2b58f0905fb20a2b418ed8f67b73ee12445855dfbe5b1be"
+          "/usr/bin:/home/tritoke/.pyenv/libexec:/home/tritoke/.pyenv/plugins/python-build/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/bin:/home/tritoke/.zplug/repos/zplug/zplug/bin:/home/tritoke/.zplug/bin:/home/tritoke/.pyenv/plugins/pyenv-virtualenv/shims:/home/tritoke/.pyenv/shims:/home/tritoke/.poetry/bin:/home/tritoke/Code/Go/bin:/home/tritoke/.pyenv/bin:/home/tritoke/.local/bin:/home/tritoke/riscv/gcc-riscv/install64/bin:/home/tritoke/riscv/gcc-riscv/install/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/tritoke/.fzf/bin"
         ],
         [
           "file",
           [
             "/var/lib/texmf/web2c/pdftex/pdflatex.fmt"
           ],
-          "d9e6052b6f98224e58bc69fe88f46ff557d12c172ff474f271e0744544e9c8f4"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty"
-          ],
-          "c2ffcbcda556a6d924fbea6d205af6c8edfefa63a29629902a8e4b09b7dc9ea0"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb"
-          ],
-          "9b58bfa828b9553b7c8331cf26c45443b836f8aab62e820b40a5b65c8531dd42"
-        ],
-        [
-          "file",
-          [
-            "report.out"
-          ],
-          "eed5b2ebe967a568898d701f5bfc5081a9cb649de8fb4fd284ca0b93b5c913de"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm"
-          ],
-          "65af8c1e162a952cab8e93c834fcf43ce09b508e6c16e512ebb673cd850b0d41"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr8.tfm"
-          ],
-          "4c5ae243ac0aa254e7ec7f0602cc2a4351e5011ff0cb6dc150a5f6de19585de6"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm"
-          ],
-          "1ce8af37ed38e93940829d3540e494eaaddc5201758d036b9074467e70a738dc"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm"
-          ],
-          "79563547084d85388e6909888f9fa7f5cad33bdda44ca6b25b362e1d301db539"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty"
-          ],
-          "798728316d538924b01584ed3beb2e5258bbc8d72d039f1e34ee26a59ade8382"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/latexconfig/hyperref.cfg"
-          ],
-          "0b863b120a22f8bf4f8800c28f49c6a61ee4b2cfc25ae94fbf2e5bd46af61de7"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm"
-          ],
-          "84c37f07ca360c41ad0a0fba7387d279d72457c69bdae03653208c683d8de6bc"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics/keyval.sty"
-          ],
-          "a459ed09ca0310e2340941ebc10fbc198684bf363ba8dc7c1e962ac94725ed02"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty"
-          ],
-          "9f1703891932406a3244d366aa5aa1dcdb3b80c82c384338401f5424bd5a85f2"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def"
-          ],
-          "e82573440b159149b2f07b59bd773041c7b0109152a6840f5119b0d24c3eea7c"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics/trig.sty"
-          ],
-          "f7fda4c4d2b2f6bfb2e7c6336d4a4b4b121d15f63708b4ecd0bb258e142d9292"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty"
-          ],
-          "29bf0a43a57d8da4b3dc2fd722d34f80536f0e303cb1477d7cb5d2e29d949b8c"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def"
-          ],
-          "0bc83e34b4ead7385fd23b3f39915c9e7fe2e470a4511ee0e0aebe8b9427bfb4"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty"
-          ],
-          "139e2cee0da9394495fdb43ac578dfcbfa1dadecf1650c0edfa9fbb20d641b35"
-        ],
-        [
-          "file",
-          [
-            "report.toc"
-          ],
-          "23d0c3b917c753e17021453472d4aeb9e3eeb80bfb727f88a562601d56244126"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg"
-          ],
-          "feb91e48789a21e4acced98e952c77a2e2cf4a77e01bf147b59fa56a1b3f2008"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmtt10.tfm"
-          ],
-          "11f3331c958b696fd484fe45c28285622617a2593d7a34511a1d6b279e1578a2"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm"
-          ],
-          "ae296e8e41b2b0f73e9a17fdc42c743b9ddcc58d23c30acaa3411206f7824780"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map"
-          ],
-          "289d05d37bb81a00180a31050a46dcbbc5108b703e85ebf5427d9841dbcd87f9"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty"
-          ],
-          "44673db6c363802fc5698f911dd8a759a9c5fec93c1a877de9c7fb156413c6e3"
-        ],
-        [
-          "file",
-          [
-            "report.aux"
-          ],
-          "dae72048a545a30e638a418d5481b8951b484d4ea5b449af27b574045844a89a"
-        ],
-        [
-          "file",
-          [
-            "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map"
-          ],
-          "daf6c53786d7561e281a8b9f0b8dfc906dcacb4b0a56219c73378c56d20ebbf0"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb"
-          ],
-          "62ee8cef552017551cd3e026a483e700730103eceaad959c87b7730017f59cff"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb"
-          ],
-          "c838238f31d86a9f198873dfaf501601a4fc966845b9c59e7dc251c4e85d1f1f"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm"
-          ],
-          "ab6ecb4aaba9ca1b4259b1d1f64309a785bbaeb09183fd79a066b7764a448a28"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/base/article.cls"
-          ],
-          "6960fffac3642c838fe7b0a975cfa8bb74e96da123b66defa457382df6ed7279"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm"
-          ],
-          "0eb2f13840155007c2d3c59b074322a3aa7358b9643aa314f3146468ae7f0806"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr17.tfm"
-          ],
-          "86b6e8a52aae6ad1655e32099e12bd2904b158aba4c8afb74143266d2d9cd18f"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm"
-          ],
-          "0ca13d421ac7133271aed7c935099ecf3d1d08ac9e15f81acb34a16564ab8a46"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg"
-          ],
-          "10db2171b6e267720299c10b9e84f92c5cf069941dbfe3760e198304e49d5324"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/base/omscmr.fd"
-          ],
-          "d09b6d23113c6ccea433aa56a6423ae9aad11da063b4e56a21442c0e154e7bf7"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb"
-          ],
-          "d6bdecc0378f3cd16683d1ac348bdbc4ccde9a552e87b53fe9e2de5cfc7aa61d"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics/graphics.sty"
-          ],
-          "806348b7543a25b9f835cfc58424040a24cd7d6c9afb0a7dc07bd38394b3a814"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/oberdiek/grfext.sty"
-          ],
-          "2c42226e752f45346e8ac1671bd2f9fbbbe300d7ae4cb6929b332883666732fe"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr6.tfm"
-          ],
-          "106afa9172f0c00e58b9f5cbc72b302a18aaeeaddf50caca145af9cc0b81afd2"
-        ],
-        [
-          "file",
-          [
-            "report.tex"
-          ],
-          "784261976f64749ad13f6e5ccf54d3716aa8989dc50fa1a89d8035dcc51e9108"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/oberdiek/auxhook.sty"
-          ],
-          "9bb58ae586882df212c331b11c1453995f9f284ae8870fb34d6094b2cd33e806"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm"
-          ],
-          "137eb9f38f661c66309614066a7b5d63d8969d33aba0c9efee9f844a4ce65b50"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/wrapfig/wrapfig.sty"
-          ],
-          "4695b760c84ded2507b1ddc33e15e299c718f9a556cd330983f0a000f0d10de7"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty"
-          ],
-          "33198a41bb7a6fac72317afe83cca19c2b4a04c5b6ac15bd29c8117f0d508434"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty"
-          ],
-          "f5a3a3b1d50e2d783a00555c2380cc7a8e4b7ee3241e521a9cd9067b6bf84f97"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def"
-          ],
-          "ec21beaab39b6b01b7ff6145f793bdc0c2152025f856969517754affa86cd56e"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/base/size10.clo"
-          ],
-          "e959e449b998490f22576db29ac5d8cca4eb3d38d51bf0892ba2db3fdb2ca676"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb"
-          ],
-          "465827b4702e12f7deea159c8084753ffc27998963de516e490bd7bd5bed41dd"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty"
-          ],
-          "87e8f734e04bcc0dc79d118aac786e7cd5879442b4605dc18d6863b49c3d7b55"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii"
-          ],
-          "5dd3675b88c7b61d3703e6bf35ed75623acc6b163dff7b1477b485cee8ad71cb"
-        ],
-        [
-          "file",
-          [
-            "/usr/share/texmf-dist/tex/latex/url/url.sty"
-          ],
-          "2373f56849ac606473e77053e5c1d14c92aba312b3f684e02a130eaf36f2de47"
+          "633875e305a6de9c1d7aa4e86fadc552093e7f3bfd2c0c6a8f31a459666bd3d2"
         ],
         [
           "file",
@@ -431,53 +73,33 @@
           "65ffceec62ccb6e1b01f58ff8e7ec6123f6385139d45bec7f8332f6f3c717912"
         ],
         [
-          "file",
-          [
-            "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb"
-          ],
-          "ca41102968b817bf6e8b22fd6de205ca23bf5088218511cce0c8129e1577cb70"
+          "unknown_input",
+          [],
+          1556289118.0023215
         ],
         [
           "file",
           [
-            "/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty"
+            "latex.out/texput.log"
           ],
-          "4a857ca75cd32128f32f68ae6f72ed813dbaed61c1a04b70a876e67156508e29"
+          "66f6d3fa0eb98e3da4b40788335ac00ea729b367bb4a2270cb3efe25e7c28e0f"
         ],
         [
           "file",
           [
-            "./report.fls"
+            "latex.out/texput.fls"
           ],
-          "63ebb09ac03917d23ab1619bce771a9b070993ebbf4db81e4f048a3bc23af580"
-        ],
-        [
-          "file",
-          [
-            "report.log"
-          ],
-          "2ed3de4bd94d9455045dd4470e3769ddad7c0f0e448dea56b39edaac77c2c241"
-        ],
-        [
-          "file",
-          [
-            "report.pdf"
-          ],
-          "e6ff66727d6797a0c218b29af2ada0ed81ec2317f990ff3da10a99ec49a1295d"
+          "ce060887e4b5bdd324431d01f00df48fece772b54d4eb6f212b53a1333afd370"
         ]
       ],
       "output_files": {
-        "report.aux": "dae72048a545a30e638a418d5481b8951b484d4ea5b449af27b574045844a89a",
-        "report.out": "eed5b2ebe967a568898d701f5bfc5081a9cb649de8fb4fd284ca0b93b5c913de",
-        "./report.fls": "63ebb09ac03917d23ab1619bce771a9b070993ebbf4db81e4f048a3bc23af580",
-        "report.log": "2ed3de4bd94d9455045dd4470e3769ddad7c0f0e448dea56b39edaac77c2c241",
-        "report.pdf": "e6ff66727d6797a0c218b29af2ada0ed81ec2317f990ff3da10a99ec49a1295d",
-        "report.toc": "23d0c3b917c753e17021453472d4aeb9e3eeb80bfb727f88a562601d56244126"
+        "latex.out/texput.log": "66f6d3fa0eb98e3da4b40788335ac00ea729b367bb4a2270cb3efe25e7c28e0f",
+        "latex.out/texput.fls": "ce060887e4b5bdd324431d01f00df48fece772b54d4eb6f212b53a1333afd370"
       },
       "extra": {
-        "jobname": "./report",
-        "outname": "./report.pdf",
-        "status": 0
+        "jobname": "latex.out/texput",
+        "outname": null,
+        "status": 1
       }
     },
     "latex_commit::report.tex": {
@@ -501,6 +123,8 @@
     "report.log": "2ed3de4bd94d9455045dd4470e3769ddad7c0f0e448dea56b39edaac77c2c241",
     "report.aux": "dae72048a545a30e638a418d5481b8951b484d4ea5b449af27b574045844a89a",
     "report.out": "eed5b2ebe967a568898d701f5bfc5081a9cb649de8fb4fd284ca0b93b5c913de",
-    "report.pdf": "e6ff66727d6797a0c218b29af2ada0ed81ec2317f990ff3da10a99ec49a1295d"
+    "report.pdf": "e6ff66727d6797a0c218b29af2ada0ed81ec2317f990ff3da10a99ec49a1295d",
+    "latex.out/texput.log": "66f6d3fa0eb98e3da4b40788335ac00ea729b367bb4a2270cb3efe25e7c28e0f",
+    "latex.out/texput.fls": "ce060887e4b5bdd324431d01f00df48fece772b54d4eb6f212b53a1333afd370"
   }
 }

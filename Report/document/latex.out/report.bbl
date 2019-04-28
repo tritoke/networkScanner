@@ -1,9 +1,36 @@
 \begin{thebibliography}{10}
 
-\bibitem{wikipedia:headerchecksum}
+\bibitem{wiki:daemon}
+Anonymous.
+\newblock {Daemon (computing)}.
+\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
+
+\bibitem{wiki:http}
+Anonymous.
+\newblock {Hypertext Transfer Protocol}.
+\newblock \url{https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol},
+  April 2019.
+
+\bibitem{wiki:tcpip}
+Anonymous.
+\newblock Internet protocol suite.
+\newblock \url{https://en.wikipedia.org/wiki/Internet_protocol_suite}, March
+  2019.
+
+\bibitem{wiki:headerchecksum}
 Anonymous.
 \newblock {IPv4} header checksum.
 \newblock \url{https://en.wikipedia.org/wiki/IPv4_header_checksum}, April 2019.
+
+\bibitem{wiki:osimodel}
+Anonymous.
+\newblock {OSI model}.
+\newblock \url{https://en.wikipedia.org/wiki/Osi_model}, March 2019.
+
+\bibitem{wiki:wireshark}
+Anonymous.
+\newblock {Wireshark}.
+\newblock \url{https://en.wikipedia.org/wiki/Wireshark}, April 2019.
 
 \bibitem{stackoverflow:rawwockets}
 brice.
@@ -11,6 +38,21 @@ brice.
 \newblock
   \url{https://stackoverflow.com/questions/1117958/how-do-i-use-raw-socket-in-python},
   June 2011.
+
+\bibitem{rfc:html}
+Berners-Lee~\& Connolly.
+\newblock {HyperText Markup Language - 2.0}.
+\newblock \url{https://tools.ietf.org/html/rfc2616}, November 1995.
+
+\bibitem{man:dhcpd}
+Linux Developers.
+\newblock {DHCPD Man Pages}.
+\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
+
+\bibitem{man:grep}
+Linux Developers.
+\newblock grep {Man Pages}.
+\newblock \url{https://linux.die.net/man/1/grep}, March 2019.
 
 \bibitem{man:icmp}
 Linux Developers.
@@ -21,6 +63,11 @@ Linux Developers.
 Linux Developers.
 \newblock {IP Man page}.
 \newblock \url{https://linux.die.net/man/7/ip}, March 2019.
+
+\bibitem{man:iptables}
+Linux Developers.
+\newblock {iptables Man Pages}.
+\newblock \url{https://linux.die.net/man/8/iptables}, March 2019.
 
 \bibitem{man:tcp}
 Linux Developers.
@@ -88,6 +135,21 @@ Python~Core Developers.
   \url{https://docs.python.org/3/library/typing.html?highlight=typing#module-typing},
   April 2019.
 
+\bibitem{download:wireshark}
+Wireshark~Core Developers.
+\newblock Wireshark download page.
+\newblock \url{https://www.wireshark.org/download.html}.
+
+\bibitem{rfc:http}
+et~al. Fielding.
+\newblock {HyperText Transfer Protocol}.
+\newblock \url{https://tools.ietf.org/html/rfc2616}, 1999.
+
+\bibitem{download:nmap}
+Gordon ``fyodor'' lyon.
+\newblock Nmap download page.
+\newblock \url{https://nmap.org/download.html}.
+
 \bibitem{rfc:udp}
 J.~Postel ISI.
 \newblock {User Datagram Protocol}.
@@ -135,5 +197,10 @@ Information Sciences Institute~University of~Southern~California.
 Information Sciences Institute~University of~Southern~California.
 \newblock {Transmission Control Protocol}.
 \newblock \url{https://tools.ietf.org/html/rfc793}, September 1981.
+
+\bibitem{rfc:dhcp}
+Bucknell~University R.~Droms.
+\newblock {Dynamic Host Configuration Protocol}.
+\newblock \url{https://www.ietf.org/rfc/rfc2131.txt}, March 1997.
 
 \end{thebibliography}

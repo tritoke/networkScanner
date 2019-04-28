@@ -89,6 +89,8 @@ if search:
     )
 else:
     base_addr = args.target_spec
+    if not ip_utils.is_valid_ip(base_addr):
+        raise ValueError(f"invalid dot form IP address: [{base_addr}]")
     addresses = {base_addr}
 
 
@@ -189,7 +191,9 @@ else:
                 except PermissionError:
                     error_exit("permission", "tcp_scan", target.address)
                 target.open_ports["TCP"].update(tcp_ports["OPEN"])
-                target.open_filtered_ports["TCP"].update(tcp_ports["FILTERED"])
+                target.open_filtered_ports["TCP"].update(
+                    tcp_ports["FILTERED"]
+                )
             if args.sT:
                 target.open_ports["TCP"].update(
                     scanners.connect(

@@ -434,7 +434,9 @@ class Probe:
                 if time_taken != -1:
                     # if the port was in open_filtered move it to open
                     if port in target.open_filtered_ports[self.protocol]:
-                        target.open_filtered_ports[self.protocol].remove(port)
+                        target.open_filtered_ports[
+                            self.protocol
+                        ].remove(port)
                         target.open_ports[self.protocol].add(port)
 
                     # recieve the data and decode it to a string
