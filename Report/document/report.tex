@@ -202,11 +202,11 @@ which interact with the \gls{nic}.
 
 Once the \gls{kernel} has loaded the required \glspl{driver} and the system has booted, the 
 networking `\glspl{daemon}' must be started. In Linux, a \gls{daemon} is a program that runs all the 
-time in the background to serve a specific purpose or utility. For example, when I start my laptop,
-the following \glspl{daemon} start: \gls{upow} (power management), \gls{sysd} (manages the creation 
-of all processes), \gls{dbus} (manages inter-process communication), iwd (manages my WiFi 
-connections) and finally \gls{dhcpcd}, which manages all interactions with the network around 
-\gls{dhcp}.
+time in the background to serve a specific purpose or utility\cite{wiki:daemon}. For example, when I start my laptop,
+the following \glspl{daemon} start: \gls{upow} (power management\cite{wiki:upowerd}), \gls{sysd} (manages the creation 
+of all processes\cite{wiki:systemd}), \gls{dbus} (manages inter-process communication\cite{wiki:dbus}), iwd (manages my WiFi 
+connections\cite{archwiki:iwd}) and finally \gls{dhcpcd}, which manages all interactions with the network around 
+\gls{dhcp}\cite{archwiki:dhcpcd}.
 
 Once the \glspl{daemon} are all started, the \gls{dhcp} client can issue commands to the 
 daemon for it to carry out. The \gls{dhcp} client is simply a daemon that runs in the background to 
@@ -214,8 +214,8 @@ carry out any interactions between the current machine and the \gls{dhcp} server
 server is normally the WiFi router or network switch for the local network and it manages a list of 
 which computer has which \gls{ipaddr} and negotiates with new computers trying to join a network to 
 get them a free \gls{ipaddr}. The \gls{dhcp} client starts the \gls{dhcp} address negotiation with 
-the server by sending a discover message with the address 255.255.255.255, which is the IP limited 
-broadcast address, which means that whatever is listening at the other end will forward this 
+the server by sending a discover message with the address 255.255.255.255\cite{wiki:dhcp}, which is the IP limited 
+broadcast address\cite{wiki:ipaddresses}, which means that whatever is listening at the other end will forward this 
 \gls{pkt} on to everyone on the \gls{subnet}. When the \gls{dhcp} \gls{server} (normally the router, 
 sometimes a separate machine) on the subnet receives this message it reserves a free \gls{ipaddr} 
 for that client and then responds with a \gls{dhcp} offer that contains the address the 
@@ -271,7 +271,7 @@ For a definition of \glspl{pkt} see Page~\pageref{packetdef}.
 For the sake of clarity, the Figure displays Wireshark showing only the \gls{dhcp} \glspl{pkt},
 so that the \gls{dhcp} negotiation can be clearly seen, including the \\
 255.255.255.255 limited broadcast destination address
-and the 0.0.0.0 unassigned address in the source column.
+and the 0.0.0.0 unassigned address in the source column\cite{wiki:ipaddresses}.
 
 \begin{figure}[H]
   \centering
@@ -279,7 +279,7 @@ and the 0.0.0.0 unassigned address in the source column.
   \caption{\textit{\gls{dhcp} address negotiation.}}\label{dhcp_negotiate}
 \end{figure}
 
-All computer networking is encapsulated in the \gls{osi} which has 7 layers:
+All computer networking is encapsulated in the \gls{osi} which has 7 layers\cite{wiki:osimodel}:
 
 \begin{etaremune}
   \item{Application: \gls{api}s, etc\ldots}
@@ -319,14 +319,14 @@ The \gls{ipaddr} defines the destination machine and the \gls{port} number
 defines which ``port'' on the remote machine the packet should be sent to. Ports are essential
 entrances to a computer; for example, if a computer were a hotel, the \gls{ipaddr} would be the
 address of the hotel, and the \gls{port} number would be the room inside the hotel.
-There are 65535 \glspl{port} and 0 is a special reserved port.
-There are this many ports because the port field in \gls{tcp} and \gls{udp} is 16 bits long and the maximum
-value for a 16 bit unsigned integer in 65535.
-Both \gls{tcp} and \gls{udp} use \glspl{port}; \gls{tcp} \glspl{port} are mainly used for
+There are 65535 \glspl{port} and 0 is a special reserved port\cite{wiki:ports}.
+There are this many ports because the port field in \gls{tcp}\cite{rfc:tcp} and \gls{udp}\cite{rfc:udp}
+is 16 bits long and the maximum value for a 16 bit unsigned integer in 65535.
+Both \gls{tcp}\cite{wiki:tcp} and \gls{udp}\cite{wiki:udp} use \glspl{port}; \gls{tcp} \glspl{port} are mainly used for
 transferring data where reliability is a concern, as \gls{tcp} has built in checks for packet loss
 whereas \gls{udp} does not.
 For this reason, \gls{udp} is used for purposes where speed is more important
-and missing some data is inconsequential, such as video streaming and playing online games. 
+and missing some data is inconsequential, such as video streaming and playing online games\cite{wiki:udp}. 
 
 I would like to illustrate how ports and packets work using the example of getting a very simple
 static HTML page with an image inside.
@@ -337,7 +337,7 @@ you can see the full sequence of \glspl{pkt} that were exchanged for the
 browser to get the resources it needed to render the page. The page is hosted using Python3's 
 http.server module, which is a quick and easy way to serve HTML pages and other content locally,
 without the hassle of setting up a full blown web server such as Nginx or Apache.
-Python's http.server makes the current directory open on port 8000.
+Python's http.server makes the current directory open on port 8000\cite{python:httpserver}.
 From there, navigating to /example.html will render the page.
 Breaking Figure~\ref{getrequest} down, \gls{pkt} one shows the browser receiving the request from the user to 
 display \verb|http://192.168.1.47:8000/example.html| and attempting to connect to 192.168.1.47 on 
@@ -346,10 +346,10 @@ being made. The browser now makes an \gls{http} GET request for the page example
 established TCP connection, as shown in \gls{pkt} 4. The server then acknowledges the request and 
 sends a \gls{pkt} with the PSH flag set, as shown in \glspl{pkt} 6 and 7.
 The PSH flag in the \gls{tcp} header is used to notify the client that the server is ready to
-push the data (in this case example.html) to the client.
+push the data (in this case example.html) to the client\cite{wiki:tcp}.
 The browser then sends back an acknowledgement and the server sends the page as shown in \glspl{pkt} 7 and 8. 
 Finally, the browser sends an acknowledgement of having received the page before initiating a 
-graceful session teardown by sending a FIN ACK \gls{pkt}, which indicates the end of a session.
+graceful session teardown by sending a FIN ACK \gls{pkt}, which indicates the end of a session\ref{rfc:tcp}.
 Having received the FIN ACK packet, the server acknowledges this by sending an ACK packet back
 to the client, completing the graceful teardown.
 This process is repeated when the browser parses the HTML and identifies there is an image which it needs to 

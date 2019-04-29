@@ -1,14 +1,89 @@
 \begin{thebibliography}{10}
 
+\bibitem{wiki:daemon}
+Anonymous.
+\newblock {Daemon (computing)}.
+\newblock \url{https://en.wikipedia.org/wiki/Daemon_(computing)}, March 2019.
+
+\bibitem{wiki:upowerd}
+Anonymous.
+\newblock {UPower}.
+\newblock \url{https://en.wikipedia.org/wiki/UPower}, February 2019.
+
+\bibitem{wiki:systemd}
+Anonymous.
+\newblock {systemd}.
+\newblock \url{https://en.wikipedia.org/wiki/Systemd}, April 2019.
+
+\bibitem{wiki:dbus}
+Anonymous.
+\newblock {D-Bus}.
+\newblock \url{https://en.wikipedia.org/wiki/D-Bus}, April 2019.
+
+\bibitem{archwiki:iwd}
+Anonymous.
+\newblock {iwd}.
+\newblock \url{https://wiki.archlinux.org/index.php/Iwd}, April 2019.
+
+\bibitem{archwiki:dhcpcd}
+Anonymous.
+\newblock {dhcpcd}.
+\newblock \url{https://wiki.archlinux.org/index.php/dhcpcd}, April 2019.
+
+\bibitem{wiki:dhcp}
+Anonymous.
+\newblock {Dynamic Host Configuration Protocol}.
+\newblock
+  \url{https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol},
+  April 2019.
+
+\bibitem{wiki:ipaddresses}
+Anonymous.
+\newblock {IP address}.
+\newblock \url{https://en.wikipedia.org/wiki/IP_address}, April 2019.
+
 \bibitem{download:wireshark}
 Wireshark~Core Developers.
 \newblock Wireshark download page.
 \newblock \url{https://www.wireshark.org/download.html}.
 
+\bibitem{wiki:osimodel}
+Anonymous.
+\newblock {OSI model}.
+\newblock \url{https://en.wikipedia.org/wiki/Osi_model}, March 2019.
+
+\bibitem{wiki:ports}
+Anonymous.
+\newblock {Port (computer networking)}.
+\newblock \url{https://en.wikipedia.org/wiki/Port_(computer_networking)}, March
+  2019.
+
 \bibitem{rfc:tcp}
 Information Sciences Institute~University of~Southern~California.
 \newblock {Transmission Control Protocol}.
 \newblock \url{https://tools.ietf.org/html/rfc793}, September 1981.
+
+\bibitem{rfc:udp}
+J.~Postel ISI.
+\newblock {User Datagram Protocol}.
+\newblock \url{https://www.ietf.org/rfc/rfc768.txt}, August 1980.
+
+\bibitem{wiki:tcp}
+anonymous.
+\newblock {Transmission Control Protocol}.
+\newblock \url{https://en.wikipedia.org/wiki/Transmission_Control_Protocol},
+  april 2019.
+
+\bibitem{wiki:udp}
+anonymous.
+\newblock {User Datagram Protocol}.
+\newblock \url{https://en.wikipedia.org/wiki/User_Datagram_Protocol}, april
+  2019.
+
+\bibitem{python:httpserver}
+Python~Core Developers.
+\newblock http.server module documentation.
+\newblock \url{https://docs.python.org/3/library/http.server.html}, April 2019.
 
 \bibitem{python:socket}
 Python~Core Developers.
@@ -51,21 +126,11 @@ Anonymous.
 \newblock \url{https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol},
   April 2019.
 
-\bibitem{wiki:daemon}
-Anonymous.
-\newblock {Daemon (computing)}.
-\newblock \url{https://linux.die.net/man/8/dhcpd}, March 2019.
-
 \bibitem{wiki:tcpip}
 Anonymous.
 \newblock Internet protocol suite.
 \newblock \url{https://en.wikipedia.org/wiki/Internet_protocol_suite}, March
   2019.
-
-\bibitem{wiki:osimodel}
-Anonymous.
-\newblock {OSI model}.
-\newblock \url{https://en.wikipedia.org/wiki/Osi_model}, March 2019.
 
 \bibitem{wiki:wireshark}
 Anonymous.
@@ -162,11 +227,6 @@ Gordon~'Fyodor' Lyon.
 Information Sciences Institute~University of~Southern~California.
 \newblock {I}nternet {P}rotocol.
 \newblock \url{https://tools.ietf.org/html/rfc791}, September 1981.
-
-\bibitem{rfc:udp}
-J.~Postel ISI.
-\newblock {User Datagram Protocol}.
-\newblock \url{https://www.ietf.org/rfc/rfc768.txt}, August 1980.
 
 \bibitem{rfc:icmp}
 J.~Postel ISI.
