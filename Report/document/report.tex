@@ -349,7 +349,7 @@ The PSH flag in the \gls{tcp} header is used to notify the client that the serve
 push the data (in this case example.html) to the client\cite{wiki:tcp}.
 The browser then sends back an acknowledgement and the server sends the page as shown in \glspl{pkt} 7 and 8. 
 Finally, the browser sends an acknowledgement of having received the page before initiating a 
-graceful session teardown by sending a FIN ACK \gls{pkt}, which indicates the end of a session\ref{rfc:tcp}.
+graceful session teardown by sending a FIN ACK \gls{pkt}, which indicates the end of a session\cite{rfc:tcp}.
 Having received the FIN ACK packet, the server acknowledges this by sending an ACK packet back
 to the client, completing the graceful teardown.
 This process is repeated when the browser parses the HTML and identifies there is an image which it needs to 
@@ -982,7 +982,7 @@ possible such that the client can interact with the service.
 I plan to use my school's system administrators users in order to gain some feedback
 as to the usability and performance of my program.
 
-\subsection{Data Dictionary}
+\subsection{Estimating Runtime Memory Requirements}
 
 While my program is running it will need to store many different things in memory:
 \begin{itemize}
@@ -1670,9 +1670,11 @@ argument that caused the error.
       \draw [arrow] (get) -- (udp listener);
       \draw [arrow] (udp listener) -- (send 1);
       \draw [arrow] (send 1) -- (loop 1);
-      \draw [arrow] (loop 1.east) -| ([xshift=1cm,yshift=0.75cm]send 1.east) node [right,yshift=-1.25cm] {yes} -| (send 1.north);
+      \draw [arrow] (loop 1.east) -- ([xshift=1cm]loop 1.east);
+      \draw [arrow] ([xshift=1cm]loop 1.east) -- ([xshift=1cm,yshift=0.75cm]send 1.east) node [right,yshift=-1.25cm] {yes} -| (send 1.north);
       \draw [arrow] (loop 1) -| node [above, xshift=1cm] {no} (loop 2);
-      \draw [arrow] (loop 2.west) -| ([xshift=-4cm,yshift=0.75cm]send 1.west) node [left,yshift=-2cm] {no} -| (send 1.north);
+      \draw [arrow] (loop 2.west) -- ([xshift=-0.5cm]loop 2.west);
+      \draw [arrow] ([xshift=-0.5cm]loop 2.west) -- ([xshift=-4cm,yshift=0.75cm]send 1.west) node [left,yshift=-2cm] {no} -| (send 1.north);
       \draw [arrow] (loop 2) -- node [xshift=-0.1cm,above] {yes} (udp wait);
       \draw [arrow] (udp wait) -- (icmp listener);
       \draw [arrow] (icmp listener) -- (send 2);
@@ -1718,13 +1720,16 @@ argument that caused the error.
       \draw [arrow] (softmatched.east) -| node[above] {yes} ([yshift=0.75cm,xshift=0.75cm]match.east) -| (match);
       \draw [arrow] (softmatched) -| node[above, xshift=1.25cm] {no} (softmatch loop);
       \draw [arrow] (softmatch loop) -- node [above, xshift=-0.1cm] {no} (match);
+      \draw [arrow] (softmatch loop.west) -- ([xshift=-0.4cm]softmatch loop.west);
       \draw [arrow] (softmatch loop)-|node[right,yshift=2.5cm]{yes}([xshift=-5.25cm,yshift=0.75cm]softmatch.west)-|(softmatch);
       \draw [arrow] (match) -- (matched);
+      \draw [arrow] (match loop) -- ([xshift=0.375cm]match loop.east);
       \draw [arrow] (match loop) -| node [right,] {yes} ([xshift=0.75cm,yshift=0.75cm] match.east) -| (match.north);
       \draw [arrow] (matched) -- node [right] {no} (match loop);
       \draw [arrow] (match loop) -- node [above, yshift=0.1cm] {no} (probe loop);
       \draw [arrow] (matched) -| node [above, xshift=1.35cm] {yes} (probe loop);
       \draw [arrow] (probe loop) -| node [left,yshift=5.5cm] {yes} ([xshift=-6cm,yshift=0.75cm]send probe.west) -| (send probe);
+      \draw [arrow] (probe loop.west) -- ([xshift=-1.125cm]probe loop.west);
       \draw [arrow] (probe loop) -- node [midway, right, yshift=0.1cm] {no} (return);
       \draw [arrow] (return) -- (end);
 
@@ -1947,7 +1952,7 @@ such as which element in a list was the one that caused the comparison to return
 
 \subsection{Testing Evidence}\label{wiresharktests}
 
-\subsubsection{Printing a usage message when run without parameters}
+\subsubsection{Printing a usage message when run without parameters}\label{test:usage}
 
 To show this I will run my program passing it no parameters.
 This should print out a message of the form: \verb|USAGE: ./<program> <required> <parameters>|
@@ -1964,7 +1969,7 @@ This shows success criterion~\ref{usage}.
 }}\label{noparametertest}
 \end{figure}
 
-\subsubsection{Printing a help message when passed -h}
+\subsubsection{Printing a help message when passed -h}\label{test:hmessage}
 
 To show this I will run my program with the \verb|-h| flag.
 This should print out a message showing each of the options as well as what each of them do.
@@ -1983,7 +1988,7 @@ This shows success criterion~\ref{usage}.
 }}\label{hflagtest}
 \end{figure}
 
-\subsubsection{Printing a help message when passed -help}
+\subsubsection{Printing a help message when passed -help}\label{test:helpmessage}
 To show this I will run my program with the \verb|--help| flag.
 This should produce the same output as with \verb|-h|.
 This shows the same message as in the test of \verb|-h|.
@@ -2009,7 +2014,7 @@ This shows success criterion~\ref{usage}.
 }}\label{messagehash}
 \end{figure}
 
-\subsubsection{Scanning a subnet with ICMP echo request messages}
+\subsubsection{Scanning a subnet with ICMP echo request messages}\label{test:pingscan}
 To show this I will run my program with the \verb|-sn| flag and specify the
 subnet of my local network \verb|192.168.178.0/24|.
 This should produce a list of all the hosts which are up on the network.
@@ -2046,7 +2051,7 @@ This meets success criteria~\ref{blackbox} and~\ref{ping}.
 }}\label{lanscanWireshark}
 \end{figure}
 
-\subsubsection{Translating a CIDR-specified subnet into a list of IP addresses}
+\subsubsection{Translating a CIDR-specified subnet into a list of IP addresses}\label{test:cidr}
 To show this I will run my program with the \verb|-sL| flag and I will specify
 a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
 such that it will fit on my terminal and therefore in a screenshot).
@@ -2078,7 +2083,7 @@ This proves my program works and covers success criterion~\ref{cidr}.
 }}\label{cidrwebproof}
 \end{figure}
 
-\subsubsection{Scanning without first checking whether hosts are up.}
+\subsubsection{Scanning without first checking whether hosts are up.}\label{test:nocheck}
 To show this I will perform a TCP scan on a small subnet where I
 know there are no hosts and show that the scan continues despite there actually
 being no host on the other end. To do this I will pass the \verb|-Pn| flag
@@ -2117,7 +2122,7 @@ up, showing success criterion~\ref{nocheck}.
 }}\label{nocheckWireshark}
 \end{figure}
 
-\subsubsection{Detecting whether a TCP port is open}
+\subsubsection{Detecting whether a TCP port is open}\label{test:tcpopen}
 To show this I will perform a \gls{tcp} \verb|Connect()| scan on my local
 machine while running a script which will listen on port 12345 for any connections
 and send back a message. I will pass my program the flags \verb|-sT| and
@@ -2156,7 +2161,7 @@ and~\ref{tcpopen}.
 }}\label{tcpopenpcap}
 \end{figure}
 
-\subsubsection{Detecting whether a TCP port is closed}
+\subsubsection{Detecting whether a TCP port is closed}\label{test:tcpclosed}
 To show this, I will perform a \gls{tcp} \verb|Connect()| scan
 on my local machine, except that instead of running a script to catch the
 request, I will just let it try to connect to the closed port.
@@ -2185,7 +2190,7 @@ with no open ports, showing success criteria~\ref{blackbox} and~\ref{tcpclosed}.
 }}\label{tcpclosedpcap}
 \end{figure}
 
-\subsubsection{Detecting whether a TCP port is filtered}
+\subsubsection{Detecting whether a TCP port is filtered}\label{test:tcpfiltered}
 To show this I will perform a \gls{tcp} SYN scan on localhost port 12345,
 except that I will also introduce a firewall rule to drop all requests to localhost.
 I expect this to produce no response to the initial SYN packet sent by my
@@ -2218,7 +2223,7 @@ to drop packets. This shows success criteria~\ref{blackbox} and~\ref{tcpfiltered
 }}\label{tcpfilteredpcap}
 \end{figure}
 
-\subsubsection{Detecting whether a UDP port is open}
+\subsubsection{Detecting whether a UDP port is open}\label{test:udpopen}
 To show this I will perform a \gls{udp} scan on a script I had already written while
 developing \gls{udp} scanning.
 This can be seen in Listing~\ref{udpopenscript}.
@@ -2255,7 +2260,7 @@ as expected. This meets success criteria~\ref{blackbox} and~\ref{udpopen}.
 }}\label{udpopenpcap}
 \end{figure}
 
-\subsubsection{Detecting whether a UDP port is closed}
+\subsubsection{Detecting whether a UDP port is closed}\label{test:udpclosed}
 To show this I will perform a \gls{udp} scan on a port which
 has no service listening behind it. I expect my program to print out
 no filtered ports and no open ports, showing that the port was closed.
@@ -2285,7 +2290,7 @@ This shows success criteria~\ref{blackbox} and~\ref{udpclosed}.
 }}\label{udpclosedcap}
 \end{figure}
 
-\subsubsection{Detecting whether a UDP port is filtered}
+\subsubsection{Detecting whether a UDP port is filtered}\label{test:udpfiltered}
 To show this I will use my program to perform a \gls{udp} scan on my local machine
 with a firewall rule to drop any ports sent to the localhost address. I expect to see
 my program to output the port as filtered and in the packet capture I expect to see
@@ -2313,7 +2318,7 @@ and~\ref{udpfiltered}.
 }}\label{udpfilteredpcap}
 \end{figure}
 
-\subsubsection{Detecting the operating system of another machine}
+\subsubsection{Detecting the operating system of another machine}\label{test:osdetect}
 I haven't directly added this as a feature to my project, largely because
 I discovered on implementing version scanning that this had the substantially the same effect.
 I found that in most instances it was possible to detect an operating system-dependent
@@ -2338,7 +2343,7 @@ This partially completes success criterion~\ref{osdetect}.
 }}\label{sshversiondetect}
 \end{figure}
 
-\subsubsection{Detecting the service and its version running behind a port}
+\subsubsection{Detecting the service and its version running behind a port}\label{test:versiondetect}
 To show this I will use my program to perform a version detection scan on my local machine
 while I am running \gls{ssh}. I expect to see my program identify that \gls{ssh} is running
 on \gls{tcp} port 22 and that it detects it as OpenSSH version 7.9. To test this
@@ -2359,7 +2364,7 @@ This meets success criteria~\ref{blackbox},~\ref{servicedetect} and~\ref{version
 }}\label{versiondetecttest}
 \end{figure}
 
-\subsubsection{User enters invalid ip address}
+\subsubsection{User enters invalid ip address}\label{test:invalidip}
 To show this I will run my program with the \verb|target_spec|
 option being \\
 \verb|300.300.300.300| which is an invalid
@@ -2381,7 +2386,7 @@ and the argument that caused the error to the user.
 }}\label{invalidip}
 \end{figure}
 
-\subsubsection{User enters invalid number of network bits}
+\subsubsection{User enters invalid number of network bits}\label{test:invalidnetworkbits}
 To show this I will run my program and ask it to list the
 \gls{ip} addresses specified by the subnet \verb|192.168.1.0/33|.
 \gls{ip} addresses are only 32 bits, long so specifying 33
@@ -2402,7 +2407,7 @@ raised the expected error, and printed the expected information.
 }}\label{invalidnetworkbits}
 \end{figure}
 
-\subsubsection{User enters an invalid port number to scan}
+\subsubsection{User enters an invalid port number to scan}\label{test:invalidport}
 To show this I will run my program with the argument \verb|-p 99999|.
 Because port numbers can only go up to 65535, this is erroneous data,
 and as such should generate an error message specifying that 
@@ -2419,7 +2424,7 @@ and printed the correct error message accordingly.
 }}\label{invalidportnum}
 \end{figure}
 
-\subsubsection{User enters an invalid number of network bits and a bad IP address}
+\subsubsection{User enters an invalid number of network bits and a bad IP address}\label{test:invalidaddressandnetworkbits}
 To show this I will run my program with both an invalid \gls{ipaddr} and an
 invalid port number. I expect this to raise a ValueError for the invalid \gls{ipaddr}.
 This is because the \glspl{ipaddr} are checked first, and thus an invalid \gls{ipaddr}
@@ -2502,21 +2507,117 @@ Implementing version scanning came with its own difficulties.
 Parsing the file which defines the probes and all the directives which are needed to interpret the service's
 response was challenging, as was matching the returned data using a regular expression that was parsed from a file.
 
-\subsection{Evaluation against objectives, end user feedback}
-When I set out on this project I intended to make a program which was able to scan other
-computers on a network from a \gls{bbox} perspective in a way similar to nmap.
-Before commencing, I set out 14 pre-specified criteria against which the performance of my program
-could be measured. As has been demonstrated above, the program fully meets 13 of the 14 criteria,
-and partially meets the remaining criterion.
-I believe therefore that my program has substantially met all the objectives set out
-at the beginning.
+\subsection{Evaluation against objectives}
+
+The criteria identified at the start of the project for determining its success were the following:
+
+\begin{enumerate}
+  \item{%
+    Probe another computer's networking from a \gls{bbox} perspective.
+  }
+  \item{%
+    To help the user with usage/help messages when prompted.  
+  }
+  \item{%
+    Translate \gls{cidr}-specified subnets into a list of domains.
+  }
+  \item{%
+    Send \gls{icmp} ECHO requests to determine whether a machine is active
+    or not.
+  }
+  \item{%
+    Perform any scan type without first checking whether the host is up.
+  }
+  \item{%
+    Detect whether a TCP port is open (can be connected to).
+  }
+  \item{%
+    Detect whether a TCP port is closed (will refuse connections).
+  }
+  \item{%
+    Detect whether a TCP port is filtered (a firewall is
+    preventing or monitoring access).
+  }
+  \item{%
+    Detect whether a UDP port is open (can be connected to).
+  }
+  \item{%
+    Detect whether a UDP port is closed (will refuse connections).
+  }
+  \item{%
+    Detect whether a UDP port is filtered (a firewall is
+    preventing or monitoring access).
+  }
+  \item{%
+    Detect the operating system of another machine on the network
+    solely from sending packets to the machine and interpreting the responses.
+  }
+  \item{%
+    Detect what service is listening behind a port.
+  }
+  \item{%
+    Detect the version of the service running behind a port.
+  }
+\end{enumerate}
+
+Criterion~\ref{blackbox}, probing another computer's networking from a \gls{bbox} perspective.
+This criterion is satisfied by many of the scanning options my program supports,
+including \verb|Connect()| scanning, SYN scanning, and version detection.
+This is met by the tests in sections~\ref{test:pingscan},~\ref{test:tcpopen},~\ref{test:tcpclosed}
+~\ref{test:tcpfiltered},~\ref{test:udpopen},~\ref{test:udpclosed},\ref{test:udpfiltered} and~\ref{test:versiondetect}.
+
+Criterion~\ref{usage}, sending usage and help messages when prompted.
+This criterion is satisfied by the tests in Sections~\ref{test:usage},~\ref{test:hmessage} and~\ref{test:helpmessage}.
+
+Criterion~\ref{cidr}, translating \gls{cidr} specified subnets.
+This criterion is satisfied by the test in Section~\ref{test:cidr}.
+
+Criterion~\ref{ping}, send \gls{icmp} ECHO requests.
+This criterion is satisfied by the test in Section~\ref{test:pingscan}.
+
+Criterion~\ref{nocheck}, perform any scan without first checking that the host is up.
+This criterion is satisfied by the test in Section~\ref{test:nocheck}.
+
+Criterion~\ref{tcpopen}, detect an open \gls{tcp} port.
+This criterion is satisfied by the test in Section~\ref{test:tcpopen}.
+
+Criterion~\ref{tcpclosed}, detect a closed \gls{tcp} port.
+This criterion is satisfied by the test in Section~\ref{test:tcpclosed}.
+
+Criterion~\ref{tcpfiltered}, detect a filtered \gls{tcp} port.
+This criterion is satisfied by the test in Section~\ref{test:tcpfiltered}.
+
+Criterion~\ref{udpopen}, detect an open \gls{udp} port.
+This criterion is satisfied by the test in Section~\ref{test:udpopen}.
+
+Criterion~\ref{udpclosed}, detect a closed \gls{udp} port.
+This criterion is satisfied by the test in Section~\ref{test:udpclosed}.
+
+Criterion~\ref{udpfiltered}, detect a filtered \gls{udp} port.
+This criterion is satisfied by the test in Section~\ref{test:udpfiltered}.
+
+Criterion~\ref{osdetect}, detect the Operating System running on a remote machine.
+This criterion is partially satisfied by the version detection scanning and
+an example of detecting the operating system via version/service detection is shown
+in Section~\ref{test:osdetect}.
+
+Criteria~\ref{servicedetect} and~\ref{versiondetect} are both satisfied
+by the test in Section~\ref{test:versiondetect}.
+
+In conclusion, I have satisfied completely all but one of the success criteria, and have partially
+completed the remaining criterion.
+Having finished my application, I met with my school's head of network services Mr Blake.
+To discuss the application and to gather some end user feedback.
+He was satisfied with the application and noted that it did what it said on the tin.
+He especially liked that the application was hard to break by design in terms of
+the minimal user input and stringent data validation combined with helpful error messages.
 
 \subsection{Potential improvements}
 I believe that I could improve my program if it were to have a dedicated option for operating
 system detection. 
 It is clear that as a single individual, it would not be feasible for me to collect the required
 number of operating system signatures myself. Therefore, in order to implement this feature,
-I would need use another of the files from nmap: nmao-os-db, which contains
+I would need use one of the files from nmap: nmap-os-db, which contains
 a database of \gls{tcp}/\gls{ip} stack fingerprints that show how the \gls{tcp} and \gls{ip}
 protocols are implemented in virtually all currently-used operating systems, as well as in different
 versions of Linux and different service packs and versions of Windows.

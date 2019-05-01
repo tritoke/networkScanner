@@ -286,11 +286,7 @@ INPUT latex.out/report.out
 INPUT latex.out/report.out
 INPUT latex.out/report.out
 OUTPUT latex.out/report.pdf
-INPUT ./report.out
-INPUT ./report.out
 OUTPUT latex.out/report.out
-INPUT report.glsdefs
-INPUT report.glsdefs
 INPUT /usr/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm1728.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm1200.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
@@ -549,8 +545,6 @@ INPUT ../../Code/tests/test_directives.py
 INPUT latex.out/report.bbl
 INPUT latex.out/report.bbl
 INPUT latex.out/report.aux
-INPUT ./report.out
-INPUT ./report.out
 INPUT /usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb

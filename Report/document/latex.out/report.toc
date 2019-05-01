@@ -8,7 +8,7 @@
 \contentsline {subsection}{\numberline {1.3}Success Criteria}{17}{subsection.1.3}% 
 \contentsline {subsection}{\numberline {1.4}Description of existing solutions}{18}{subsection.1.4}% 
 \contentsline {subsection}{\numberline {1.5}Prospective Users}{24}{subsection.1.5}% 
-\contentsline {subsection}{\numberline {1.6}Data Dictionary}{24}{subsection.1.6}% 
+\contentsline {subsection}{\numberline {1.6}Estimating Runtime Memory Requirements}{24}{subsection.1.6}% 
 \contentsline {subsection}{\numberline {1.7}Data Flow Diagram}{26}{subsection.1.7}% 
 \contentsline {subsection}{\numberline {1.8}Description of Solution Details}{27}{subsection.1.8}% 
 \contentsline {subsection}{\numberline {1.9}Acceptable Limitations}{39}{subsection.1.9}% 
@@ -44,18 +44,18 @@
 \contentsline {subsection}{\numberline {4.3}Test Table}{68}{subsection.4.3}% 
 \contentsline {section}{\numberline {5}Evaluation}{69}{section.5}% 
 \contentsline {subsection}{\numberline {5.1}Reflection on final outcome}{69}{subsection.5.1}% 
-\contentsline {subsection}{\numberline {5.2}Evaluation against objectives, end user feedback}{69}{subsection.5.2}% 
-\contentsline {subsection}{\numberline {5.3}Potential improvements}{70}{subsection.5.3}% 
-\contentsline {section}{\numberline {A}Technical Solution}{71}{appendix.A}% 
-\contentsline {subsection}{\numberline {A.1}icmp\_ping}{71}{subsection.A.1}% 
-\contentsline {subsection}{\numberline {A.2}ping\_scanner}{72}{subsection.A.2}% 
-\contentsline {subsection}{\numberline {A.3}subnet\_to\_addresses}{75}{subsection.A.3}% 
-\contentsline {subsection}{\numberline {A.4}tcp\_scan}{76}{subsection.A.4}% 
-\contentsline {subsubsection}{\numberline {A.4.1}connect\_scan}{76}{subsubsection.A.4.1}% 
-\contentsline {subsubsection}{\numberline {A.4.2}syn\_scan}{77}{subsubsection.A.4.2}% 
-\contentsline {subsection}{\numberline {A.5}udp\_scan}{80}{subsection.A.5}% 
-\contentsline {subsection}{\numberline {A.6}version\_detection}{85}{subsection.A.6}% 
-\contentsline {subsection}{\numberline {A.7}modules}{90}{subsection.A.7}% 
-\contentsline {subsection}{\numberline {A.8}examples}{126}{subsection.A.8}% 
-\contentsline {subsection}{\numberline {A.9}netscan}{127}{subsection.A.9}% 
-\contentsline {subsection}{\numberline {A.10}tests}{132}{subsection.A.10}% 
+\contentsline {subsection}{\numberline {5.2}Evaluation against objectives}{69}{subsection.5.2}% 
+\contentsline {subsection}{\numberline {5.3}Potential improvements}{71}{subsection.5.3}% 
+\contentsline {section}{\numberline {A}Technical Solution}{72}{appendix.A}% 
+\contentsline {subsection}{\numberline {A.1}icmp\_ping}{72}{subsection.A.1}% 
+\contentsline {subsection}{\numberline {A.2}ping\_scanner}{73}{subsection.A.2}% 
+\contentsline {subsection}{\numberline {A.3}subnet\_to\_addresses}{76}{subsection.A.3}% 
+\contentsline {subsection}{\numberline {A.4}tcp\_scan}{77}{subsection.A.4}% 
+\contentsline {subsubsection}{\numberline {A.4.1}connect\_scan}{77}{subsubsection.A.4.1}% 
+\contentsline {subsubsection}{\numberline {A.4.2}syn\_scan}{78}{subsubsection.A.4.2}% 
+\contentsline {subsection}{\numberline {A.5}udp\_scan}{81}{subsection.A.5}% 
+\contentsline {subsection}{\numberline {A.6}version\_detection}{86}{subsection.A.6}% 
+\contentsline {subsection}{\numberline {A.7}modules}{91}{subsection.A.7}% 
+\contentsline {subsection}{\numberline {A.8}examples}{127}{subsection.A.8}% 
+\contentsline {subsection}{\numberline {A.9}netscan}{128}{subsection.A.9}% 
+\contentsline {subsection}{\numberline {A.10}tests}{133}{subsection.A.10}% 

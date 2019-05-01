@@ -8,7 +8,7 @@
 \BOOKMARK [2][-]{subsection.1.3}{Success Criteria}{section.1}% 8
 \BOOKMARK [2][-]{subsection.1.4}{Description of existing solutions}{section.1}% 9
 \BOOKMARK [2][-]{subsection.1.5}{Prospective Users}{section.1}% 10
-\BOOKMARK [2][-]{subsection.1.6}{Data Dictionary}{section.1}% 11
+\BOOKMARK [2][-]{subsection.1.6}{Estimating Runtime Memory Requirements}{section.1}% 11
 \BOOKMARK [2][-]{subsection.1.7}{Data Flow Diagram}{section.1}% 12
 \BOOKMARK [2][-]{subsection.1.8}{Description of Solution Details}{section.1}% 13
 \BOOKMARK [2][-]{subsection.1.9}{Acceptable Limitations}{section.1}% 14
@@ -44,7 +44,7 @@
 \BOOKMARK [2][-]{subsection.4.3}{Test Table}{section.4}% 44
 \BOOKMARK [1][-]{section.5}{Evaluation}{}% 45
 \BOOKMARK [2][-]{subsection.5.1}{Reflection on final outcome}{section.5}% 46
-\BOOKMARK [2][-]{subsection.5.2}{Evaluation against objectives, end user feedback}{section.5}% 47
+\BOOKMARK [2][-]{subsection.5.2}{Evaluation against objectives}{section.5}% 47
 \BOOKMARK [2][-]{subsection.5.3}{Potential improvements}{section.5}% 48
 \BOOKMARK [1][-]{appendix.A}{Technical Solution}{}% 49
 \BOOKMARK [2][-]{subsection.A.1}{icmp\137ping}{appendix.A}% 50
