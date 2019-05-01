@@ -26,8 +26,8 @@
 \BOOKMARK [3][-]{subsubsection.4.2.1}{Printing a usage message when run without parameters}{subsection.4.2}% 26
 \BOOKMARK [3][-]{subsubsection.4.2.2}{Printing a help message when passed -h}{subsection.4.2}% 27
 \BOOKMARK [3][-]{subsubsection.4.2.3}{Printing a help message when passed -help}{subsection.4.2}% 28
-\BOOKMARK [3][-]{subsubsection.4.2.4}{Scanning a subnet with ICMP echo request messages}{subsection.4.2}% 29
-\BOOKMARK [3][-]{subsubsection.4.2.5}{Translating a CIDR-specified subnet into a list of IP addresses}{subsection.4.2}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Translating a CIDR-specified subnet into a list of IP addresses}{subsection.4.2}% 29
+\BOOKMARK [3][-]{subsubsection.4.2.5}{Scanning a subnet with ICMP echo request messages}{subsection.4.2}% 30
 \BOOKMARK [3][-]{subsubsection.4.2.6}{Scanning without first checking whether hosts are up.}{subsection.4.2}% 31
 \BOOKMARK [3][-]{subsubsection.4.2.7}{Detecting whether a TCP port is open}{subsection.4.2}% 32
 \BOOKMARK [3][-]{subsubsection.4.2.8}{Detecting whether a TCP port is closed}{subsection.4.2}% 33

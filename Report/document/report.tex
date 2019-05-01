@@ -2014,6 +2014,38 @@ This shows success criterion~\ref{usage}.
 }}\label{messagehash}
 \end{figure}
 
+\subsubsection{Translating a CIDR-specified subnet into a list of IP addresses}\label{test:cidr}
+To show this I will run my program with the \verb|-sL| flag and I will specify
+a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
+such that it will fit on my terminal and therefore in a screenshot).
+I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
+To prove that my program works,
+I will screenshot the output when run with the stated parameters and I will use
+a website to translate the same subnet and show
+that it displays the same addresses as my program.
+In Figure~\ref{cidrtest}, you can see that the output from my program matches
+the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
+which is also shown by the screen shot of the same subnet translated by
+the ipcalc utility on Linux.
+This proves my program works and covers success criterion~\ref{cidr}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{iplist.png}
+  \caption{\textit{%
+    Screenshot showing the output of my program when asked to translate the subnet 192.168.1.0/28.
+}}\label{cidrtest}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{ipcalclist.png}
+  \caption{\textit{%
+    Screenshot showing the range displayed by the ipcalc utility when asked to calculate
+    the same subnet.
+}}\label{cidrwebproof}
+\end{figure}
+
 \subsubsection{Scanning a subnet with ICMP echo request messages}\label{test:pingscan}
 To show this I will run my program with the \verb|-sn| flag and specify the
 subnet of my local network \verb|192.168.178.0/24|.
@@ -2049,38 +2081,6 @@ This meets success criteria~\ref{blackbox} and~\ref{ping}.
   \caption{\textit{%
     Screenshot showing a selection of the packets being sent by this scan.
 }}\label{lanscanWireshark}
-\end{figure}
-
-\subsubsection{Translating a CIDR-specified subnet into a list of IP addresses}\label{test:cidr}
-To show this I will run my program with the \verb|-sL| flag and I will specify
-a small subnet of \verb|192.168.1.0/28| (I have chosen such a small subnet
-such that it will fit on my terminal and therefore in a screenshot).
-I expect the list of addresses to be \verb|192.168.1.1 - 192.168.1.14|.
-To prove that my program works,
-I will screenshot the output when run with the stated parameters and I will use
-a website to translate the same subnet and show
-that it displays the same addresses as my program.
-In Figure~\ref{cidrtest}, you can see that the output from my program matches
-the expected list of IP addresses from \verb|192.168.1.1| to \verb|192.168.1.14|
-which is also shown by the screen shot of the same subnet translated by
-the ipcalc utility on Linux.
-This proves my program works and covers success criterion~\ref{cidr}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{iplist.png}
-  \caption{\textit{%
-    Screenshot showing the output of my program when asked to translate the subnet 192.168.1.0/28.
-}}\label{cidrtest}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{ipcalclist.png}
-  \caption{\textit{%
-    Screenshot showing the range displayed by the ipcalc utility when asked to calculate
-    the same subnet.
-}}\label{cidrwebproof}
 \end{figure}
 
 \subsubsection{Scanning without first checking whether hosts are up.}\label{test:nocheck}
@@ -2622,7 +2622,6 @@ a database of \gls{tcp}/\gls{ip} stack fingerprints that show how the \gls{tcp} 
 protocols are implemented in virtually all currently-used operating systems, as well as in different
 versions of Linux and different service packs and versions of Windows.
 
-\clearpage
 \appendix
 
 \section{Technical Solution}\label{code}

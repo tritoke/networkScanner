@@ -26,8 +26,8 @@
 \contentsline {subsubsection}{\numberline {4.2.1}Printing a usage message when run without parameters}{52}{subsubsection.4.2.1}% 
 \contentsline {subsubsection}{\numberline {4.2.2}Printing a help message when passed -h}{53}{subsubsection.4.2.2}% 
 \contentsline {subsubsection}{\numberline {4.2.3}Printing a help message when passed -help}{54}{subsubsection.4.2.3}% 
-\contentsline {subsubsection}{\numberline {4.2.4}Scanning a subnet with ICMP echo request messages}{54}{subsubsection.4.2.4}% 
-\contentsline {subsubsection}{\numberline {4.2.5}Translating a CIDR-specified subnet into a list of IP addresses}{55}{subsubsection.4.2.5}% 
+\contentsline {subsubsection}{\numberline {4.2.4}Translating a CIDR-specified subnet into a list of IP addresses}{54}{subsubsection.4.2.4}% 
+\contentsline {subsubsection}{\numberline {4.2.5}Scanning a subnet with ICMP echo request messages}{55}{subsubsection.4.2.5}% 
 \contentsline {subsubsection}{\numberline {4.2.6}Scanning without first checking whether hosts are up.}{56}{subsubsection.4.2.6}% 
 \contentsline {subsubsection}{\numberline {4.2.7}Detecting whether a TCP port is open}{59}{subsubsection.4.2.7}% 
 \contentsline {subsubsection}{\numberline {4.2.8}Detecting whether a TCP port is closed}{60}{subsubsection.4.2.8}% 
